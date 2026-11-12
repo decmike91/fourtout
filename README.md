@@ -46,3 +46,8 @@ AUTRES LOGICIELS DU DÉPÔT
                                astronomiques (voir AstroForge/README.md ;
                                installateur Windows dans la publication
                                astroforge-v2.0.0)
+  AstroForge-rs/               AstroForge en Rust : interface Planétaire,
+                               Planétaire IA (traitement automatique) et
+                               Time-lapse multi-vidéos ; programmes Windows
+                               dans AstroForge-rs/Windows (voir
+                               AstroForge-rs/README.md)

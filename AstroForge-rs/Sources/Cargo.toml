@@ -1,0 +1,78 @@
+[package]
+name = "astroforge"
+version = "2.0.0"
+edition = "2021"
+rust-version = "1.88"
+description = "AstroForge — traitement d'images astronomiques (ciel profond & planétaire), moteur et ligne de commande en Rust"
+license = "MIT"
+default-run = "astroforge"
+
+[lib]
+name = "astroforge"
+path = "src/lib.rs"
+
+[[bin]]
+name = "astroforge"
+path = "src/main.rs"
+
+# interface graphique (onglets Planétaire et Planétaire IA automatique)
+[[bin]]
+name = "astroforge-gui"
+path = "src/bin/astroforge-gui/main.rs"
+required-features = ["gui"]
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[features]
+default = ["raw", "net", "gui"]
+# lecture des RAW d'appareils photo (CR2, NEF, ARW, DNG, RAF, ORF, RW2, PEF, SRW…)
+raw = ["dep:rawloader"]
+# vérification des mises à jour et téléchargement de catalogues de modèles IA
+net = ["dep:ureq"]
+# inférence ONNX locale (pur Rust, via tract)
+onnx = ["dep:tract-onnx"]
+# interface graphique egui (exécutable astroforge-gui)
+gui = ["dep:eframe", "dep:rfd"]
+
+[dependencies]
+rayon = "1.10"
+rustfft = "6.2"
+nalgebra = "0.33"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "bmp", "gif"] }
+tiff = "0.9"
+flate2 = "1"
+lz4_flex = "0.11"
+ruzstd = "0.7"
+roxmltree = "0.20"
+base64 = "0.22"
+memmap2 = "0.9"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+clap = { version = "4.5", features = ["derive"] }
+chrono = "0.4"
+regex = "1"
+glob = "0.3"
+colorous = "1.0"
+font8x8 = "0.3"
+anyhow = "1"
+sha2 = "0.10"
+tempfile = "3"
+rawloader = { version = "0.37", optional = true }
+ureq = { version = "2", optional = true }
+tract-onnx = { version = "0.21", optional = true }
+eframe = { version = "0.32", optional = true, default-features = false, features = ["glow", "default_fonts", "wayland", "x11"] }
+rfd = { version = "0.15", optional = true, default-features = false, features = ["xdg-portal", "async-std"] }
+
+[dev-dependencies]
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 4
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3

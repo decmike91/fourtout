@@ -1,0 +1,11 @@
+openngc_lite.csv — sous-ensemble du catalogue OpenNGC
+
+Source : OpenNGC, Mattia Verga — https://github.com/mattiaverga/OpenNGC
+Licence : Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+          https://creativecommons.org/licenses/by-sa/4.0/
+
+Modifications apportées pour AstroForge : sélection des objets Messier, des
+nébuleuses, amas et restes de supernova, et des objets de magnitude ≤ 13 ;
+conversion des coordonnées en degrés décimaux ; colonnes réduites
+(label, nom, type, ra, dec, axes en minutes d'arc, angle, magnitude, nom
+usuel). Ce fichier dérivé est distribué sous la même licence CC BY-SA 4.0.
