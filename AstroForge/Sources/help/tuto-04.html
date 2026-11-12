@@ -1,0 +1,63 @@
+ch4">
+    <h2><font color="#1c3a6e">4. Ciel profond — les opérations dans l'ordre</font></h2>
+    <p>Chaque section ci-dessous correspond à un groupe de l'onglet <strong>Ciel profond</strong> (et à une étape de la figure 1). Réglez chaque groupe en suivant l'aperçu live, puis lancez la chaîne complète avec <b>[▶ Traiter (pleine résolution) et exporter…]</b> quand tout est en place.</p>
+
+    <h3><font color="#2b4a7e">4.1 Étape ① — Charger les images brutes</font></h3>
+    <p>Groupe <em>« 1. Images brutes (FITS/TIFF/PNG/RAW) »</em> : <b>[Ajouter…]</b> sélectionne toutes les poses unitaires (lights) en une fois, <b>[Vider]</b> réinitialise la liste. Pour une caméra couleur one-shot (OSC), la Matrice de Bayer est lue automatiquement depuis les RAW ; sur les FITS déjà debayerisés, vérifiez-la (RGGB est la plus courante). <strong>Toutes les images doivent provenir du même matériel, à la même température et au même gain.</strong></p>
+
+    <h3><font color="#2b4a7e">4.2 Étape ② — Construire les masters (les « verres correcteurs » de la session)</font></h3>
+    <p>Groupe <em>« 2. Calibration — création des Masters »</em>. Quatre champs, quatre rôles :</p>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Master</b></td><td bgcolor="#dfe6f2"><b>Volumes conseillés</b></td><td bgcolor="#dfe6f2"><b>À quoi il sert</b></td></tr><tr><td><strong>Bias</strong></td><td>50–100 (pose la plus courte)</td><td>Retire le signal électronique fixe et le bruit de lecture</td></tr><tr><td><strong>Dark</strong></td><td>20–50, même pose et même température que les lights</td><td>Retire le signal thermique (point chauds, amp-glow)</td></tr><tr><td><strong>Flat</strong></td><td>20–30, au même pointage (ou panneau)</td><td>Retire vignettage, poussières, sensibilité inégale</td></tr><tr><td><strong>Dark-flat</strong></td><td>15–20, même pose que les flats</td><td>Retire le signal thermique des flats eux-mêmes</td></tr></table>
+    <p>Les masters sont construits en interne par combinaison robuste des frames (médiane) puis appliqués à chaque light : le dark est mis à l'échelle et le flat normalisé automatiquement. <strong>Un dark à la mauvaise température (ou pose) est la première cause de « noise fixed » résiduel</strong> : prenez les darks la nuit même, capteur à la température des lights.</p>
+
+    <h3><font color="#2b4a7e">4.3 Étapes ③+④ — Calibration et défauts</font></h3>
+    <p>La calibration s'exécute automatiquement dans la chaîne dès que des masters sont fournis. La correction des défauts vient <strong>juste après</strong> (groupe <em>« 10. Pixels défectueux — carte &amp; colonnes/lignes mortes »</em>, la place est indiquée sur le bouton : <b>[Corriger (après calibration)]</b>). Deux voies :</p>
+    <ul>
+      <li><b>[Détection auto (master dark/flat)]</b> — la plus simple : les pixels systématiquement chauds dans le master dark et froids dans le master flat sont repérés et corrigés par voisins ; cochez <b>[Colonnes/lignes]</b> pour traiter aussi les défauts colonne/ligne (amp-glow CMOS).</li>
+      <li><strong>Carte fournie</strong> — si votre constructeur ou logiciel fournit une bad-pixel map (FITS/PNG/TXT), pointez-la avec <b>[Carte (FITS/PNG/TXT) :]</b>.</li>
+    </ul>
+
+    <h3><font color="#2b4a7e">4.4 Étape ⑤ — Alignement et drizzle</font></h3>
+    <p>Groupe <em>« 3. Alignement &amp; Drizzle »</em>. Trois méthodes, de la plus rapide à la plus puissante :</p>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Méthode</b></td><td bgcolor="#dfe6f2"><b>Principe</b></td><td bgcolor="#dfe6f2"><b>Quand la choisir</b></td></tr><tr><td><strong>Phase (translation+rotation)</strong></td><td>Corrélation de phase entre frames</td><td>Petites séries, champ stable, rapidité</td></tr><tr><td><strong>Étoiles (similarity)</strong></td><td>Appariement de motifs d'étoiles (astroalign), similitude complète</td><td>Séries longues avec rotation du champ — le choix par défaut en ciel profond</td></tr><tr><td><strong>Plate solving + distorsions (poly)</strong></td><td>Détection d'étoiles puis ajustement polynomial de leurs positions</td><td>Grands champs, longue focale, optique qui distord (réducteurs, bretelles) : l'ajustement est itéré avec rejet des paires aberrantes</td></tr></table>
+    <ul>
+      <li><b>[Tenir compte de la rotation du champ]</b> : cochez dès que la monture n'est pas parfaitement polaire ou que la série s'étale sur des heures.</li>
+      <li><strong>Drizzle</strong> (<b>[Sans / ×2 / ×3]</b>, Pixfrac ≈ 0,6–0,8) : rééchantillonne pendant l'accumulation en exploitant les micro-décalages entre frames. Utile si <em>e</em> &gt; 2″/px ou si l'échantillonnage est serré au pixel près ; coût : mémoire et temps de calcul proportionnels à l'agrandissement. À 0,8″/px, restez sur « Sans ».</li>
+    </ul>
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#eef4fb"><b>Astuce.</b> En cas d'appariement décevant avec la méthode « poly » sur très peu d'étoiles, revenez à « Étoiles (similarity) » : l'ajustement polynomial réclame au moins ~20 étoiles bien réparties pour un degré 3.</td></tr></table>
+
+    <h3><font color="#2b4a7e">4.5 Étape ⑥ — Empilement : quel algorithme ?</font></h3>
+    <p>Groupe <em>« 4. Empilement »</em>. Les sept algorithmes partagent le même but — accumuler le signal, rejeter les écarts — mais pas le même compromis :</p>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Algorithme</b></td><td bgcolor="#dfe6f2"><b>Comportement</b></td><td bgcolor="#dfe6f2"><b>Usage recommandé</b></td></tr><tr><td><strong>Sigma-clipping</strong> (défaut)</td><td>Rejette les pixels qui s'écartent de σ fois la médiane</td><td>Le bon choix universel (σ = 2,5–3)</td></tr><tr><td><strong>Moyenne</strong></td><td>Simplicité, meilleur S/B théorique</td><td>Séries très propres (labo, longue pose calme)</td></tr><tr><td><strong>Médiane</strong></td><td>Rejette tout ce qui n'est pas répété</td><td>Peu de frames, satellites fréquents</td></tr><tr><td><strong>Winsorisé</strong></td><td>Rejet doux : les extrêmes sont bornés, pas supprimés</td><td>Séries moyennes, peu de frames à sacrifier</td></tr><tr><td><strong>Rejet min/max</strong></td><td>Retire la plus claire et la plus sombre</td><td>Dépannage rapide, N &gt; 10</td></tr><tr><td><strong>Linear fit</strong></td><td>Ajuste une droite par pixel et rejette les résidus</td><td>Grandes séries, ciel variable (brume, lune)</td></tr><tr><td><strong>MAD clipping</strong></td><td>Rejet fondé sur l'écart absolu médian, robuste aux valeurs extrêmes</td><td>Séries polluées de trains de satellites</td></tr></table>
+    <p>Le champ <b>[Sigma :]</b> règle l'agressivité du rejet (3,0 pour commencer ; 2,5 si des traces subsistent). Le classement qualité des frames (scores de netteté/luminosité, utilisé par le mode planétaire) est également disponible au niveau du noyau pour les chaînes scriptées (chapitre 10).</p>
+
+    <h3><font color="#2b4a7e">4.6 Étape ⑦ — Gradient et fond de ciel</font></h3>
+    <p>Groupe <em>« 5. Traitement (fond, denoise, déconvolution) »</em>. Le Gradient modélise le fond (pollution, lune, veilleuse) et le retire :</p>
+    <ul>
+      <li><b>[Polynôme 2D]</b> avec son Degré (2–3) : le cas général, très stable.</li>
+      <li><b>[RBF (thin plate)]</b> avec ses cases (10–12) : s'adapte aux fonds irréguliers (coins lumineux, halos de lampadaires).</li>
+      <li><b>[Soustraction]</b> (le plus courant) ou <b>[Division]</b> (quand le défaut est un vignettage multiplicatif).</li>
+    </ul>
+    <p>Procédez doucement : un gradient bien réglé laisse un fond plat et sombre sans creuser les grands nébulosités. En pratique, <strong>contraignez d'abord la zone d'échantillonnage (cases) plutôt que le degré</strong>.</p>
+
+    <h3><font color="#2b4a7e">4.7 Étape ⑧ — Débruitage et déconvolution</font></h3>
+    <p>Dans le même groupe : le Denoise propose <b>[Non-local means]</b> (naturel, le plus utilisé ; force 0,3–0,5), <b>[Bilatéral]</b> (protège les bords) et <b>[Ondelettes]</b> (contrôle multi-échelle). La déconvolution (Richardson-Lucy) affine les détails : <b>[Déconv. itérations :]</b> 10–20 avec un σ de PSF ≈ 1–1,5 px — par petites touches, et toujours <strong>après</strong> le débruitage léger : déconvoluer un stack bruité amplifie le grain.</p>
+
+    <h3><font color="#2b4a7e">4.8 Étape ⑨ — Couleur : calibrer, neutraliser, déverdir</font></h3>
+    <p>Groupe <em>« Calibration couleur &amp; neutralisation »</em>, à utiliser dans cet ordre :</p>
+    <p>① <b>Calibration couleur (fond ciel)</b>  — équilibre R/G/B sur le fond du ciel (méthode type Siril).</p>
+    <p>② <b>Neutraliser le fond</b>  — fait tendre le fond vers le gris neutre ; le <b>[Percentile fond :]</b> choisit la population de pixels « fond » (2–5 %).</p>
+    <p>③ <b>SCNR vert (OSC)</b>  — supprime la dominante verte des caméras couleur.</p>
+    <p>④ <b>Calibration photométrique des couleurs (étoiles Gaia)</b>  — l'affinage le plus juste : les couleurs sont calées sur les étoiles réelles du catalogue (nécessite la plateforme astrométrie du chapitre 9).</p>
+
+    <h3><font color="#2b4a7e">4.9 Étape ⑩ — L'IA locale, au bon endroit de la chaîne</font></h3>
+    <p>Groupe <em>« 6. IA locale »</em> : choisissez la Tâche (<b>[denoise]</b> / <b>[background]</b> / <b>[sharpen]</b> / <b>[superres]</b> / <b>[satellite]</b>) et le Fournisseur. Trois voies existent, du plus simple au plus intégré :</p>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Voie</b></td><td bgcolor="#dfe6f2"><b>Contenu</b></td><td bgcolor="#dfe6f2"><b>Installation</b></td></tr><tr><td><strong>Outils externes</strong> (résultats professionnels)</td><td>GraXpert (denoise, fond IA), StarNet2/DeepSNR (Cosmic Clarity : usage manuel, non automatisable)</td><td>Gratuits ; renseignez leurs chemins via <b>[Configurer les outils IA (chemins)…]</b></td></tr><tr><td><strong>Modèles ONNX</strong></td><td>Vos modèles <code>.onnx</code> déposés dans <code>models/ai/</code> (+ JSON optionnel : tâche, taille d'entrée, chevauchement, échelle)</td><td><code>pip install onnxruntime</code> ; GPU utilisé automatiquement s'il est disponible</td></tr><tr><td><strong>Algorithmes classiques intégrés</strong></td><td>NLM, bilatéral, médiane, ondelettes ; Richardson-Lucy ; polynôme/RBF ; Hough + inpainting ; Lanczos</td><td>Rien à installer</td></tr></table>
+    <p><strong>Placement dans la chaîne</strong> : le débruitage IA remplace (ou complète) l'étape ⑧, après le gradient ; la super-résolution est la toute dernière opération avant export ; la suppression de satellites se fait de préférence sur les frames ou sur le stack avant finition.</p>
+
+    <h3><font color="#2b4a7e">4.10 Étape ⑪ — HDR : fusionner plusieurs empilements</font></h3>
+    <p>Groupe <em>« 7. Composition HDR (plusieurs empilements) »</em> : empilez séparément chaque lot d'expositions (par ex. 300 s et 60 s), ajoutez chaque résultat avec <b>[Ajouter exposition…]</b>, puis <b>[Fusionner HDR]</b> (algorithme de Mertens) : le cœur des étoiles et les bras externes restent détaillés sur la même image.</p>
+
+    <h3><font color="#2b4a7e">4.11 Astrométrie et exécution finale</font></h3>
+    <p>Le groupe <em>« 9. Astrométrie locale »</em> (plate solving, photométrie) est décrit en détail au chapitre 9 — il se règle après l'empilement, sur l'image finale. Quand toute la chaîne est réglée : <b>[▶ Traiter (pleine résolution) et exporter…]</b> exécute calibration → défauts → alignement → empilement → traitements dans le bon sens, puis propose l'export. Le bouton <b>[Exporter l'image…]</b> ré-exporte ensuite sans tout recalculer.</p>
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#fdf5e8"><b>Rappel.</b> L'aperçu applique un étirement automatique pour vous montrer les données linéaires — c'est un <em>affichage</em>. Le fichier exporté reste linéaire tant que vous n'avez pas traité la tonalité dans l'onglet Finition (chapitre 8) : conservez le stack FITS 32 bits comme archive maîtresse.</td></tr></table>

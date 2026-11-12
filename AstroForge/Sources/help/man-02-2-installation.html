@@ -1,0 +1,22 @@
+<h3><font color="#2b4a7e">2. Installation</font></h3>
+<h4><font color="#2b4a7e">2.1 Prérequis</font></h4>
+<ul>
+  <li>Python 3.10 ou plus récent (Windows, macOS ou Linux).</li>
+  <li>Les paquets de <code>requirements.txt</code> : PySide6, numpy, scipy, opencv-python, astropy, Pillow, matplotlib.</li>
+</ul>
+<h4><font color="#2b4a7e">2.2 Installation standard</font></h4>
+<pre><code>python -m venv .venv
+# Windows : .venv\Scripts\activate    Linux/macOS : source .venv/bin/activate
+pip install -r requirements.txt
+python main.py</code></pre>
+<h4><font color="#2b4a7e">2.3 Scripts de lancement tout-en-un</font></h4>
+<p><code>launch.bat</code> (Windows, double-clic possible) et <code>launch.sh</code>
+(Linux/macOS) créent l'environnement virtuel, installent les dépendances manquantes puis
+lancent le logiciel.</p>
+<h4><font color="#2b4a7e">2.4 Exécutable autonome</font></h4>
+<pre><code>build_exe.bat   (Windows)   →  dist\AstroForge\AstroForge.exe
+./build_exe.sh  (Linux/mac) →  dist/AstroForge/AstroForge</code></pre>
+<p>Ces scripts utilisent PyInstaller et embarquent les interfaces. <code>main.py --selftest</code>
+vérifie une installation sans ouvrir la fenêtre.</p>
+<h4><font color="#2b4a7e">2.5 Dépendances optionnelles</font></h4>
+<table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Paquet</b></td><td bgcolor="#dfe6f2"><b>Utilité</b></td></tr><tr><td><code>onnxruntime</code></td><td>Modèles IA locaux (.onnx) — débruitage, super-résolution…</td></tr><tr><td><code>rawpy</code></td><td>Lecture des RAW d'appareils photo (CR2/CR3/NEF/ARW/DNG…)</td></tr><tr><td><code>photutils</code>, <code>astroalign</code></td><td>Détection/appariement d'étoiles (alignement, PCC, photométrie)</td></tr><tr><td><code>astroquery</code></td><td>Génération du catalogue Gaia (une seule fois, internet requis)</td></tr><tr><td>astrometry.net (<code>solve-field</code>)</td><td>Plate solving local de référence (utilisé automatiquement s'il est coché)</td></tr></table>

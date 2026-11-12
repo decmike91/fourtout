@@ -1,0 +1,55 @@
+ch10">
+    <h2><font color="#1c3a6e">10. Séquences batch et scripts Python</font></h2>
+
+    <h3><font color="#2b4a7e">10.1 Les trois niveaux d'automatisation</font></h3>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Niveau</b></td><td bgcolor="#dfe6f2"><b>Où</b></td><td bgcolor="#dfe6f2"><b>Ce qu'il rejoue</b></td></tr><tr><td>Sequence batch finition</td><td>Onglet Finition (commune)</td><td>Toute la chaîne de finition sur un dossier d'images</td></tr><tr><td>Processus de traitement automatique</td><td>Onglet Ciel profond (groupe 8)</td><td>La liste d'étapes ciel profond (↑/↓ réordonne, Activer/désactive), enregistrée en JSON</td></tr><tr><td>Séquence planétaire</td><td>Onglet Planétaire (groupe 8)</td><td>Classement, dérotation, ondelettes, palette… sur toutes les vidéos d'un dossier</td></tr></table>
+    <p>Dans chaque cas : réglez une fois, <b>[💾 Enregistrer…]</b>, puis appliquez au lot. Les fichiers JSON sont petits et lisibles — voici l'exemple fourni <code>scripts/batch_planetaire_ser.json</code> :</p>
+<pre><code>{
+  "mode": "ser",
+  "ops": [ { "op": "planet_chain", "params": {
+      "quality_mode": "Netteté (Registax)", "keep_percent": 75.0,
+      "derot": false, "align_method": "Limbe (précis)", "rgb_align": true,
+      "stack_method": "AutoStack (AS!-style)", "stack_percent": 90.0,
+      "gains": [1.3, 1.2, 1.0, 1.0, 1.0, 1.0, 1.0], "wave_denoise": 0.3 } } ]
+}</code></pre>
+
+    <h3><font color="#2b4a7e">10.2 Le noyau en Python pur (sans interface)</font></h3>
+    <p>Toutes les fonctions sont appelables en script — pour un plan d'action nocturne ou un ordinateur sans écran. L'essentiel (extrait de <code>GUIDE_SCRIPTS.md</code>, à lancer depuis le dossier de l'application avec <code>export PYTHONPATH=.</code>) :</p>
+<pre><code># Batch de finition sur un dossier
+from astroforge.core import sequence as Q
+seq = {"mode": "image", "ops": [
+    {"op": "gimp_tone", "params": {"contrast": 0.1, "sat": 1.1,
+                                    "usm_amount": 0.5, "usm_radius": 1.5}},
+    {"op": "denoise", "params": {"method": "Non-local means", "strength": 0.4}}]}
+Q.run_batch_image(seq, "entree/", "sortie/")
+
+# Batch planétaire : toutes les vidéos SER d'un dossier
+seq = Q.load_sequence("scripts/batch_planetaire_ser.json")
+Q.run_batch_ser_chain(seq, "videos/", "empiles/", max_frames=200)</code></pre>
+<pre><code># Pipeline ciel profond scripté : calibration -> drizzle -> gradient -> denoise
+from astroforge.core.image_io import load_image, save_image
+from astroforge.core import calibration as C, registration as R
+from astroforge.core.stacking import stack
+from astroforge.core.drizzle import drizzle_stack
+from astroforge.core.gradient import extract_gradient
+from astroforge.core.restoration import denoise
+
+cal = [C.calibrate(load_image(p), mb, md, mf) for p in lights]
+ref = cal[len(cal) // 2]
+shifts = [R.phase_corr(ref, im)[:2] for im in cal]
+img, _ = drizzle_stack(cal, shifts, scale=2, pixfrac=0.7)   # drizzle ×2
+img, fond = extract_gradient(img, "Polynôme 2D", 3, 12, 2.5, "Soustraction")
+img = denoise(img, "Non-local means", 0.5)
+save_image("resultat.fits", img)</code></pre>
+<pre><code># Astrométrie : catalogue, focale auto, photométrie (internet pour le catalogue)
+from astroforge.core import equipment as EQ, astrometry as A
+from astroforge.core.image_io import load_image
+
+EQ.make_gaia_catalog(156.25, 19.75, 0.6, "profiles/gaia_champ.csv", mag_limit=15)
+img = load_image("m51.fits")
+res = A.solve_image(img, catalog_path="profiles/gaia_champ.csv",
+                    center_ra=156.25, center_dec=19.75)
+focal = EQ.focal_from_scale(pixel_um=3.8, scale_arcsec_pix=res["scale_arcsec_pix"])
+tab = A.aperture_photometry(img, wcs=res["wcs"], catalog_path="profiles/gaia_champ.csv")
+tab.write("photometrie.csv", format="csv")</code></pre>
+    <p>Les opérations de séquence disponibles côté script (<code>Q.OPS</code>) couvrent la tonalité, le débruitage, la déconvolution, les satellites, les palettes, la super-résolution et l'appel IA. Pour un lancement nocturne : <code>nohup python3 mon_script.py &gt; log.txt 2&gt;&amp;1 &amp;</code>. Chaque fonction lourde accepte un rappel <code>progress</code> (fait, total) pour l'avancement.</p>

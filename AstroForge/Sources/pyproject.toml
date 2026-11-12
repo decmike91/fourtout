@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "astroforge"
+dynamic = ["version"]
+description = "Traitement d'images astronomiques : ciel profond, planétaire, solaire, finition"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "astroforge/data/OPENNGC_LICENSE.txt"]
+requires-python = ">=3.10"
+authors = [{ name = "Contributeurs AstroForge" }]
+keywords = ["astronomy", "astrophotography", "stacking", "fits", "xisf", "planetary"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: Astronomy",
+  "Environment :: X11 Applications :: Qt",
+  "Natural Language :: French",
+  "Natural Language :: English",
+]
+dependencies = [
+  "PySide6>=6.5",
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "opencv-python>=4.8",
+  "astropy>=5.3",
+  "Pillow>=10.0",
+  "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+# astrométrie, analyse des brutes, alignement par étoiles, catalogue Gaia
+astro = ["photutils>=1.10", "astroalign>=2.4", "astroquery>=0.4.7"]
+# IA locale (modèles ONNX)
+ia = ["onnxruntime>=1.16"]
+# RAW d'appareils photo, XISF compressés
+raw = ["rawpy>=0.18", "lz4>=4.0", "zstandard>=0.21"]
+# accélération GPU (NVIDIA CUDA 12) — adaptez le paquet CuPy à votre pilote
+gpu = ["cupy-cuda12x>=13"]
+dev = ["pytest>=7.4", "ruff>=0.4", "pyinstaller>=6.0"]
+all = ["astroforge[astro,ia,raw]"]
+
+[project.scripts]
+astroforge = "astroforge.cli:main"
+
+[project.gui-scripts]
+astroforge-gui = "astroforge.cli:gui_main"
+
+[tool.setuptools.dynamic]
+version = { attr = "astroforge.__version__" }
+
+[tool.setuptools]
+# ui/ et help/ (à la racine du dépôt) sont installés comme ressources du paquet
+packages = ["astroforge", "astroforge.ai", "astroforge.core", "astroforge.gui",
+            "astroforge.i18n", "astroforge.processing",
+            "astroforge._res.ui", "astroforge._res.help"]
+package-dir = { "astroforge._res.ui" = "ui", "astroforge._res.help" = "help" }
+
+
+[tool.setuptools.package-data]
+"astroforge" = ["data/*.csv", "data/*.txt", "i18n/*.json"]
+"astroforge._res.ui" = ["*.ui"]
+"astroforge._res.help" = ["*.html", "*.json", "*.css", "*.png", "*.svg"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = ["slow: suite de bout en bout (smoke.py), plusieurs minutes"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+extend-exclude = ["ui_generated", "docs_src"]
+
+[tool.ruff.lint]
+select = ["E9", "F63", "F7", "F82", "F401", "F841"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/smoke.py" = ["F841"]

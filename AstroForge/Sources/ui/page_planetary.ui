@@ -1,0 +1,319 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ui version="4.0">
+ <class>PagePlanetary</class>
+ <widget class="QWidget" name="PagePlanetary">
+  <layout class="QVBoxLayout" name="outerP">
+   <property name="spacing"><number>2</number></property>
+   <item>
+    <layout class="QHBoxLayout" name="topBarP">
+     <item><widget class="QPushButton" name="btnUndoP"><property name="text"><string>Annuler</string></property><property name="toolTip"><string>Annule jusqu'à 10 actions terminées (Ctrl+Z)</string></property></widget></item>
+     <item><spacer name="hSpaceTopP"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>10</height></size></property></spacer></item>
+    </layout>
+   </item>
+   <item>
+  <layout class="QHBoxLayout" name="mainH" stretch="0,1,0">
+   <item>
+    <widget class="QScrollArea" name="scrollParams">
+     <property name="minimumWidth"><number>360</number></property>
+     <property name="widgetResizable"><bool>true</bool></property>
+     <widget class="QWidget" name="scrollContent">
+      <property name="geometry"><rect><x>0</x><y>0</y><width>380</width><height>820</height></rect></property>
+      <layout class="QVBoxLayout" name="paramsLayout">
+       <property name="sizeConstraint"><enum>QLayout::SetMinAndMaxSize</enum></property>
+       <item>
+        <widget class="QGroupBox" name="grpSource">
+         <property name="title"><string>1. Chargement — vidéo SER/AVI/MP4 ou images</string></property>
+         <layout class="QVBoxLayout" name="laySource">
+           <item><layout class="QHBoxLayout" name="commandsSource"><item><widget class="QPushButton" name="btnLaunch_grpSource"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpSource"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item><widget class="QComboBox" name="cmbSourceType"><item><property name="text"><string>Vidéo (SER/AVI/MP4)</string></property></item><item><property name="text"><string>Images (APN/FITS/TIFF)</string></property></item></widget></item>
+          <item><widget class="QPushButton" name="btnLoadSource"><property name="text"><string>Charger la source…</string></property></widget></item>
+          <item><widget class="QLabel" name="lblSourceInfo"><property name="text"><string>Aucune source chargée</string></property></widget></item>
+          <item>
+           <layout class="QHBoxLayout" name="layBrowse">
+            <item><widget class="QToolButton" name="btnPrevFrame"><property name="text"><string>◀</string></property></widget></item>
+            <item><widget class="QSlider" name="sldBrowse"><property name="minimum"><number>0</number></property><property name="maximum"><number>0</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+            <item><widget class="QToolButton" name="btnNextFrame"><property name="text"><string>▶</string></property></widget></item>
+           </layout>
+          </item>
+          <item><widget class="QLabel" name="lblBrowse"><property name="text"><string>Frame — / —</string></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpRank">
+         <property name="title"><string>2. Tri des images (meilleure → moins bonne)</string></property>
+         <layout class="QGridLayout" name="gridRank">
+           <item row="6" column="0" colspan="2"><layout class="QHBoxLayout" name="commandsRank"><item><widget class="QPushButton" name="btnLaunch_grpRank"><property name="text"><string>Lancer le tri</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpRank"><property name="text"><string>Annuler le tri</string></property></widget></item></layout></item>
+          <item row="0" column="0"><widget class="QLabel" name="lblQMethod"><property name="text"><string>Méthode :</string></property></widget></item>
+          <item row="0" column="1"><widget class="QComboBox" name="cmbQualityMode"><item><property name="text"><string>Contraste HF (AutoStakkert)</string></property></item><item><property name="text"><string>Netteté (Laplacien)</string></property></item><item><property name="text"><string>Gradient (Sobel)</string></property></item><item><property name="text"><string>Luminosité</string></property></item><item><property name="text"><string>Mixte</string></property></item></widget></item>
+          <item row="1" column="0"><widget class="QLabel" name="lblRoiMode"><property name="text"><string>Zone de mesure :</string></property></widget></item>
+          <item row="1" column="1"><widget class="QComboBox" name="cmbRoiMode"><item><property name="text"><string>Disque auto-détecté</string></property></item><item><property name="text"><string>Image entière</string></property></item></widget></item>
+          <item row="2" column="0" colspan="2"><widget class="QPushButton" name="btnRank"><property name="text"><string>Trier les images par qualité</string></property></widget></item>
+          <item row="3" column="0" colspan="2">
+           <layout class="QHBoxLayout" name="layRankBrowse">
+            <item><widget class="QToolButton" name="btnPrevRank"><property name="text"><string>◀</string></property></widget></item>
+            <item><widget class="QSlider" name="sldRankBrowse"><property name="minimum"><number>0</number></property><property name="maximum"><number>0</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+            <item><widget class="QToolButton" name="btnNextRank"><property name="text"><string>▶</string></property></widget></item>
+           </layout>
+          </item>
+          <item row="4" column="0" colspan="2"><widget class="QLabel" name="lblRankInfo"><property name="text"><string>Tri non effectué</string></property></widget></item>
+          <item row="5" column="0" colspan="2"><layout class="QVBoxLayout" name="profRank" /></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpNAlign">
+         <property name="title"><string>3. Nombre d'images à aligner</string></property>
+         <layout class="QGridLayout" name="gridNAlign">
+           <item row="2" column="0" colspan="2"><layout class="QHBoxLayout" name="commandsNAlign"><item><widget class="QPushButton" name="btnLaunch_grpNAlign"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpNAlign"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item row="0" column="0"><widget class="QLabel" name="lblNAlign"><property name="text"><string>Les N meilleures :</string></property></widget></item>
+          <item row="0" column="1"><widget class="QSpinBox" name="spnNAlign"><property name="minimum"><number>1</number></property><property name="maximum"><number>99999</number></property><property name="value"><number>50</number></property></widget></item>
+          <item row="1" column="0" colspan="2"><widget class="QLabel" name="lblNCut"><property name="text"><string>Tri effectué à l'étape 2 pour voir la qualité de coupure</string></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpAlign">
+         <property name="title"><string>4. Méthode d'alignement (points / carrés)</string></property>
+         <layout class="QGridLayout" name="gridAlign">
+           <item row="5" column="0" colspan="2"><layout class="QHBoxLayout" name="commandsAlign"><item><widget class="QPushButton" name="btnLaunch_grpAlign"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpAlign"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item row="0" column="0" colspan="2"><widget class="QComboBox" name="cmbAlignKindP"><item><property name="text"><string>Multi-points (grille NxN)</string></property></item><item><property name="text"><string>Global (une translation)</string></property></item><item><property name="text"><string>Points manuels (carrés)</string></property></item><item><property name="text"><string>Multi-points local (AS!)</string></property></item></widget></item>
+          <item row="1" column="0"><widget class="QLabel" name="lblGridN"><property name="text"><string>Points (grille NxN) :</string></property></widget></item>
+          <item row="1" column="1"><widget class="QSpinBox" name="spnGridN"><property name="minimum"><number>2</number></property><property name="maximum"><number>10</number></property><property name="value"><number>4</number></property></widget></item>
+          <item row="2" column="0"><widget class="QLabel" name="lblBoxSize"><property name="text"><string>Taille des carrés :</string></property></widget></item>
+          <item row="2" column="1"><widget class="QSpinBox" name="spnBoxSize"><property name="suffix"><string> px</string></property><property name="minimum"><number>0</number></property><property name="maximum"><number>512</number></property><property name="value"><number>0</number></property></widget></item>
+          <item row="3" column="0" colspan="2"><widget class="QPushButton" name="btnPickPoints"><property name="text"><string>Placer des points (clic sur l'aperçu)</string></property><property name="checkable"><bool>true</bool></property></widget></item>
+          <item row="4" column="0"><widget class="QPushButton" name="btnClearPoints"><property name="text"><string>Effacer les points</string></property></widget></item>
+          <item row="4" column="1"><widget class="QLabel" name="lblPoints"><property name="text"><string>0 point</string></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpStackP">
+         <property name="title"><string>5. Aligner puis empiler (image finale)</string></property>
+         <layout class="QGridLayout" name="gridStackP">
+           <item row="7" column="0" colspan="2"><layout class="QHBoxLayout" name="commandsStackP"><item><widget class="QPushButton" name="btnLaunch_grpStackP"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpStackP"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item row="0" column="0" colspan="2"><widget class="QCheckBox" name="chkDerot"><property name="text"><string>Dérotation du champ avant alignement</string></property></widget></item>
+          <item row="1" column="0"><widget class="QComboBox" name="cmbDerotMode"><item><property name="text"><string>auto</string></property></item><item><property name="text"><string>manuelle</string></property></item></widget></item>
+          <item row="1" column="1"><widget class="QDoubleSpinBox" name="spnDerotRate"><property name="suffix"><string> °/min</string></property><property name="minimum"><double>-60.000000000000000</double></property><property name="maximum"><double>60.000000000000000</double></property></widget></item>
+          <item row="2" column="0"><widget class="QLabel" name="lblInterval"><property name="text"><string>Intervalle frames :</string></property></widget></item>
+          <item row="2" column="1"><widget class="QDoubleSpinBox" name="spnInterval"><property name="suffix"><string> s</string></property><property name="maximum"><double>3600.000000000000000</double></property><property name="singleStep"><double>0.100000000000000</double></property><property name="value"><double>1.000000000000000</double></property></widget></item>
+          <item row="3" column="0" colspan="2"><widget class="QCheckBox" name="chkRGBAlign"><property name="text"><string>Alignement des couleurs (R/B sur G)</string></property></widget></item>
+          <item row="4" column="0"><widget class="QComboBox" name="cmbStackP"><item><property name="text"><string>Moyenne</string></property></item><item><property name="text"><string>Moyenne (meilleurs %)</string></property></item><item><property name="text"><string>Médiane</string></property></item><item><property name="text"><string>Sigma-clipping</string></property></item><item><property name="text"><string>Winsorisé</string></property></item><item><property name="text"><string>Rejet min/max</string></property></item><item><property name="text"><string>Linear fit</string></property></item><item><property name="text"><string>MAD clipping</string></property></item></widget></item>
+          <item row="4" column="1"><widget class="QSpinBox" name="spnStackPercent"><property name="suffix"><string> %</string></property><property name="minimum"><number>10</number></property><property name="maximum"><number>100</number></property><property name="value"><number>90</number></property></widget></item>
+          <item row="5" column="0" colspan="2"><layout class="QVBoxLayout" name="profStackP" /></item>
+          <item row="6" column="0" colspan="2"><layout class="QVBoxLayout" name="profDerot" /></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpWave">
+         <property name="title"><string>Ondelettes (style Registax6) — aperçu live</string></property>
+         <layout class="QGridLayout" name="gridWave">
+           <item row="9" column="0" colspan="2"><layout class="QHBoxLayout" name="commandsWave"><item><widget class="QPushButton" name="btnLaunch_grpWave"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpWave"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item row="0" column="0"><widget class="QLabel" name="lblW1"><property name="text"><string>Couche 1 (fins)</string></property></widget></item>
+          <item row="0" column="1"><widget class="QSlider" name="sldW1"><property name="minimum"><number>-100</number></property><property name="maximum"><number>300</number></property><property name="value"><number>100</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="1" column="0"><widget class="QLabel" name="lblW2"><property name="text"><string>Couche 2</string></property></widget></item>
+          <item row="1" column="1"><widget class="QSlider" name="sldW2"><property name="minimum"><number>-100</number></property><property name="maximum"><number>300</number></property><property name="value"><number>100</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="2" column="0"><widget class="QLabel" name="lblW3"><property name="text"><string>Couche 3</string></property></widget></item>
+          <item row="2" column="1"><widget class="QSlider" name="sldW3"><property name="minimum"><number>-100</number></property><property name="maximum"><number>300</number></property><property name="value"><number>100</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="3" column="0"><widget class="QLabel" name="lblW4"><property name="text"><string>Couche 4</string></property></widget></item>
+          <item row="3" column="1"><widget class="QSlider" name="sldW4"><property name="minimum"><number>-100</number></property><property name="maximum"><number>300</number></property><property name="value"><number>100</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="4" column="0"><widget class="QLabel" name="lblW5"><property name="text"><string>Couche 5</string></property></widget></item>
+          <item row="4" column="1"><widget class="QSlider" name="sldW5"><property name="minimum"><number>-100</number></property><property name="maximum"><number>300</number></property><property name="value"><number>100</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="5" column="0"><widget class="QLabel" name="lblW6"><property name="text"><string>Couche 6 (larges)</string></property></widget></item>
+          <item row="5" column="1"><widget class="QSlider" name="sldW6"><property name="minimum"><number>-100</number></property><property name="maximum"><number>300</number></property><property name="value"><number>100</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="6" column="0" colspan="2"><widget class="QPushButton" name="btnWaveReset"><property name="text"><string>Réinitialiser les couches</string></property></widget></item>
+          <item row="7" column="0" colspan="2"><layout class="QVBoxLayout" name="profWave" /></item>
+           <item row="10" column="0" colspan="2"><widget class="QLabel" name="lblLayerControls"><property name="text"><string>Par couche : débruitage 0–1 ; netteté 0–3 (0 = neutre). Les gains ci-dessus restent indépendants.</string></property></widget></item>
+           <item row="11" column="0"><widget class="QDoubleSpinBox" name="spnWDn1"><property name="prefix"><string>Débruitage 1 : </string></property><property name="maximum"><double>1</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="11" column="1"><widget class="QDoubleSpinBox" name="spnWSh1"><property name="prefix"><string>Netteté 1 : </string></property><property name="maximum"><double>3</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="12" column="0"><widget class="QDoubleSpinBox" name="spnWDn2"><property name="prefix"><string>Débruitage 2 : </string></property><property name="maximum"><double>1</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="12" column="1"><widget class="QDoubleSpinBox" name="spnWSh2"><property name="prefix"><string>Netteté 2 : </string></property><property name="maximum"><double>3</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="13" column="0"><widget class="QDoubleSpinBox" name="spnWDn3"><property name="prefix"><string>Débruitage 3 : </string></property><property name="maximum"><double>1</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="13" column="1"><widget class="QDoubleSpinBox" name="spnWSh3"><property name="prefix"><string>Netteté 3 : </string></property><property name="maximum"><double>3</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="14" column="0"><widget class="QDoubleSpinBox" name="spnWDn4"><property name="prefix"><string>Débruitage 4 : </string></property><property name="maximum"><double>1</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="14" column="1"><widget class="QDoubleSpinBox" name="spnWSh4"><property name="prefix"><string>Netteté 4 : </string></property><property name="maximum"><double>3</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="15" column="0"><widget class="QDoubleSpinBox" name="spnWDn5"><property name="prefix"><string>Débruitage 5 : </string></property><property name="maximum"><double>1</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="15" column="1"><widget class="QDoubleSpinBox" name="spnWSh5"><property name="prefix"><string>Netteté 5 : </string></property><property name="maximum"><double>3</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="16" column="0"><widget class="QDoubleSpinBox" name="spnWDn6"><property name="prefix"><string>Débruitage 6 : </string></property><property name="maximum"><double>1</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+           <item row="16" column="1"><widget class="QDoubleSpinBox" name="spnWSh6"><property name="prefix"><string>Netteté 6 : </string></property><property name="maximum"><double>3</double></property><property name="singleStep"><double>0.05</double></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpIA">
+         <property name="title"><string>IA locale (denoise, netteté, super-résolution…)</string></property>
+         <layout class="QGridLayout" name="gridIA">
+           <item row="3" column="0" colspan="2"><layout class="QHBoxLayout" name="commandsIA"><item><widget class="QPushButton" name="btnLaunch_grpIA"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpIA"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item row="0" column="0"><widget class="QComboBox" name="cmbAITask"><item><property name="text"><string>denoise</string></property></item><item><property name="text"><string>background</string></property></item><item><property name="text"><string>sharpen</string></property></item><item><property name="text"><string>superres</string></property></item></widget></item>
+          <item row="0" column="1"><widget class="QPushButton" name="btnAIApply"><property name="text"><string>Appliquer (aperçu)</string></property></widget></item>
+          <item row="1" column="0"><widget class="QComboBox" name="cmbAIProvider" /></item>
+          <item row="1" column="1"><widget class="QPushButton" name="btnAIConfig"><property name="text"><string>Configurer…</string></property></widget></item>
+          <item row="2" column="0" colspan="2"><layout class="QVBoxLayout" name="profIA" /></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpAnim">
+         <property name="title"><string>Film stabilisé (aligner + recadrer) &amp; export</string></property>
+         <layout class="QGridLayout" name="gridAnim">
+           <item row="6" column="0" colspan="2"><layout class="QHBoxLayout" name="commandsAnim"><item><widget class="QPushButton" name="btnLaunch_grpAnim"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpAnim"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item row="0" column="0" colspan="2"><widget class="QCheckBox" name="chkAutoCrop"><property name="text"><string>Recadrage commun automatique (anti-« danse »)</string></property></widget></item>
+          <item row="1" column="0"><widget class="QLabel" name="lblCropSize"><property name="text"><string>Taille crop :</string></property></widget></item>
+          <item row="1" column="1"><widget class="QSpinBox" name="spnCropSize"><property name="suffix"><string> px (0=auto)</string></property><property name="maximum"><number>9999</number></property><property name="value"><number>0</number></property></widget></item>
+          <item row="2" column="0"><widget class="QLabel" name="lblFps"><property name="text"><string>FPS :</string></property></widget></item>
+          <item row="2" column="1"><widget class="QSpinBox" name="spnFps"><property name="minimum"><number>1</number></property><property name="maximum"><number>120</number></property><property name="value"><number>24</number></property></widget></item>
+          <item row="3" column="0"><widget class="QComboBox" name="cmbAnimFmt"><item><property name="text"><string>MP4</string></property></item><item><property name="text"><string>AVI (MJPG)</string></property></item><item><property name="text"><string>GIF</string></property></item></widget></item>
+          <item row="3" column="1"><widget class="QSpinBox" name="spnAnimQuality"><property name="prefix"><string>Qualité </string></property><property name="minimum"><number>10</number></property><property name="maximum"><number>100</number></property><property name="value"><number>90</number></property></widget></item>
+          <item row="4" column="0" colspan="2"><widget class="QPushButton" name="btnMakeMovie"><property name="text"><string>🎬 Créer le film…</string></property></widget></item>
+          <item row="5" column="0" colspan="2"><layout class="QVBoxLayout" name="profAnim" /></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpFalseColor">
+         <property name="title"><string>Fausses couleurs (Soleil N&amp;B)</string></property>
+         <layout class="QVBoxLayout" name="layFC">
+           <item><layout class="QHBoxLayout" name="commandsFC"><item><widget class="QPushButton" name="btnLaunch_grpFalseColor"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpFalseColor"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item><widget class="QCheckBox" name="chkFalseColor"><property name="text"><string>Appliquer une palette</string></property></widget></item>
+          <item><widget class="QComboBox" name="cmbPalette"><item><property name="text"><string>Solaire (orange)</string></property></item><item><property name="text"><string>Inferno</string></property></item><item><property name="text"><string>Magma</string></property></item><item><property name="text"><string>Plasma</string></property></item><item><property name="text"><string>Viridis</string></property></item><item><property name="text"><string>Turbo</string></property></item></widget></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpSeqP">
+         <property name="title"><string>Séquence &amp; batch (style Registax)</string></property>
+         <layout class="QGridLayout" name="gridSeqP">
+           <item row="4" column="0" colspan="2"><layout class="QHBoxLayout" name="commandsSeqP"><item><widget class="QPushButton" name="btnLaunch_grpSeqP"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpSeqP"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item row="0" column="0" colspan="2"><widget class="QPushButton" name="btnSaveSeqP"><property name="text"><string>💾 Enregistrer la séquence (tous les réglages)</string></property></widget></item>
+          <item row="1" column="0"><widget class="QLabel" name="lblBatchMax"><property name="text"><string>Frames max/SER :</string></property></widget></item>
+          <item row="1" column="1"><widget class="QSpinBox" name="spnBatchMax"><property name="toolTip"><string>Nombre maximal de frames lues par vidéo (0 = toutes)</string></property><property name="specialValueText"><string>Toutes</string></property><property name="minimum"><number>0</number></property><property name="maximum"><number>1000000</number></property><property name="value"><number>0</number></property></widget></item>
+          <item row="2" column="0" colspan="2"><widget class="QPushButton" name="btnBatchSER"><property name="text"><string>▶ Batch SER : empiler toutes les vidéos d'un dossier…</string></property></widget></item>
+          <item row="3" column="0" colspan="2"><widget class="QPushButton" name="btnLoadSeqP"><property name="text"><string>Charger une séquence (modifiable)…</string></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpCA">
+         <property name="title"><string>Aberration chromatique (correction radiale)</string></property>
+         <layout class="QGridLayout" name="gridCA">
+           <item row="4" column="0" colspan="2"><layout class="QHBoxLayout" name="commandsCA"><item><widget class="QPushButton" name="btnLaunch_grpCA"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpCA"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+          <item row="0" column="0" colspan="2"><widget class="QCheckBox" name="chkCA"><property name="text"><string>Corriger (R et B autour du centre)</string></property></widget></item>
+          <item row="1" column="0"><widget class="QLabel" name="lblCAR"><property name="text"><string>Rouge :</string></property></widget></item>
+          <item row="1" column="1"><widget class="QSlider" name="sldCAR"><property name="minimum"><number>-100</number></property><property name="maximum"><number>100</number></property><property name="value"><number>0</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="2" column="0"><widget class="QLabel" name="lblCAB"><property name="text"><string>Bleu :</string></property></widget></item>
+          <item row="2" column="1"><widget class="QSlider" name="sldCAB"><property name="minimum"><number>-100</number></property><property name="maximum"><number>100</number></property><property name="value"><number>0</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="3" column="0" colspan="2"><layout class="QVBoxLayout" name="profCA" /></item>
+         </layout>
+        </widget>
+       </item>
+       <item><spacer name="vSpaceP"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer></item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="previewContainer" />
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollRightP">
+     <property name="widgetResizable"><bool>true</bool></property>
+     <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+     <property name="minimumWidth"><number>376</number></property>
+     <widget class="QWidget" name="scrollRightContent">
+      <layout class="QVBoxLayout" name="rightCol">
+       <property name="sizeConstraint"><enum>QLayout::SetMinAndMaxSize</enum></property>
+       <property name="spacing"><number>4</number></property>
+      <item>
+       <widget class="QGroupBox" name="grpTone">
+        <property name="title"><string>Tonalité — toutes les images</string></property>
+        <property name="maximumWidth"><number>376</number></property>
+        <layout class="QVBoxLayout" name="layTone">
+         <property name="spacing"><number>3</number></property>
+         <property name="leftMargin"><number>6</number></property>
+         <property name="rightMargin"><number>6</number></property>
+         <property name="topMargin"><number>6</number></property>
+         <property name="bottomMargin"><number>6</number></property>
+         <item><widget class="QLabel" name="lblToneHelp"><property name="text"><string>Avant tri / empilement — sans cumul.</string></property></widget></item>
+         <item><widget class="QDoubleSpinBox" name="spnBrightness"><property name="prefix"><string>Luminosité : </string></property><property name="minimum"><double>-1</double></property><property name="maximum"><double>1</double></property><property name="decimals"><number>3</number></property><property name="singleStep"><double>0.05</double></property></widget></item>
+         <item><widget class="QDoubleSpinBox" name="spnContrast"><property name="prefix"><string>Contraste : </string></property><property name="maximum"><double>3</double></property><property name="value"><double>1</double></property><property name="decimals"><number>3</number></property><property name="singleStep"><double>0.05</double></property></widget></item>
+         <item>
+          <widget class="QTabWidget" name="tabsTone">
+           <property name="styleSheet"><string>QTabBar::tab { padding-left: 2px; padding-right: 2px; }</string></property>
+           <widget class="QWidget" name="tabCurve">
+            <attribute name="title"><string>Courbe</string></attribute>
+            <layout class="QVBoxLayout" name="layTabCurve">
+             <property name="spacing"><number>2</number></property>
+             <property name="leftMargin"><number>2</number></property>
+             <property name="topMargin"><number>2</number></property>
+             <property name="rightMargin"><number>2</number></property>
+             <property name="bottomMargin"><number>2</number></property>
+             <item><layout class="QVBoxLayout" name="curveContainer" /></item>
+             <item><layout class="QVBoxLayout" name="profTone" /></item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tabAutoC">
+            <attribute name="title"><string>Contraste automatique</string></attribute>
+            <layout class="QVBoxLayout" name="layTabAutoC">
+             <property name="spacing"><number>3</number></property>
+             <property name="leftMargin"><number>2</number></property>
+             <property name="topMargin"><number>2</number></property>
+             <property name="rightMargin"><number>2</number></property>
+             <property name="bottomMargin"><number>2</number></property>
+             <item><widget class="QDoubleSpinBox" name="spnAutoClip"><property name="prefix"><string>Rognage : </string></property><property name="suffix"><string> %</string></property><property name="minimum"><double>0.01</double></property><property name="maximum"><double>5</double></property><property name="decimals"><number>2</number></property><property name="singleStep"><double>0.05</double></property><property name="value"><double>0.1</double></property></widget></item>
+             <item><widget class="QDoubleSpinBox" name="spnAutoBlack"><property name="prefix"><string>Noir : </string></property><property name="maximum"><double>1</double></property><property name="decimals"><number>3</number></property><property name="singleStep"><double>0.01</double></property><property name="buttonSymbols"><enum>QAbstractSpinBox::NoButtons</enum></property></widget></item>
+             <item><widget class="QDoubleSpinBox" name="spnAutoWhite"><property name="prefix"><string>Blanc : </string></property><property name="maximum"><double>1</double></property><property name="value"><double>1</double></property><property name="decimals"><number>3</number></property><property name="singleStep"><double>0.01</double></property><property name="buttonSymbols"><enum>QAbstractSpinBox::NoButtons</enum></property></widget></item>
+             <item><widget class="QPushButton" name="btnAutoCompute"><property name="text"><string>Actualiser (depuis l'aperçu)</string></property></widget></item>
+             <item><widget class="QLabel" name="lblAutoInfo"><property name="text"><string>Points noir/blanc mesurés une fois sur l'aperçu.</string></property></widget></item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tabAutoL">
+            <attribute name="title"><string>Luminosité automatique</string></attribute>
+            <layout class="QVBoxLayout" name="layTabAutoL">
+             <property name="spacing"><number>3</number></property>
+             <property name="leftMargin"><number>2</number></property>
+             <property name="topMargin"><number>2</number></property>
+             <property name="rightMargin"><number>2</number></property>
+             <property name="bottomMargin"><number>2</number></property>
+             <item><widget class="QDoubleSpinBox" name="spnAutoGamma"><property name="prefix"><string>Gamma : </string></property><property name="minimum"><double>0.1</double></property><property name="maximum"><double>10</double></property><property name="decimals"><number>2</number></property><property name="singleStep"><double>0.05</double></property><property name="value"><double>1</double></property></widget></item>
+             <item><widget class="QPushButton" name="btnAutoGamma"><property name="text"><string>Actualiser (depuis l'aperçu)</string></property></widget></item>
+             <item><widget class="QLabel" name="lblAutoGammaInfo"><property name="text"><string>Gris moyen visé : 0,5 — gamma posé en courbe.</string></property></widget></item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item><widget class="QPushButton" name="btnTonePreview"><property name="text"><string>Aperçu de l'image courante</string></property></widget></item>
+         <item><layout class="QHBoxLayout" name="commandsTone">
+          <item><widget class="QPushButton" name="btnLaunch_grpTone"><property name="text"><string>Appliquer</string></property></widget></item>
+          <item><widget class="QPushButton" name="btnCancel_grpTone"><property name="text"><string>Annuler</string></property></widget></item>
+         </layout></item>
+         <item><widget class="QPushButton" name="btnToneReset"><property name="text"><string>Réinitialiser aux originaux</string></property></widget></item>
+         <item><widget class="QLabel" name="lblToneState"><property name="text"><string>Originaux — réglages non appliqués</string></property></widget></item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+      <widget class="QGroupBox" name="grpRun">
+       <property name="title"><string>Exécution (étapes 5 et 6)</string></property>
+       <layout class="QVBoxLayout" name="layRun">
+         <item><layout class="QHBoxLayout" name="commandsRun"><item><widget class="QPushButton" name="btnLaunch_grpRun"><property name="text"><string>Lancer</string></property></widget></item><item><widget class="QPushButton" name="btnCancel_grpRun"><property name="text"><string>Annuler</string></property></widget></item></layout></item>
+        <item><widget class="QPushButton" name="btnRunAll"><property name="text"><string>▶ Aligner les N images, empiler, visualiser</string></property></widget></item>
+        <item><widget class="QPushButton" name="btnExport"><property name="text"><string>Exporter l'image…</string></property></widget></item>
+        <item><widget class="QProgressBar" name="progress"><property name="value"><number>0</number></property></widget></item>
+        <item><widget class="QPlainTextEdit" name="log"><property name="minimumSize"><size><width>260</width><height>55</height></size></property><property name="readOnly"><bool>true</bool></property></widget></item>
+       </layout>
+      </widget>
+     </item>
+      <item><spacer name="vSpaceRightP"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer></item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   </layout>
+  </item>
+ </layout>
+ </widget>
+ <resources />
+ <connections />
+</ui>

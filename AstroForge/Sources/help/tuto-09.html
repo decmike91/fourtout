@@ -1,0 +1,15 @@
+ch9">
+    <h2><font color="#1c3a6e">9. Astrométrie : plate solving et photométrie</font></h2>
+
+    <h3><font color="#2b4a7e">9.1 Deux solveurs 100 % locaux</font></h3>
+    <ul>
+      <li><strong>astrometry.net</strong> (bouton <b>[Plate solving]</b> du groupe 9, si l'option est cochée en Configuration) : installez le paquet + les fichiers d'index une fois ; c'est le plus robuste, notamment pour les grands champs.</li>
+      <li><strong>Solveur interne</strong> : détection d'étoiles (photutils), appariement de motifs contre votre catalogue CSV (<code>ra,dec,mag</code> en degrés — Gaia par la méthode du chapitre 3), puis ajustement WCS TAN (astropy). Il suppose un centre approximatif connu (RA/Dec + Rayon du groupe 9) et un champ sans distorsion optique forte.</li>
+    </ul>
+    <p>Le formulaire attend les coordonnées sous deux formes — « 10:25:03 ou 156.26 » — et le Rayon (deg) délimite la zone de recherche. Une fois résolu, le WCS est inscrit dans l'en-tête FITS à l'export : vos fichiers deviennent géoréférencés pour tous les autres outils.</p>
+
+    <h3><font color="#2b4a7e">9.2 Photométrie d'ouverture</font></h3>
+    <p><b>[Photométrie → CSV]</b> mesure chaque étoile du catalogue dans l'image (ouverture photutils), calibre le zéro de magnitude sur les étoiles de référence et exporte un CSV (x, y, flux, mag). Utilisations : contrôle d'échantillonnage, suivi de transparence, préparation de courbes de lumière.</p>
+    <h3><font color="#2b4a7e">9.3 Photométrie différentielle</font></h3>
+    <p><b>[Photom. différentielle → CSV]</b> mesure votre cible <em>par rapport à un ensemble d'étoiles de comparaison</em> du catalogue : le zéro instrumental et l'extinction atmosphérique s'annulent, et le résultat s'exprime directement <strong>Δmag ± erreur</strong>. C'est la méthode de référence pour les exoplanètes en transit et les étoiles variables — tout se calcule localement, sans service en ligne.</p>
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#eef4fb"><b>Réglages d'ouverture.</b> Si les magnitudes dérivées s'écartent du catalogue, agrandissez légèrement le rayon d'ouverture ou vérifiez l'échantillonnage résolu par le plate solving : une échelle erronée décale toutes les ouvertures.</td></tr></table>

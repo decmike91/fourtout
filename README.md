@@ -40,3 +40,9 @@ SOURCES
                               node seticon.mjs "dist/win-unpacked/Trait Fin.exe" ;
                               makensis installer.nsi
   Sources/icones/             Icône de l'application (PNG, ICO)
+
+AUTRES LOGICIELS DU DÉPÔT
+  AstroForge/                  AstroForge 2.0.0 - traitement d'images
+                               astronomiques (voir AstroForge/README.md ;
+                               installateur Windows dans la publication
+                               astroforge-v2.0.0)

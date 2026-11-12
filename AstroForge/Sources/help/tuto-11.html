@@ -1,0 +1,24 @@
+ch11">
+    <h2><font color="#1c3a6e">11. Profils, astuces et dépannage</font></h2>
+
+    <h3><font color="#2b4a7e">11.1 Les familles de profils</font></h3>
+    <p>Chaque groupe de réglages possède sa barre <b>[[profil ▾] [💾 Enregistrer] [↺ Standard]]</b>. Les répertoires créés sous <code>profiles/</code> :</p>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Famille</b></td><td bgcolor="#dfe6f2"><b>Contenu</b></td></tr><tr><td><code>equipment</code></td><td>Profils d'équipement (caméra + télescope + Bortle)</td></tr><tr><td><code>sky_align</code>, <code>sky_stack</code>, <code>sky_trait</code>, <code>sky_defects</code>, <code>sky_ia</code></td><td>Alignement, empilement, traitements, défauts, IA du mode ciel profond</td></tr><tr><td><code>planet_rank</code>, <code>planet_stack</code>, <code>planet_wavelets</code>, <code>planet_ca</code>, <code>planet_anim</code></td><td>Classement, empilement, ondelettes, aberration chromatique, film stabilisé</td></tr><tr><td><code>common_tone</code>, <code>common_superres</code></td><td>Finition commune : tonalité et recalcul</td></tr></table>
+    <p>Le profil <em>Standard</em> reste toujours disponible pour revenir aux valeurs par défaut en un clic.</p>
+
+    <h3><font color="#2b4a7e">11.2 Les bons réflexes d'une nuit</font></h3>
+    <ul>
+      <li><strong>Avant la nuit</strong> : profil d'équipement à jour (température du capteur !), catalogue Gaia généré si vous changez de champ.</li>
+      <li><strong>Pendant</strong> : darks à la température des lights ; flats le soir ou au panneau ; clips planétaires courts (60–120 s).</li>
+      <li><strong>Après</strong> : traitez d'abord une petite sous-série pour valider la chaîne, enregistrez la séquence, puis lancez le lot complet — éventuellement la nuit suivante en batch.</li>
+    </ul>
+
+    <h3><font color="#2b4a7e">11.3 Dépannage rapide</font></h3>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Symptôme</b></td><td bgcolor="#dfe6f2"><b>Cause probable</b></td><td bgcolor="#dfe6f2"><b>Remède</b></td></tr><tr><td>Le fond reste vert (OSC)</td><td>Dominante verte du capteur</td><td><b>[SCNR vert]</b> après la calibration couleur</td></tr><tr><td>Colonnes brillantes récurrentes</td><td>Défauts de lecture CMOS</td><td>Groupe défauts + <b>[Colonnes/lignes]</b>, détection auto sur masters</td></tr><tr><td>Étoiles floues aux coins après alignement</td><td>Distorsion optique</td><td>Méthode <b>[Plate solving + distorsions (poly)]</b>, ≥ 20 étoiles</td></tr><tr><td>Le plate solving échoue</td><td>Centre/rayon trop loin, catalogue trop faible</td><td>Vérifiez RA/Dec/Rayon, magnitude limite 14–15, ou installez astrometry.net</td></tr><tr><td>Stack plus sombre qu'attendu</td><td>Flat mal normalisé, dark-flat manquant</td><td>Reprenez les flats avec dark-flats assortis</td></tr><tr><td>Traces de satellites dans le stack</td><td>Rejet trop doux</td><td>σ = 2,5, ou <b>[MAD clipping]</b>, ou tâche IA <b>[satellite]</b></td></tr><tr><td>Planétaire « dansant » dans le film</td><td>Recadrage commun désactivé</td><td>Cochez <b>[Recadrage commun automatique]</b></td></tr><tr><td>IA : fournisseur vide</td><td>Aucun outil configuré</td><td><b>[Configurer les outils IA (chemins)…]</b> ou déposez un <code>.onnx</code> dans <code>models/ai/</code></td></tr><tr><td>RAW APN refusé</td><td>rawpy absent</td><td><code>pip install rawpy</code></td></tr></table>
+
+    <h3><font color="#2b4a7e">11.4 Limites connues (à connaître avant de chercher un bug)</font></h3>
+    <ul>
+      <li>Le drizzle utilise un noyau carré (translation + petite rotation) — version simplifiée du drizzle de DrizzlePac.</li>
+      <li>Le solveur interne suppose un champ sans distorsion forte et un centre approximatif : pour de très grands champs, préférez astrometry.net.</li>
+      <li>XISF : lecture des images non compressées et zlib (pas LZ4/Huffman) ; écriture Float32 non compressée.</li>
+    </ul>

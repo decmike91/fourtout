@@ -1,0 +1,16 @@
+ch8">
+    <h2><font color="#1c3a6e">8. Finition (commune) et export des fichiers</font></h2>
+
+    <h3><font color="#2b4a7e">8.1 L'onglet Finition : la « salle de retouche » type GIMP</font></h3>
+    <p>L'onglet <strong>Finition (commune)</strong> travaille sur <em>une</em> image chargée — le stack des autres onglets ou n'importe quel fichier — et regroupe trois familles d'outils, dans l'ordre où vous les rencontrez :</p>
+    <p>① <b>Tonalité (style GIMP).</b>  Luminosité, Contraste, Saturation, Gamma (courbes) et Balance des blancs R/G/B. C'est ici que l'image linéaire du stack devient visible : le Gamma est votre outil d'étirement manuel (1,5–2,5 typiquement).</p>
+    <p>② <b>Géométrie.</b>  Recadrer X,Y,L,H ; rotations Aucune/90°/180°/270° ; Miroir horizontal/vertical ; <b>[Appliquer]</b>. Recadrez tardivement : une opération géométrique n'est pas réversible.</p>
+    <p>③ <b>Netteté / filtres.</b>  Masque flou (force + rayon) : la touche finale sur les détails, à petits réglages (0,3–0,6 / 1–2 px) après tout le reste.</p>
+    <p>④ <b>Recalcul pour augmenter la résolution.</b>  <b>[Lanczos ×2]</b>, <b>[Lanczos ×3]</b> ou <b>[IA (ONNX superres)]</b> — à placer juste avant l'export final, jamais avant la netteté.</p>
+    <p>L'histogramme (panneau <em>Histogramme</em>) accompagne chaque réglage : c'est lui qui montre quand le fond « décolle » du bord gauche sans y être collé.</p>
+
+    <h3><font color="#2b4a7e">8.2 Exporter sans perdre la qualité</font></h3>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Format d'export</b></td><td bgcolor="#dfe6f2"><b>Profondeur</b></td><td bgcolor="#dfe6f2"><b>Usage</b></td></tr><tr><td><strong>FITS (32 bits flottant)</strong></td><td>Float32</td><td>Archive maîtresse, échanges avec d'autres logiciels ; le WCS résolu est inscrit dans l'en-tête</td></tr><tr><td><strong>TIFF 16 bits</strong></td><td>16 bits</td><td>Retouche externe, impression</td></tr><tr><td><strong>PNG 8 / 16 bits</strong></td><td>8–16 bits</td><td>Web, sans perte</td></tr><tr><td><strong>JPEG 95 %</strong></td><td>8 bits compressé</td><td>Partage rapide (réseaux)</td></tr></table>
+    <p>Ordre conseillé : terminer la chaîne en 16 bits, exporter le maître FITS, <em>puis</em> décliner les variantes de partage. Un JPEG créé trop tôt dans la chaîne devient un plafond de qualité dont on ne revient pas.</p>
+    <h3><font color="#2b4a7e">8.3 Séquences batch (esprit Registax) dans la finition</font></h3>
+    <p>Le groupe <em>« Séquences batch (enregistrer &amp; rejouer) »</em> capture votre chaîne de finition : <b>[＋ Ajouter l'étape courante]</b> mémorise les réglages de chaque groupe dans la liste, <b>[▶ Appliquer au lot (dossier)…]</b> rejoue la séquence sur toutes les images d'un dossier (FITS/TIFF/PNG/XISF), <b>[Charger…]</b> / <b>[Supprimer]</b> gèrent les séquences enregistrées. Détails et exemples JSON au chapitre 10.</p>

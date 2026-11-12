@@ -1,0 +1,52 @@
+<h3><font color="#2b4a7e">4. Mode ciel profond — workflow complet</font></h3>
+<h4><font color="#2b4a7e">4.1 Chargement et calibration (groupes 1-2)</font></h4>
+<p>Ajoutez les brutes (FITS, TIFF, PNG, RAW) et choisissez la matrice de Bayer (RGGB, BGGR,
+GRBG, GBRG) pour les capteurs couleur. Désignez les dossiers de bias, dark, flat et
+dark-flat : les <strong>masters</strong> sont créés (médiane avec rejet sigma) et la
+calibration applique (L − bias − k·dark) / flat avec mise à l'échelle du dark.</p>
+<h4><font color="#2b4a7e">4.2 Pixels défectueux (groupe 10) v1.3</font></h4>
+<p>Trois cases : correction globale, détection automatique (sur le master dark/flat, σ-MAD)
+et correction des <strong>colonnes/lignes mortes</strong> (restaurées par les voisines). Une
+<strong>carte de pixels défectueux</strong> externe (FITS/PNG où &gt; 0,5 = défaut, ou fichier
+texte « x,y ») peut être fournie.</p>
+<h4><font color="#2b4a7e">4.3 Alignement &amp; Drizzle (groupe 3)</font></h4>
+<p>Trois méthodes d'alignement :</p>
+<ul>
+  <li><strong>Phase (translation + rotation)</strong> : corrélation de phase passe-haut — rapide et robuste ;</li>
+  <li><strong>Étoiles (similitude)</strong> : appariement d'étoiles — rotation + échelle + translation, sans distorsion polynomiale ;</li>
+  <li><strong>Plate solving + distorsions (poly)</strong> v1.5 : appariement
+  d'étoiles puis ajustement <strong>polynôme de degré ≤ 3</strong> des coordonnées — corrige les
+  distorsions optiques/atmosphériques <em>propres à chaque pose</em> (ré-association mutuelle
+  itérative, seuils 8→5→3 px, degré choisi au meilleur résidu).</li>
+</ul>
+<p>Le drizzle (×2 ou ×3, pixfrac réglable) reconstruit l'image à plus haute résolution en
+profitant du dithering entre les poses.</p>
+<h4><font color="#2b4a7e">4.4 Empilement (groupe 4)</font></h4>
+<p>Sept algorithmes : moyenne, médiane, sigma-clipping, winsorisé, rejet min/max,
+<strong>linear fit</strong> (mise à l'échelle de chaque frame sur l'image médiane, rejet au-delà
+de k·σ) et <strong>MAD clipping</strong> (médiane absolue). Les deux derniers éliminent
+satellites et traces cosmiques — testés : résidu 0,000 là où la moyenne simple laisse 0,056.</p>
+<h4><font color="#2b4a7e">4.5 Traitement (groupes 5-6) et couleurs</font></h4>
+<p>Extraction de gradient (polynôme 2D degré 1-5 ou RBF ; soustraction ou division),
+débruitage (non-local means, bilatéral, médiane, ondelettes — ou IA locale), déconvolution
+Richardson-Lucy, netteté. Groupe 8 : <strong>calibration couleur sur le fond du ciel</strong>,
+<strong>neutralisation du fond</strong> et <strong>SCNR vert</strong>.</p>
+<h4><font color="#2b4a7e">4.6 Calibration photométrique des couleurs — PCC v1.5</font></h4>
+<p>Résolvez d'abord le champ (groupe 9), puis cliquez « Calibration photométrique des couleurs
+(étoiles Gaia) » : les étoiles détectées sont appariées au catalogue ; les flux mesurés par
+canal sont comparés aux couleurs BP/RP de Gaia et les canaux R et B sont corrigés pour que
+les couleurs stellaires mesurées retrouvent celles du catalogue. Le journal affiche kR, kB et
+le nombre d'étoiles utilisées.</p>
+<h4><font color="#2b4a7e">4.7 Astrométrie et photométrie (groupe 9)</font></h4>
+<p><strong>Plate solving</strong> : solve-field (si installé et coché) ou solveur interne
+(appariement de motifs contre le catalogue local, WCS TAN). Le résultat (échelle, centre,
+nombre d'étoiles, RMS) s'affiche et le WCS est inscrit dans le FITS à l'export.
+<strong>Photométrie d'ouverture</strong> : CSV (x, y, flux, mag, zero point calibré).
+<strong>Photométrie différentielle</strong> v1.5 : la magnitude de la
+cible (étoile la plus proche des coordonnées RA/Dec saisies, sinon la plus brillante) est
+mesurée par rapport à la moyenne d'un ensemble d'étoiles de comparaison du catalogue — le
+zero point et l'extinction s'annulent. Export CSV : dmag ± erreur.</p>
+<h4><font color="#2b4a7e">4.8 HDR, IA et processus automatique (groupes 7-8 de la liste d'étapes)</font></h4>
+<p>La fusion HDR (Mertens) combine plusieurs empilements d'expositions différentes. La liste
+« Processus de traitement automatique » organise les étapes (haut/bas, activer/désactiver) et
+s'enregistre/recharge en JSON.</p>

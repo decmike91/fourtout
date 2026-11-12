@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=AstroForge
+GenericName=Astronomical image processing
+GenericName[fr]=Traitement d'images astronomiques
+Comment=Deep-sky, planetary and solar image processing
+Comment[fr]=Ciel profond, planétaire, solaire et finition
+Exec=AstroForge %F
+Icon=astroforge
+Terminal=false
+Categories=Graphics;Science;Astronomy;
+MimeType=image/fits;application/fits;

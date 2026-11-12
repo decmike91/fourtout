@@ -1,0 +1,19 @@
+ch7">
+    <h2><font color="#1c3a6e">7. Tuto d'exemple ② — une nuit sur Jupiter</font></h2>
+    <p><strong>Scénario.</strong> Jupiter à 40° de haut, seeing moyen. Newton 200/1000 + Barlow ×2 (focale effective 2000 mm), caméra ASI662MC. Vous avez filmé un clip SER de 90 s à ~110 fps (≈ 9 900 frames). Objectif : un stack net + un film de 6 s montrant le globe.</p>
+
+    <h3><font color="#2b4a7e">7.1 Traitement pas à pas</font></h3>
+    <p>1. <b>Source.</b>  Onglet Planétaire, <b>[Vidéo (SER/AVI/MP4)]</b> → <b>[Charger la source…]</b> → le SER. L'aperçu montre la première frame.</p>
+    <p>2. <b>Classement.</b>  <b>[Netteté (Registax)]</b>, garder <strong>25 %</strong> (seeing moyen). La courbe de classement affichée vous indique où tombe la qualité.</p>
+    <p>3. <b>Dérotation.</b>  Clip de 90 s : laissez la dérotation désactivée (rotation imperceptible).</p>
+    <p>4. <b>Alignement.</b>  Algorithme <b>[Limbe (précis)]</b>. <b>[Alignement des couleurs (R/B sur G)]</b> coché.</p>
+    <p>5. <b>Empilement.</b>  <b>[AutoStack (AS!-style)]</b>, <b>[%]</b> 75 des frames classées. Résultat attendu : un globe lisse, les bandes équatoriales nettes.</p>
+    <p>6. <b>Ondelettes.</b>  Gains <strong>1,4 / 1,2 / 0,9 / 1,0 / 1,0 / 1,0</strong> (couches 1→6), Débruitage 0,3. La Grande Tache Rouge se détache sans halos ; si le bord du limbe « accroche », réduisez la couche 1.</p>
+    <p>7. <b>Chromatisme.</b>  Franges violettes sur le limbe ? <b>[Aberration chromatique]</b> : Rouge +2, Bleu −2 (valeurs d'exemple à affiner à l'aperçu).</p>
+    <p>8. <b>IA (optionnel).</b>  <b>[sharpen]</b> puis <b>[superres]</b> (fournisseur ONNX ou outil externe) pour un agrandissement propre.</p>
+    <p>9. <b>Film.</b>  Recadrage commun coché, Taille 300 px (0 = auto), FPS 24, MP4, Qualité haute → <b>[🎬 Créer le film…]</b> : la turbulence devient lisible image par image, le globe reste fixe.</p>
+    <p>10. <b>Exécuter.</b>  <b>[▶ Tout traiter (classement→empilement→ondelettes…)]</b> puis <b>[Exporter l'image…]</b> (PNG 16 bits pour garder la dynamique).</p>
+
+    <h3><font color="#2b4a7e">7.2 Aller plus loin : plusieurs clips, plusieurs heures</font></h3>
+    <p>Filmez un clip de 60–90 s toutes les 15 minutes pendant 2 h : chaque clip donne un stack (étapes ci-dessus), et le <em>film stabilisé</em> d'un lot de stacks révèle la rotation du globe. Quand vos réglages sont stables, enregistrez-les (<b>[💾 Enregistrer la séquence]</b>) et laissez le <b>[▶ Batch SER]</b> empiler la soirée entière d'un seul clic — le JSON <code>scripts/batch_planetaire_ser.json</code> fourni avec l'application montre la structure attendue (classement « Netteté (Registax) » 75 %, alignement « Limbe (précis) », AutoStack 90 %, ondelettes 1,3/1,2/1,0…).</p>
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#fdf5e8"><b>Piège classique.</b> Fusionner dans un même empilement des clips étalés sur plus de 3–5 minutes à grande focale : la rotation jovienne brouille les détails les plus fins. Empilez clip par clip, la dérotation ne compensant que le champ, pas la rotation du globe elle-même.</td></tr></table>

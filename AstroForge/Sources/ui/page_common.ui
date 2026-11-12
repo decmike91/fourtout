@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ui version="4.0">
+ <class>PageCommon</class>
+ <widget class="QWidget" name="PageCommon">
+  <layout class="QHBoxLayout" name="mainH" stretch="0,1,0">
+   <item>
+    <widget class="QScrollArea" name="scrollParams">
+     <property name="minimumWidth"><number>380</number></property>
+     <property name="widgetResizable"><bool>true</bool></property>
+     <widget class="QWidget" name="scrollContent">
+      <property name="geometry"><rect><x>0</x><y>0</y><width>380</width><height>700</height></rect></property>
+      <layout class="QVBoxLayout" name="paramsLayout">
+       <item>
+        <widget class="QGroupBox" name="grpTone">
+         <property name="title"><string>Tonalité (style GIMP)</string></property>
+         <layout class="QGridLayout" name="gridTone">
+          <item row="0" column="0"><widget class="QLabel" name="lblBright"><property name="text"><string>Luminosité</string></property></widget></item>
+          <item row="0" column="1"><widget class="QSlider" name="sldBright"><property name="minimum"><number>-100</number></property><property name="maximum"><number>100</number></property><property name="value"><number>0</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="1" column="0"><widget class="QLabel" name="lblContrast"><property name="text"><string>Contraste</string></property></widget></item>
+          <item row="1" column="1"><widget class="QSlider" name="sldContrast"><property name="minimum"><number>-100</number></property><property name="maximum"><number>100</number></property><property name="value"><number>0</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="2" column="0"><widget class="QLabel" name="lblSat"><property name="text"><string>Saturation</string></property></widget></item>
+          <item row="2" column="1"><widget class="QSlider" name="sldSat"><property name="minimum"><number>0</number></property><property name="maximum"><number>300</number></property><property name="value"><number>100</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="3" column="0"><widget class="QLabel" name="lblGamma"><property name="text"><string>Gamma (courbes)</string></property></widget></item>
+          <item row="3" column="1"><widget class="QDoubleSpinBox" name="spnGamma"><property name="minimum"><double>0.100000000000000</double></property><property name="maximum"><double>5.000000000000000</double></property><property name="singleStep"><double>0.050000000000000</double></property><property name="value"><double>1.000000000000000</double></property></widget></item>
+          <item row="4" column="0"><widget class="QLabel" name="lblWB"><property name="text"><string>Balance des blancs R/G/B</string></property></widget></item>
+          <item row="4" column="1">
+           <layout class="QHBoxLayout" name="layWB">
+            <item><widget class="QDoubleSpinBox" name="spnWR"><property name="maximum"><double>3.000000000000000</double></property><property name="singleStep"><double>0.050000000000000</double></property><property name="value"><double>1.000000000000000</double></property></widget></item>
+            <item><widget class="QDoubleSpinBox" name="spnWG"><property name="maximum"><double>3.000000000000000</double></property><property name="singleStep"><double>0.050000000000000</double></property><property name="value"><double>1.000000000000000</double></property></widget></item>
+            <item><widget class="QDoubleSpinBox" name="spnWB"><property name="maximum"><double>3.000000000000000</double></property><property name="singleStep"><double>0.050000000000000</double></property><property name="value"><double>1.000000000000000</double></property></widget></item>
+           </layout>
+          </item>
+          <item row="5" column="0" colspan="2"><layout class="QVBoxLayout" name="profTone" /></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpGeo">
+         <property name="title"><string>Géométrie</string></property>
+         <layout class="QGridLayout" name="gridGeo">
+          <item row="0" column="0"><widget class="QLabel" name="lblCrop"><property name="text"><string>Recadrer X,Y,L,H :</string></property></widget></item>
+          <item row="0" column="1">
+           <layout class="QHBoxLayout" name="layCrop">
+            <item><widget class="QSpinBox" name="spnCX"><property name="maximum"><number>99999</number></property></widget></item>
+            <item><widget class="QSpinBox" name="spnCY"><property name="maximum"><number>99999</number></property></widget></item>
+            <item><widget class="QSpinBox" name="spnCW"><property name="maximum"><number>99999</number></property></widget></item>
+            <item><widget class="QSpinBox" name="spnCH"><property name="maximum"><number>99999</number></property></widget></item>
+           </layout>
+          </item>
+          <item row="1" column="0"><widget class="QComboBox" name="cmbRotate"><item><property name="text"><string>Aucune rotation</string></property></item><item><property name="text"><string>90°</string></property></item><item><property name="text"><string>180°</string></property></item><item><property name="text"><string>270°</string></property></item><item><property name="text"><string>Miroir horizontal</string></property></item><item><property name="text"><string>Miroir vertical</string></property></item></widget></item>
+          <item row="1" column="1"><widget class="QPushButton" name="btnApplyGeo"><property name="text"><string>Appliquer</string></property></widget></item>
+          <item row="2" column="0" colspan="2"><layout class="QVBoxLayout" name="profGeo" /></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpSharp">
+         <property name="title"><string>Netteté / filtres</string></property>
+         <layout class="QGridLayout" name="gridSharp">
+          <item row="0" column="0"><widget class="QLabel" name="lblUSM"><property name="text"><string>Masque flou — force :</string></property></widget></item>
+          <item row="0" column="1"><widget class="QSlider" name="sldUSMAmount"><property name="maximum"><number>200</number></property><property name="value"><number>60</number></property><property name="orientation"><enum>Qt::Horizontal</enum></property></widget></item>
+          <item row="1" column="0"><widget class="QLabel" name="lblUSMR"><property name="text"><string>Rayon :</string></property></widget></item>
+          <item row="1" column="1"><widget class="QDoubleSpinBox" name="spnUSMRadius"><property name="maximum"><double>20.000000000000000</double></property><property name="singleStep"><double>0.100000000000000</double></property><property name="value"><double>2.000000000000000</double></property></widget></item>
+          <item row="2" column="0" colspan="2"><layout class="QVBoxLayout" name="profSharp" /></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpRetouch">
+         <property name="title"><string>Retouches astro — courbes, filtres &amp; IA locale</string></property>
+         <layout class="QVBoxLayout" name="layRetouch"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpColorDetail">
+         <property name="title"><string>Retouches couleur &amp; détail</string></property>
+         <layout class="QVBoxLayout" name="layColor"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpIAF">
+         <property name="title"><string>IA locale sur l'image (mêmes outils que le planétaire)</string></property>
+         <layout class="QVBoxLayout" name="layIAF"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpSuperRes">
+         <property name="title"><string>Recalcul pour augmenter la résolution</string></property>
+         <layout class="QGridLayout" name="gridSR">
+          <item row="0" column="0"><widget class="QComboBox" name="cmbSuperRes"><item><property name="text"><string>Lanczos ×2</string></property></item><item><property name="text"><string>Lanczos ×3</string></property></item><item><property name="text"><string>IA (ONNX superres)</string></property></item></widget></item>
+          <item row="0" column="1"><widget class="QPushButton" name="btnApplySuperRes"><property name="text"><string>Appliquer</string></property></widget></item>
+          <item row="1" column="0" colspan="2"><layout class="QVBoxLayout" name="profSuperRes" /></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="grpExport">
+         <property name="title"><string>Export</string></property>
+         <layout class="QGridLayout" name="gridExport">
+          <item row="0" column="0"><widget class="QComboBox" name="cmbFmt"><item><property name="text"><string>FITS (32 bits flottant)</string></property></item><item><property name="text"><string>TIFF 16 bits</string></property></item><item><property name="text"><string>PNG 8 bits</string></property></item><item><property name="text"><string>PNG 16 bits</string></property></item><item><property name="text"><string>JPEG 95 %</string></property></item></widget></item>
+          <item row="0" column="1"><widget class="QPushButton" name="btnSave"><property name="text"><string>Enregistrer…</string></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+              <item>
+        <widget class="QGroupBox" name="grpSeq">
+         <property name="title"><string>Séquences batch (enregistrer &amp; rejouer)</string></property>
+         <layout class="QVBoxLayout" name="laySeq">
+          <item><widget class="QListWidget" name="lstSeqOps"><property name="minimumHeight"><number>70</number></property></widget></item>
+          <item>
+           <layout class="QHBoxLayout" name="laySeq1">
+            <item><widget class="QPushButton" name="btnSeqAdd"><property name="text"><string>＋ Ajouter l'étape courante</string></property></widget></item>
+            <item><widget class="QPushButton" name="btnSeqDel"><property name="text"><string>Supprimer</string></property></widget></item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="laySeq2">
+            <item><widget class="QPushButton" name="btnSeqSave"><property name="text"><string>Enregistrer…</string></property></widget></item>
+            <item><widget class="QPushButton" name="btnSeqLoad"><property name="text"><string>Charger…</string></property></widget></item>
+           </layout>
+          </item>
+          <item><widget class="QPushButton" name="btnSeqBatch"><property name="text"><string>▶ Appliquer au lot (dossier)…</string></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+<item><spacer name="vSpaceC"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer></item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="previewContainer" />
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="rightCol">
+     <item>
+      <widget class="QGroupBox" name="grpHist">
+       <property name="title"><string>Histogramme</string></property>
+       <layout class="QVBoxLayout" name="layHist">
+        <item><widget class="QLabel" name="histLabel"><property name="minimumSize"><size><width>240</width><height>120</height></size></property><property name="text"><string>—</string></property></widget></item>
+       </layout>
+      </widget>
+     </item>
+     <item><widget class="QLabel" name="lblInfo"><property name="text"><string>Partie commune : finition sur l'image chargée (depuis un mode ou directement).</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+     <item><spacer name="vSpaceRightC"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer></item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources />
+ <connections />
+</ui>

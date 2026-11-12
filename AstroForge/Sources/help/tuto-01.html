@@ -1,0 +1,30 @@
+ch1">
+    <h2><font color="#1c3a6e">1. Installer et lancer AstroForge</font></h2>
+
+    <h3><font color="#2b4a7e">1.1 Ce que fait AstroForge</font></h3>
+    <p>AstroForge est un logiciel de traitement d'images astronomiques écrit en Python, qui fonctionne entièrement en local (aucun envoi de vos images sur Internet). Il s'organise en <strong>quatre onglets</strong>, visibles en haut de la fenêtre :</p>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Onglet</b></td><td bgcolor="#dfe6f2"><b>Rôle</b></td><td bgcolor="#dfe6f2"><b>Matière première</b></td></tr><tr><td><strong>Ciel profond</strong></td><td>Calibration, alignement, empilement, gradient, débruitage, IA, astrométrie</td><td>Fichiers FITS/TIFF/PNG/RAW : des dizaines de poses unitaires</td></tr><tr><td><strong>Planétaire</strong></td><td>Classement qualité, dérotation, alignement, empilement, ondelettes, film stabilisé</td><td>Vidéos SER/AVI/MP4 ou images APN</td></tr><tr><td><strong>Finition (commune)</strong></td><td>Tonalité type GIMP, géométrie, netteté, recalcul, export</td><td>Une image déjà empilée, de n'importe quel mode</td></tr><tr><td><strong>Configuration</strong></td><td>Profil d'équipement (caméra, télescope), catalogue Gaia, focale automatique</td><td>Les caractéristiques de votre matériel</td></tr></table>
+    <p>L'onglet <em>Configuration</em> nourrit les trois autres : le profil y détermine le catalogue d'étoiles, la taille de pixel et le mode par défaut. On le remplit <strong>une seule fois</strong>, au début du chapitre 3.</p>
+
+    <h3><font color="#2b4a7e">1.2 Installation pas à pas</font></h3>
+    <p><b>① Installer Python</b>  — il faut Python 3.10 ou plus récent. Sous Windows, cochez « Add Python to PATH » pendant l'installation.</p>
+    <p><b>② Créer un environnement et installer les dépendances</b>  — dans un terminal, depuis le dossier d'AstroForge :</p>
+<pre><code>python -m venv .venv
+# Windows :  .venv\Scripts\activate        Linux / macOS :  source .venv/bin/activate
+pip install -r requirements.txt</code></pre>
+    <p><b>③ Options recommandées</b>  — <code>pip install rawpy</code> si vous voulez charger les RAW d'appareil photo (CR2/CR3/NEF/ARW/DNG…), et <code>pip install onnxruntime</code> pour les modèles d'IA locaux.</p>
+    <p><b>④ Vérifier l'installation</b>  — <code>python main.py --selftest</code> contrôle tout le noyau sans ouvrir l'interface ; <code>python tests/smoke.py</code> exécute la batterie complète de tests.</p>
+    <p><b>⑤ Lancer</b>  — <code>python main.py</code>. En pratique quotidienne, préférez les lanceurs <b>[launch.sh]</b> (Linux/macOS) ou <b>[launch.bat]</b> (Windows, double-clic possible) : ils créent l'environnement, installent les dépendances manquantes et démarront le logiciel. Pour distribuer un exécutable autonome : <b>[build_exe.sh]</b> / <b>[build_exe.bat]</b> produisent <code>dist/AstroForge</code>.</p>
+
+    <h3><font color="#2b4a7e">1.3 Visite guidée de l'interface</font></h3>
+    <p>Trois éléments reviennent dans tous les modes ; il faut les connaître avant de commencer :</p>
+    <ul>
+      <li><strong>L'aperçu live.</strong> Chaque groupe de réglages recalcule un aperçu environ 450&nbsp;ms après votre dernier geste, sur une copie réduite de l'image. Vous voyez l'effet immédiatement, avec la bascule <em>Avant / Après / Côte à côte</em> et un <strong>étirement automatique commutable</strong> — indispensable pour juger une image FITS, dont les données brutes restent volontairement sombres (voir encadré).</li>
+      <li><strong>Les barres de profils.</strong> Chaque groupe (alignement, empilement, traitement, IA, ondelettes, animation…) porte une barre <b>[[profil ▾] [💾 Enregistrer] [↺ Standard]]</b> : le profil <em>Standard</em> contient les valeurs par défaut, et vous pouvez créer vos propres réglages nommés (un JSON par profil, dans <code>profiles/</code>).</li>
+      <li><strong>Les traitements en thread.</strong> Les opérations lourdes tournent en arrière-plan : l'interface reste réactive et vous pouvez préparer l'étape suivante pendant qu'une pile se calcule.</li>
+    </ul>
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#eef4fb"><b>Astuce.</b> Les menus <em>Fichier</em> (Quitter, Ctrl+Q) et <em>Aide</em> (À propos) complètent l'interface. Tout est reproductible : chaque chaîne de traitement peut être enregistrée et rejouée en batch — c'est l'objet du chapitre 10.</td></tr></table>
+
+    <h3><font color="#2b4a7e">1.4 Formats pris en charge</font></h3>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b></b></td><td bgcolor="#dfe6f2"><b>Formats</b></td></tr><tr><td><strong>Entrée ciel profond</strong></td><td>FITS (mono ou RGB, 8–32 bits), TIFF/PNG/JPEG 8–16 bits, RAW APN (via rawpy), XISF lu nativement</td></tr><tr><td><strong>Matrices de Bayer</strong></td><td>RGGB, BGGR, GRBG, GBRG — choix manuel, ou automatique pour les RAW</td></tr><tr><td><strong>Entrée planétaire</strong></td><td>SER (mono/bayer/couleur, 8–16 bits), AVI, MP4, séquences d'images FITS/TIFF/PNG</td></tr><tr><td><strong>Sortie</strong></td><td>FITS float32, TIFF 16 bits, PNG 8/16 bits, JPEG 95 %, MP4/AVI/GIF (films)</td></tr></table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#eef4fb"><b>Trois réflexes à prendre dès maintenant.</b> ① L'aperçu est calculé sur une image réduite : le bouton <b>[▶ Traiter (pleine résolution) et exporter…]</b> reste l'arbitre final. ② Les fichiers sont traités en flottant 32 bits sur [0..1] : n'ayez pas peur des valeurs d'aperçu « ternes », c'est normal avant étirement. ③ Enregistrez un profil de paramètres dès qu'une combinaison vous satisfait — vous la retrouverez en un clic la prochaine nuit.</td></tr></table>

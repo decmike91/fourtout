@@ -1,0 +1,37 @@
+ch6">
+    <h2><font color="#1c3a6e">6. Planétaire — les opérations dans l'ordre</font></h2>
+    <p>L'onglet <strong>Planétaire</strong> suit la figure 2. Sa logique diffère du ciel profond : la matière première est une vidéo dont seules quelques dizaines de frames valent la peine, et la cible tourne.</p>
+
+    <h3><font color="#2b4a7e">6.1 Étape ① — Charger la source</font></h3>
+    <p>Groupe <em>« 1. Source : vidéo SER/AVI/MP4 ou images »</em> : basculez <b>[Vidéo (SER/AVI/MP4)]</b> / <b>[Images (APN/FITS/TIFF)]</b> puis <b>[Charger la source…]</b>. Le SER est le format à privilégier à l'acquisition (métadonnées complètes, pas de compression) ; les MP4/AVI de caméras ou de smartphones sont aussi acceptés, de même que les éclipses/lune en fichiers images.</p>
+
+    <h3><font color="#2b4a7e">6.2 Étape ② — Le classement qualité, cœur du mode</font></h3>
+    <p>Groupe <em>« Classement : »</em>. Chaque frame reçoit un score, et seules les meilleures entrent dans l'empilement :</p>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Critère</b></td><td bgcolor="#dfe6f2"><b>Ce qu'il mesure</b></td><td bgcolor="#dfe6f2"><b>À choisir quand…</b></td></tr><tr><td><strong>Netteté (Registax)</strong></td><td>Énergie des contours (détails fins)</td><td>Cas général lunaire/planétaire</td></tr><tr><td><strong>Luminosité</strong></td><td>Stabilité d'exposition</td><td>Vidéos avec fluctuations (auto-exposition)</td></tr><tr><td><strong>Mixte (AutoStacker)</strong></td><td>Combinaison des deux</td><td>Seeing instable, nuit tourmentée</td></tr></table>
+    <p>Le pourcentage (<b>[%]</b>) détermine la sélection : gardez 10–30 % les mauvaises nuits, 25–50 % les bonnes. Trop généreux, le « voyant » se fige dans le stack ; trop sévère, le bruit remonte.</p>
+
+    <h3><font color="#2b4a7e">6.3 Étapes ③+④ — Dérotation et alignement fin</font></h3>
+    <p>Groupe <em>« 2. Dérotation &amp; alignement »</em>. La <b>[Dérotation du champ]</b> compense la rotation propre de l'image pendant la vidéo : <b>[auto]</b> calcule le taux depuis les données de la séance, <b>[manuelle]</b> impose un taux en °/min (utile au-delà de ~3 min sur Jupiter à grande focale ; en dessous d'une minute, laissez la dérotation désactivée). <b>[Intervalle frames :]</b> précise la cadence si elle n'est pas lue dans l'en-tête. L'<b>[Alignement des couleurs (R/B sur G)]</b> recale les canaux des caméras couleur — à activer si les bords frangés de violet/vert apparaissent. L'<b>[Algorithme :]</b> se choisit selon la cible :</p>
+    <table width="100%" border="1" cellspacing="0" cellpadding="4"><tr><td bgcolor="#dfe6f2"><b>Algorithme</b></td><td bgcolor="#dfe6f2"><b>Cible idéale</b></td></tr><tr><td><strong>Phase (rapide)</strong></td><td>Planètes pleines, bonne luminosité, quick look</td></tr><tr><td><strong>Limbe (précis)</strong></td><td>Jupiter/Saturne/Mars — suit le limbe, robuste en bout de focale</td></tr><tr><td><strong>Étoiles (large champ)</strong></td><td>Grand champ lunaire avec étoiles, ou scènes en fichiers</td></tr></table>
+
+    <h3><font color="#2b4a7e">6.4 Étape ⑤ — Empilement planétaire</font></h3>
+    <p>Groupe <em>« 3. Empilement »</em> : <b>[Moyenne]</b>, <b>[Médiane]</b>, <b>[Sigma-clipping]</b>, <b>[Moyenne (meilleurs %)]</b>, et surtout <b>[AutoStack (AS!-style)]</b> — l'approche AutoStakkert! : score de qualité par frame, sélection des meilleures, alignement par points du champ. Avec un stack_percent de 50–75 %, c'est le réglage recommandé.</p>
+
+    <h3><font color="#2b4a7e">6.5 Étape ⑥ — Les ondelettes : la « loupe Registax6 »</font></h3>
+    <p>Groupe <em>« 4. Ondelettes (style Registax6) — aperçu live »</em>. L'image empilée est décomposée en 6 couches de détails, de la plus fine (<b>[Couche 1 (fins)]</b>) à la plus large (<b>[Couche 6 (larges)]</b>). Chaque couche a son gain :</p>
+    <ul>
+      <li><strong>Couche 1</strong> : granulation, micro-détails — gain 1,3–1,5 pas plus (amplifie aussi le bruit).</li>
+      <li><strong>Couches 2–3</strong> : bandes, continents lunaires — gain 1,2–1,3, le « bon » niveau habituel.</li>
+      <li><strong>Couches 4–6</strong> : structures larges — gain 1,0 (ne touchez pas au début) ; le résidu règle le contraste global.</li>
+      <li><b>[Débruitage (ondelettes Registax) :]</b> 0,2–0,4 pour absorber le grain réveillé par les couches fines ; <b>[Réinitialiser les couches]</b> repart de tout à 1,0.</li>
+    </ul>
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#eef4fb"><b>Méthode.</b> Poussez la couche 1 jusqu'à voir du bruit, puis revenez en dessous d'un cran : vous venez de trouver votre maximum. Les anneaux de Saturne prennent surtout dans les couches 2–3 ; le limbe de la Lune, dans la couche 4.</td></tr></table>
+
+    <h3><font color="#2b4a7e">6.6 Étapes ⑦+⑧ — Couleurs, aberration chromatique, IA</font></h3>
+    <p>L'<b>[Aberration chromatique (correction radiale)]</b> corrige les franges R/B qui fuient autour du centre (forte au Newton + barlow) : <b>[Rouge :]</b> et <b>[Bleu :]</b> se règlent en quelques essais à l'aperçu. Les <em>fausses couleurs</em> (groupe 7) transforment une image solaire N&B (H-alpha) en palette <b>[Solaire (orange)]</b>, Inferno, Magma, Plasma, Viridis ou Turbo. L'IA locale (groupe 5 : <b>[denoise]</b>, <b>[sharpen]</b>, <b>[superres]</b>) s'applique après les ondelettes — la super-résolution toujours en dernier.</p>
+
+    <h3><font color="#2b4a7e">6.7 Étape ⑨ — Le film stabilisé</font></h3>
+    <p>Groupe <em>« 6. Film stabilisé (aligner + recadrer) &amp; export »</em> : la <b>[Recadrage commun automatique (anti-« danse »)]</b> aligne toutes les frames sur un recadrage commun — le film ne tremble plus et la rotation du globe devient visible. Réglez <b>[Taille crop :]</b> (0 = auto), <b>[FPS :]</b>, le conteneur (<b>[MP4]</b> / <b>[AVI (MJPG)]</b> / <b>[GIF]</b>) et la Qualité, puis <b>[🎬 Créer le film…]</b>. Idéal pour animer la rotation jovienne sur 1–2 h de clips ou une éclipse lunaire.</p>
+
+    <h3><font color="#2b4a7e">6.8 Exécuter et rejouer</font></h3>
+    <p><b>[▶ Tout traiter (classement→empilement→ondelettes…)]</b> enchaîne toute la chaîne en pleine résolution, puis <b>[Exporter l'image…]</b> écrit le résultat. Le groupe <em>« 8. Séquence &amp; batch (style Registax) »</em> mémorise tous vos réglages : <b>[💾 Enregistrer la séquence (tous les réglages)]</b>, <b>[Charger une séquence (modifiable)…]</b>, et <b>[▶ Batch SER : empiler toutes les vidéos d'un dossier…]</b> avec <b>[Frames max/SER :]</b> pour borner chaque vidéo — l'objet du chapitre 10.</p>

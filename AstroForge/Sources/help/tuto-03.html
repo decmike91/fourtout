@@ -1,0 +1,21 @@
+ch3">
+    <h2><font color="#1c3a6e">3. Configuration : décrire son matériel (profil d'équipement)</font></h2>
+
+    <h3><font color="#2b4a7e">3.1 Créer le profil — cinq minutes qui servent à tout</font></h3>
+    <p>L'onglet <strong>Configuration</strong> décrit votre matériel une fois pour toutes ; les autres onglets s'en servent (taille de pixel, catalogue d'étoiles par défaut, solveur). La démarche, reprise de l'aide intégrée (« Comment ça marche ») :</p>
+    <p>① <b>Remplir « 1. Profil d'équipement ».</b>  Caméra, Pixel (µm), température capteur (°C), Résolution (px), Matrice de Bayer (Aucune (mono) / RGGB / BGGR / GRBG / GBRG) ; Télescope, Ouverture (mm), f= (mm) ; le cas échéant Réducteur de focale et son facteur (×) ; le Mode (Ciel profond / Planétaire) et le niveau de pollution lumineuse (Bortle 1 à 9, par exemple « Banlieue (Bortle 5-6) »).</p>
+    <p>② <b>Enregistrer.</b>  Bouton <b>[💾 Enregistrer…]</b> : créez <strong>un profil par matériel</strong> (par caméra, par télescope, par réducteur). <b>[Supprimer]</b> efface le profil courant.</p>
+    <p>③ <b>Lire les valeurs calculées.</b>  La focale effective (focale × facteur du réducteur), l'échantillonnage (″/px) et le champ de vue sont recalculés <strong>en direct</strong> pendant la frappe.</p>
+    <p>④ <b>Régler « 2. Astrométrie ».</b>  Cochez <b>[Utiliser solve-field (astrometry.net) s'il est installé]</b> si vous avez installé astrometry.net (le plus robuste) ; sinon le solveur interne utilisera le catalogue CSV — renseignez le Catalogue par défaut (ex. <code>profiles/gaia_mon_champ.csv</code>) et la Magnitude limite.</p>
+
+    <h3><font color="#2b4a7e">3.2 Ce que le profil calcule pour vous</font></h3>
+    <p>Deux nombres pilotent toute l'astrométrie et le choix de drizzle :</p>
+    <p style="text-align:center;"><strong>échantillonnage</strong> <em>e</em> (″/px) ≈ 206 × <em>p</em>(µm) / <em>f</em>(mm) &nbsp;&nbsp;·&nbsp;&nbsp; <strong>champ de vue</strong> = dimension du capteur (px) × <em>e</em></p>
+    <p>Exemples : une caméra à pixels de 3,76 µm au foyer d'un 200/1000 mm donne 206 × 3,76 / 1000 = <strong>0,77″/px</strong> ; avec un réducteur ×0,63 (focale 630 mm) on passe à <strong>1,23″/px</strong>. Sous 1″/px on est « sur-échantillonné » (le drizzle est inutile) ; au-delà de 2–2,5″/px, le drizzle ×2 gagne vraiment en détails (chapitre 4.4).</p>
+
+    <h3><font color="#2b4a7e">3.3 Catalogue Gaia et focale automatique</font></h3>
+    <ul>
+      <li><b>[🌐 Générer le catalogue Gaia pour ce champ (focale + capteur)]</b> télécharge <strong>une seule fois</strong> (Internet requis) les étoiles couvrant le champ de vue de votre profil, et mémorise le CSV comme catalogue par défaut. C'est ce catalogue que le solveur interne et la photométrie utilisent.</li>
+      <li><b>[🔍 Déterminer la focale automatiquement]</b> résout une image prise avec votre matériel puis calcule <em>f</em> = 206 265 × pixel / échelle. Pratique après un changement de réducteur ou une distance de caméra modifiée : chargez une image, donnez le RA/Dec du centre (formats « 10:25:03 ou 156.26 » acceptés), cliquez, et la focale du profil se remplit.</li>
+    </ul>
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#eef4fb"><b>Astuce.</b> Le profil se décline aussi en suggestions : le niveau de pollution lumineuse (Bortle) et la taille de pixel orientent notamment les réglages de débruitage et de drizzle. Si vous changez de matériel, dupliquez le profil plutôt que de l'écraser — vous conserverez les deux chaînes de traitement.</td></tr></table>

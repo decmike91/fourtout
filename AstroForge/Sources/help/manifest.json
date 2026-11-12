@@ -1,0 +1,452 @@
+{
+ "pages": [
+  {
+   "file": "accueil.html",
+   "title": "Accueil",
+   "group": "Accueil",
+   "keywords": [
+    "aide",
+    "sommaire"
+   ]
+  },
+  {
+   "file": "tuto-01.html",
+   "title": "1. Installer et lancer AstroForge",
+   "group": "Tutoriel",
+   "keywords": [
+    "1.",
+    "apercu live",
+    "astroforge",
+    "bayer",
+    "et",
+    "exe",
+    "formats",
+    "installation",
+    "installer",
+    "interface",
+    "lancement",
+    "lancer",
+    "pip",
+    "python",
+    "venv"
+   ]
+  },
+  {
+   "file": "tuto-02.html",
+   "title": "2. L'ordre des opérations : la logique d'ensemble",
+   "group": "Tutoriel",
+   "keywords": [
+    "2.",
+    ":",
+    "chaine",
+    "d'ensemble",
+    "des",
+    "l'ordre",
+    "la",
+    "logique",
+    "operations",
+    "ordre",
+    "ordre des operations",
+    "pipeline",
+    "workflow"
+   ]
+  },
+  {
+   "file": "tuto-03.html",
+   "title": "3. Configuration : décrire son matériel (profil d'équipement)",
+   "group": "Tutoriel",
+   "keywords": [
+    "(profil",
+    "3.",
+    ":",
+    "bortle",
+    "camera",
+    "catalogue",
+    "configuration",
+    "d'equipement)",
+    "decrire",
+    "echantillonnage",
+    "equipement",
+    "focale",
+    "gaia",
+    "materiel",
+    "profil",
+    "son",
+    "telescope"
+   ]
+  },
+  {
+   "file": "tuto-04.html",
+   "title": "4. Ciel profond — les opérations dans l'ordre",
+   "group": "Tutoriel",
+   "keywords": [
+    "4.",
+    "alignement",
+    "bias",
+    "calibration",
+    "ciel",
+    "ciel profond",
+    "couleur",
+    "dans",
+    "dark",
+    "deconvolution",
+    "defauts",
+    "denoise",
+    "drizzle",
+    "empilement",
+    "flat",
+    "gradient",
+    "hdr",
+    "l'ordre",
+    "les",
+    "master",
+    "operations",
+    "profond",
+    "scnr",
+    "sigma",
+    "—"
+   ]
+  },
+  {
+   "file": "tuto-05.html",
+   "title": "5. Tuto d'exemple ① — traiter M51 de A à Z",
+   "group": "Tutoriel",
+   "keywords": [
+    "1",
+    "5.",
+    "a",
+    "d'exemple",
+    "de",
+    "exemple",
+    "galaxie",
+    "m51",
+    "newton",
+    "traiter",
+    "tuto",
+    "z",
+    "—"
+   ]
+  },
+  {
+   "file": "tuto-06.html",
+   "title": "6. Planétaire — les opérations dans l'ordre",
+   "group": "Tutoriel",
+   "keywords": [
+    "6.",
+    "autostack",
+    "avi",
+    "chromatisme",
+    "classement",
+    "dans",
+    "derotation",
+    "fausses couleurs",
+    "film",
+    "l'ordre",
+    "les",
+    "mp4",
+    "ondelettes",
+    "operations",
+    "planetaire",
+    "qualite",
+    "registax",
+    "ser",
+    "—"
+   ]
+  },
+  {
+   "file": "tuto-07.html",
+   "title": "7. Tuto d'exemple ② — une nuit sur Jupiter",
+   "group": "Tutoriel",
+   "keywords": [
+    "2",
+    "7.",
+    "barlow",
+    "d'exemple",
+    "exemple",
+    "jupiter",
+    "nuit",
+    "seeing",
+    "sur",
+    "tuto",
+    "une",
+    "—"
+   ]
+  },
+  {
+   "file": "tuto-08.html",
+   "title": "8. Finition (commune) et export des fichiers",
+   "group": "Tutoriel",
+   "keywords": [
+    "(commune)",
+    "8.",
+    "des",
+    "et",
+    "export",
+    "fichiers",
+    "finition",
+    "fits",
+    "gamma",
+    "gimp",
+    "jpeg",
+    "masque flou",
+    "png",
+    "recadrage",
+    "resolution",
+    "tiff",
+    "tonalite"
+   ]
+  },
+  {
+   "file": "tuto-09.html",
+   "title": "9. Astrométrie : plate solving et photométrie",
+   "group": "Tutoriel",
+   "keywords": [
+    "9.",
+    ":",
+    "astrometrie",
+    "differentielle",
+    "et",
+    "exoplanete",
+    "ouverture",
+    "photometrie",
+    "plate",
+    "plate solving",
+    "solve-field",
+    "solving",
+    "wcs"
+   ]
+  },
+  {
+   "file": "tuto-10.html",
+   "title": "10. Séquences batch et scripts Python",
+   "group": "Tutoriel",
+   "keywords": [
+    "10.",
+    "automatisation",
+    "batch",
+    "et",
+    "json",
+    "nohup",
+    "python",
+    "script",
+    "scripts",
+    "sequence",
+    "sequences"
+   ]
+  },
+  {
+   "file": "tuto-11.html",
+   "title": "11. Profils, astuces et dépannage",
+   "group": "Tutoriel",
+   "keywords": [
+    "11.",
+    "astuces",
+    "depannage",
+    "et",
+    "limites",
+    "probleme",
+    "profils",
+    "profils,"
+   ]
+  },
+  {
+   "file": "tuto-annexe.html",
+   "title": "A. Annexe — l'ordre des opérations en une page",
+   "group": "Tutoriel",
+   "keywords": [
+    "a.",
+    "annexe",
+    "checklist",
+    "des",
+    "en",
+    "l'ordre",
+    "operations",
+    "ordre",
+    "page",
+    "resume",
+    "une",
+    "une page",
+    "—"
+   ]
+  },
+  {
+   "file": "man-01-1-presentation.html",
+   "title": "1. Présentation",
+   "group": "Manuel",
+   "keywords": [
+    "1.",
+    "presentation"
+   ]
+  },
+  {
+   "file": "man-02-2-installation.html",
+   "title": "2. Installation",
+   "group": "Manuel",
+   "keywords": [
+    "2.",
+    "installation"
+   ]
+  },
+  {
+   "file": "man-03-3-prise-en.html",
+   "title": "3. Prise en main",
+   "group": "Manuel",
+   "keywords": [
+    "3.",
+    "en",
+    "main",
+    "prise"
+   ]
+  },
+  {
+   "file": "man-04-4-mode-ciel.html",
+   "title": "4. Mode ciel profond — workflow complet",
+   "group": "Manuel",
+   "keywords": [
+    "4.",
+    "ciel",
+    "complet",
+    "mode",
+    "profond",
+    "workflow",
+    "—"
+   ]
+  },
+  {
+   "file": "man-05-5-mode-planetaire.html",
+   "title": "5. Mode planétaire — workflow complet",
+   "group": "Manuel",
+   "keywords": [
+    "5.",
+    "complet",
+    "mode",
+    "planetaire",
+    "workflow",
+    "—"
+   ]
+  },
+  {
+   "file": "man-06-6-traitement-par.html",
+   "title": "6. Traitement par lot (batch)",
+   "group": "Manuel",
+   "keywords": [
+    "(batch)",
+    "6.",
+    "lot",
+    "par",
+    "traitement"
+   ]
+  },
+  {
+   "file": "man-07-7-ia-locale.html",
+   "title": "7. IA locale",
+   "group": "Manuel",
+   "keywords": [
+    "7.",
+    "ia",
+    "locale"
+   ]
+  },
+  {
+   "file": "man-08-8-formats-matrices.html",
+   "title": "8. Formats et matrices de Bayer",
+   "group": "Manuel",
+   "keywords": [
+    "8.",
+    "bayer",
+    "de",
+    "et",
+    "formats",
+    "matrices"
+   ]
+  },
+  {
+   "file": "man-09-9-depannage-limites.html",
+   "title": "9. Dépannage et limites",
+   "group": "Manuel",
+   "keywords": [
+    "9.",
+    "depannage",
+    "et",
+    "limites"
+   ]
+  },
+  {
+   "file": "man-10-10-session-bibliotheque.html",
+   "title": "10. Session et bibliothèque de masters",
+   "group": "Manuel",
+   "keywords": [
+    "10.",
+    "bibliotheque",
+    "de",
+    "et",
+    "masters",
+    "session"
+   ]
+  },
+  {
+   "file": "man-11-11-analyse-brutes.html",
+   "title": "11. Analyse des brutes, poids, normalisation et multi-nuits",
+   "group": "Manuel",
+   "keywords": [
+    "11.",
+    "analyse",
+    "brutes,",
+    "des",
+    "et",
+    "multi-nuits",
+    "normalisation",
+    "poids,"
+   ]
+  },
+  {
+   "file": "man-12-12-finition-avancee.html",
+   "title": "12. Finition avancée",
+   "group": "Manuel",
+   "keywords": [
+    "12.",
+    "avancee",
+    "finition"
+   ]
+  },
+  {
+   "file": "man-13-13-menu-outils.html",
+   "title": "13. Menu Outils",
+   "group": "Manuel",
+   "keywords": [
+    "13.",
+    "menu",
+    "outils"
+   ]
+  },
+  {
+   "file": "man-14-14-ligne-commande.html",
+   "title": "14. Ligne de commande, langue, GPU, mises à jour",
+   "group": "Manuel",
+   "keywords": [
+    "14.",
+    "a",
+    "commande,",
+    "de",
+    "gpu,",
+    "jour",
+    "langue,",
+    "ligne",
+    "mises"
+   ]
+  },
+  {
+   "file": "man-15-15-installation-par.html",
+   "title": "15. Installation par pip et installeurs",
+   "group": "Manuel",
+   "keywords": [
+    "15.",
+    "et",
+    "installation",
+    "installeurs",
+    "par",
+    "pip"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="genspark-artifact-type" content="paged_book" />
+  <title>AstroForge — Tutoriel complet</title>
+  <script src="/api/docs_agent/paged_assets/paged.polyfill.js"></script>
+  <link rel="stylesheet" href="/api/docs_agent/paged_assets/paged_book_viewer.css" />
+  <script src="/api/docs_agent/paged_assets/paged_book_viewer.js" defer></script>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm 20mm 22mm 20mm;
+      @top-right { content: string(chapter-title); font-size: 8pt; color: #6a7488; }
+      @bottom-center { content: counter(page) " / " counter(pages); font-size: 8.5pt; color: #6a7488; }
+    }
+    @page :first { margin: 0; @top-right { content: none; } @bottom-center { content: none; } }
+
+    body { font-family: Georgia, "Times New Roman", serif; font-size: 9.5pt; line-height: 1.55; color: #1c2434; margin: 0; }
+    h1, h2, h3, h4, .sans { font-family: Arial, Helvetica, sans-serif; }
+    h1.chapter { break-before: page; string-set: chapter-title content(); font-size: 19pt; color: #14203a; border-bottom: 2px solid #4a6fa5; padding-bottom: 3mm; margin: 0 0 6mm; }
+    h1.no-break { break-before: auto; }
+    h2 { font-size: 12.5pt; color: #1c3a6e; margin: 7mm 0 2.5mm; }
+    h3 { font-size: 10.5pt; color: #2b4a7e; margin: 5mm 0 2mm; }
+    p { margin: 0 0 2.8mm; text-align: left; text-wrap: pretty; }
+    ul, ol { margin: 1mm 0 3mm 0; padding-left: 6mm; }
+    li { margin-bottom: 1.2mm; }
+    a { color: #2b4a7e; text-decoration: none; }
+    strong { color: #14203a; }
+
+    /* Couverture */
+    .cover { position: relative; min-height: 297mm; overflow: hidden; background: #0b1026; }
+    .cover img.bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: .9; }
+    .cover .veil { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(8,12,30,.30) 0%, rgba(8,12,30,.42) 48%, rgba(8,12,30,.94) 100%); }
+    .cover .content { position: absolute; bottom: 0; left: 0; right: 0; padding: 0 18mm 22mm 18mm; color: #ffffff; }
+    .cover .over { font-family: Arial, sans-serif; font-size: 10pt; letter-spacing: 2.5px; text-transform: uppercase; color: #9db8e8; margin-bottom: 6mm; }
+    .cover h1 { font-size: 34pt; margin: 0 0 4mm; color: #ffffff; }
+    .cover .sub { font-size: 13pt; color: #dfe7f6; margin-bottom: 2.5mm; font-family: Arial, sans-serif; }
+    .cover .meta { font-size: 9.5pt; color: #a9b8d6; font-family: Arial, sans-serif; margin-top: 8mm; border-top: 1px solid rgba(255,255,255,.35); padding-top: 4mm; }
+
+    /* Sommaire */
+    .toc-title { font-size: 17pt; color: #14203a; border-bottom: 2px solid #4a6fa5; padding-bottom: 3mm; margin: 0 0 6mm; }
+    .toc { list-style: none; margin: 0; padding: 0; }
+    .toc li { border-bottom: 0.5pt dotted #b9c2d0; padding: 1.6mm 0; }
+    .toc a { display: block; overflow: hidden; color: #1c2434; }
+    .toc a::after { content: target-counter(attr(href), page); float: right; color: #4a6fa5; font-family: Arial, sans-serif; font-size: 9pt; padding-left: 3mm; }
+    .toc .n { font-family: Arial, sans-serif; font-weight: bold; color: #4a6fa5; display: inline-block; width: 9mm; }
+    .toc .sub { font-size: 8.5pt; color: #55606f; }
+
+    /* Encadrés et étapes */
+    .tip, .warn { padding: 2.6mm 3.5mm; margin: 3mm 0; break-inside: avoid; font-size: 9pt; }
+    .tip { background: #eef4fb; border-left: 3px solid #4a6fa5; }
+    .warn { background: #fdf5e8; border-left: 3px solid #d99b26; }
+    .tip b, .warn b { font-family: Arial, sans-serif; }
+    .step { border-left: 3px solid #4a6fa5; background: #f5f7fb; padding: 2.4mm 3.5mm; margin: 2.5mm 0; break-inside: avoid; }
+    .step .t { font-family: Arial, sans-serif; font-weight: bold; color: #14203a; }
+    .kbd { font-family: Arial, sans-serif; font-size: 84%; background: #eef2f8; border: 0.5pt solid #ccd5e3; border-radius: 2px; padding: 0 1.2mm; white-space: nowrap; }
+    .num { display: inline-block; width: 5mm; font-family: Arial, sans-serif; font-weight: bold; color: #4a6fa5; }
+
+    /* Tableaux */
+    table { width: 100%; border-collapse: collapse; margin: 3mm 0 4mm; font-size: 8.5pt; font-family: Arial, sans-serif; }
+    th { background: #1a2740; color: #ffffff; padding: 1.6mm 2mm; text-align: left; font-size: 8.2pt; }
+    td { border: 0.4pt solid #c9d2e0; padding: 1.5mm 2mm; vertical-align: top; }
+    tr:nth-child(even) td { background: #f4f6fa; }
+
+    /* Figures */
+    figure { break-inside: avoid; margin: 4mm 0; text-align: center; }
+    figure svg { width: 100%; }
+    figcaption { font-size: 8.5pt; color: #55606f; font-family: Arial, sans-serif; margin-top: 1.5mm; font-style: italic; }
+
+    pre { background: #f6f8fa; border: 0.4pt solid #dbe1ea; padding: 2.5mm 3mm; font-size: 7.6pt; font-family: "DejaVu Sans Mono", "Courier New", monospace; white-space: pre-wrap; word-wrap: break-word; margin: 2mm 0 3.5mm; line-height: 1.45; break-inside: avoid; }
+    code { font-family: "DejaVu Sans Mono", "Courier New", monospace; font-size: 8.2pt; background: #f1f3f7; padding: 0 0.8mm; }
+    pre code { background: none; padding: 0; }
+    .check { color: #2e7d32; }
+  </style>
+</head>
+<body>
+  <div class="cover">
+    <img class="bg" src="assets/cover.png" alt="" />
+    <div class="veil"></div>
+    <div class="content">
+      <div class="over">Manuel de prise en main</div>
+      <h1>AstroForge</h1>
+      <div class="sub">Tutoriel complet — toutes les fonctionnalités, dans le bon ordre</div>
+      <div class="sub" style="font-size:10.5pt; color:#b7c6e4;">Deux guides d'exemple pas à pas : M51 en ciel profond, Jupiter en planétaire</div>
+      <div class="meta">Version 1.5.0 · Septembre 2026 · Traitement d'images astronomiques — ciel profond, planétaire, finition</div>
+    </div>
+  </div>
+
+  <section id="sommaire">
+    <h2 class="toc-title">Sommaire</h2>
+    <ul class="toc">
+      <li><a href="#ch1"><span class="n">1.</span> Installer et lancer AstroForge</a></li>
+      <li><a href="#ch2"><span class="n">2.</span> L'ordre des opérations : la logique d'ensemble</a></li>
+      <li><a href="#ch3"><span class="n">3.</span> Configuration : décrire son matériel (profil d'équipement)</a></li>
+      <li><a href="#ch4"><span class="n">4.</span> Ciel profond — les opérations dans l'ordre</a></li>
+      <li><a href="#ch5"><span class="n">5.</span> Tuto d'exemple ① — traiter M51 de A à Z</a></li>
+      <li><a href="#ch6"><span class="n">6.</span> Planétaire — les opérations dans l'ordre</a></li>
+      <li><a href="#ch7"><span class="n">7.</span> Tuto d'exemple ② — une nuit sur Jupiter</a></li>
+      <li><a href="#ch8"><span class="n">8.</span> Finition (commune) et export des fichiers</a></li>
+      <li><a href="#ch9"><span class="n">9.</span> Astrométrie : plate solving et photométrie</a></li>
+      <li><a href="#ch10"><span class="n">10.</span> Séquences batch et scripts Python</a></li>
+      <li><a href="#ch11"><span class="n">11.</span> Profils, astuces et dépannage</a></li>
+      <li><a href="#annexe"><span class="n">A.</span> Annexe — l'ordre des opérations en une page</a></li>
+    </ul>
+    <div class="tip" style="margin-top:6mm;"><b>Comment lire ce tutoriel.</b> Les noms de boutons et de champs sont reproduits exactement tels qu'ils apparaissent dans le logiciel, entre des puces grises : <span class="kbd">▶ Traiter (pleine résolution) et exporter…</span>. Les deux guides d'exemple (chapitres 5 et 7) sont écrits pour être suivis « en pilotage automatique » la première fois, puis relus chapitre par chapitre pour approfondir.</div>
+  </section>
+
+  <section id="ch1">
+    <h1 class="chapter">1. Installer et lancer AstroForge</h1>
+
+    <h2>1.1 Ce que fait AstroForge</h2>
+    <p>AstroForge est un logiciel de traitement d'images astronomiques écrit en Python, qui fonctionne entièrement en local (aucun envoi de vos images sur Internet). Il s'organise en <strong>quatre onglets</strong>, visibles en haut de la fenêtre :</p>
+    <table>
+      <tr><th>Onglet</th><th>Rôle</th><th>Matière première</th></tr>
+      <tr><td><strong>Ciel profond</strong></td><td>Calibration, alignement, empilement, gradient, débruitage, IA, astrométrie</td><td>Fichiers FITS/TIFF/PNG/RAW : des dizaines de poses unitaires</td></tr>
+      <tr><td><strong>Planétaire</strong></td><td>Classement qualité, dérotation, alignement, empilement, ondelettes, film stabilisé</td><td>Vidéos SER/AVI/MP4 ou images APN</td></tr>
+      <tr><td><strong>Finition (commune)</strong></td><td>Tonalité type GIMP, géométrie, netteté, recalcul, export</td><td>Une image déjà empilée, de n'importe quel mode</td></tr>
+      <tr><td><strong>Configuration</strong></td><td>Profil d'équipement (caméra, télescope), catalogue Gaia, focale automatique</td><td>Les caractéristiques de votre matériel</td></tr>
+    </table>
+    <p>L'onglet <em>Configuration</em> nourrit les trois autres : le profil y détermine le catalogue d'étoiles, la taille de pixel et le mode par défaut. On le remplit <strong>une seule fois</strong>, au début du chapitre 3.</p>
+
+    <h2>1.2 Installation pas à pas</h2>
+    <div class="step"><span class="t">① Installer Python</span> — il faut Python 3.10 ou plus récent. Sous Windows, cochez « Add Python to PATH » pendant l'installation.</div>
+    <div class="step"><span class="t">② Créer un environnement et installer les dépendances</span> — dans un terminal, depuis le dossier d'AstroForge :</div>
+<pre><code>python -m venv .venv
+# Windows :  .venv\Scripts\activate        Linux / macOS :  source .venv/bin/activate
+pip install -r requirements.txt</code></pre>
+    <div class="step"><span class="t">③ Options recommandées</span> — <code>pip install rawpy</code> si vous voulez charger les RAW d'appareil photo (CR2/CR3/NEF/ARW/DNG…), et <code>pip install onnxruntime</code> pour les modèles d'IA locaux.</div>
+    <div class="step"><span class="t">④ Vérifier l'installation</span> — <code>python main.py --selftest</code> contrôle tout le noyau sans ouvrir l'interface ; <code>python tests/smoke.py</code> exécute la batterie complète de tests.</div>
+    <div class="step"><span class="t">⑤ Lancer</span> — <code>python main.py</code>. En pratique quotidienne, préférez les lanceurs <span class="kbd">launch.sh</span> (Linux/macOS) ou <span class="kbd">launch.bat</span> (Windows, double-clic possible) : ils créent l'environnement, installent les dépendances manquantes et démarront le logiciel. Pour distribuer un exécutable autonome : <span class="kbd">build_exe.sh</span> / <span class="kbd">build_exe.bat</span> produisent <code>dist/AstroForge</code>.</div>
+
+    <h2>1.3 Visite guidée de l'interface</h2>
+    <p>Trois éléments reviennent dans tous les modes ; il faut les connaître avant de commencer :</p>
+    <ul>
+      <li><strong>L'aperçu live.</strong> Chaque groupe de réglages recalcule un aperçu environ 450&nbsp;ms après votre dernier geste, sur une copie réduite de l'image. Vous voyez l'effet immédiatement, avec la bascule <em>Avant / Après / Côte à côte</em> et un <strong>étirement automatique commutable</strong> — indispensable pour juger une image FITS, dont les données brutes restent volontairement sombres (voir encadré).</li>
+      <li><strong>Les barres de profils.</strong> Chaque groupe (alignement, empilement, traitement, IA, ondelettes, animation…) porte une barre <span class="kbd">[profil ▾] [💾 Enregistrer] [↺ Standard]</span> : le profil <em>Standard</em> contient les valeurs par défaut, et vous pouvez créer vos propres réglages nommés (un JSON par profil, dans <code>profiles/</code>).</li>
+      <li><strong>Les traitements en thread.</strong> Les opérations lourdes tournent en arrière-plan : l'interface reste réactive et vous pouvez préparer l'étape suivante pendant qu'une pile se calcule.</li>
+    </ul>
+    <div class="tip"><b>Astuce.</b> Les menus <em>Fichier</em> (Quitter, Ctrl+Q) et <em>Aide</em> (À propos) complètent l'interface. Tout est reproductible : chaque chaîne de traitement peut être enregistrée et rejouée en batch — c'est l'objet du chapitre 10.</div>
+
+    <h2>1.4 Formats pris en charge</h2>
+    <table>
+      <tr><th></th><th>Formats</th></tr>
+      <tr><td><strong>Entrée ciel profond</strong></td><td>FITS (mono ou RGB, 8–32 bits), TIFF/PNG/JPEG 8–16 bits, RAW APN (via rawpy), XISF lu nativement</td></tr>
+      <tr><td><strong>Matrices de Bayer</strong></td><td>RGGB, BGGR, GRBG, GBRG — choix manuel, ou automatique pour les RAW</td></tr>
+      <tr><td><strong>Entrée planétaire</strong></td><td>SER (mono/bayer/couleur, 8–16 bits), AVI, MP4, séquences d'images FITS/TIFF/PNG</td></tr>
+      <tr><td><strong>Sortie</strong></td><td>FITS float32, TIFF 16 bits, PNG 8/16 bits, JPEG 95 %, MP4/AVI/GIF (films)</td></tr>
+    </table>
+    <div class="tip"><b>Trois réflexes à prendre dès maintenant.</b> ① L'aperçu est calculé sur une image réduite : le bouton <span class="kbd">▶ Traiter (pleine résolution) et exporter…</span> reste l'arbitre final. ② Les fichiers sont traités en flottant 32 bits sur [0..1] : n'ayez pas peur des valeurs d'aperçu « ternes », c'est normal avant étirement. ③ Enregistrez un profil de paramètres dès qu'une combinaison vous satisfait — vous la retrouverez en un clic la prochaine nuit.</div>
+  </section>
+
+  <section id="ch2">
+    <h1 class="chapter">2. L'ordre des opérations : la logique d'ensemble</h1>
+
+    <h2>2.1 Pourquoi l'ordre compte plus que les réglages</h2>
+    <p>Un traitement astronomique n'est pas une liste d'effets appliqués dans n'importe quel ordre : c'est un <strong>entonnoir</strong>. On élimine d'abord les défauts instrumentaux, puis on accumule le signal, puis seulement on embellit. Inverser deux étapes ne « dégrade » pas seulement le résultat — cela rend certaines corrections impossibles. Trois principes suffisent à retenir tout l'ordre :</p>
+    <ul>
+      <li><strong>Réparer avant d'aligner.</strong> Les pixels morts, colonnes d'amp-glow et poussières du flat sont des défauts <em>fixes</em> du capteur : on les corrige pendant la calibration, avant tout déplacement d'image. Après l'alignement, un pixel mort « bouge » et devient une tache multipliée par chaque frame.</li>
+      <li><strong>Aligner avant d'empiler.</strong> L'empilement additionne ou moyenne les pixels ; si les étoiles ne sont pas superposées, on additionne du flou. Toute la géométrie (translation, rotation, distorsions) se règle donc <em>avant</em> la combinaison — et drizzle s'insère exactement là.</li>
+      <li><strong>Embellir après avoir empilé.</strong> Le bruit se traite quand le signal est déjà accumulé (le stack a gagné en rapport signal/bruit) ; le gradient se modélise une fois les frames fusionnées ; la couleur, l'IA et l'étirement viennent en dernier, car ce sont des opérations esthétiques qui doivent rester réversibles.</li>
+    </ul>
+    <p>AstroForge impose implicitement cet ordre : l'onglet ciel profond lit ses groupes de haut en bas, et le bouton <span class="kbd">▶ Traiter (pleine résolution) et exporter…</span> exécute la chaîne complète dans le bon sens. Le tutoriel suit exactement ce fil.</p>
+
+    <figure>
+      <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" style="font-family:Arial,sans-serif;">
+        <defs><marker id="fl" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#4a6fa5"/></marker></defs>
+        <g fill="#eef2f8" stroke="#4a6fa5" stroke-width="1.2">
+          <rect x="4"   y="10" width="166" height="40" rx="6"/><rect x="196" y="10" width="166" height="40" rx="6"/><rect x="388" y="10" width="166" height="40" rx="6"/><rect x="580" y="10" width="166" height="40" rx="6"/>
+          <rect x="4"   y="80" width="166" height="40" rx="6"/><rect x="196" y="80" width="166" height="40" rx="6"/><rect x="388" y="80" width="166" height="40" rx="6"/><rect x="580" y="80" width="166" height="40" rx="6"/>
+          <rect x="4"   y="150" width="166" height="40" rx="6"/><rect x="196" y="150" width="166" height="40" rx="6"/><rect x="388" y="150" width="358" height="40" rx="6"/>
+        </g>
+        <g font-size="11" fill="#14203a" text-anchor="middle">
+          <text x="87"  y="26">① Images brutes</text><text x="87" y="40" font-size="9" fill="#55606f">+ matrice de Bayer</text>
+          <text x="279" y="26">② Masters</text><text x="279" y="40" font-size="9" fill="#55606f">bias · dark · flat · dark-flat</text>
+          <text x="471" y="26">③ Calibration</text><text x="471" y="40" font-size="9" fill="#55606f">des frames brutes</text>
+          <text x="663" y="26">④ Défauts</text><text x="663" y="40" font-size="9" fill="#55606f">pixels/colonnes (après calib.)</text>
+          <text x="87"  y="96">⑤ Alignement</text><text x="87" y="110" font-size="9" fill="#55606f">phase · étoiles · poly (+ drizzle)</text>
+          <text x="279" y="96">⑥ Empilement</text><text x="279" y="110" font-size="9" fill="#55606f">7 algorithmes</text>
+          <text x="471" y="96">⑦ Gradient / fond</text><text x="471" y="110" font-size="9" fill="#55606f">polynôme 2D · RBF</text>
+          <text x="663" y="96">⑧ Débruitage +</text><text x="663" y="110" font-size="9" fill="#55606f">déconvolution</text>
+          <text x="87"  y="166">⑨ Couleur</text><text x="87" y="180" font-size="9" fill="#55606f">calibration · neutralisation · SCNR</text>
+          <text x="279" y="166">⑩ IA locale</text><text x="279" y="180" font-size="9" fill="#55606f">denoise · fond · netteté…</text>
+          <text x="567" y="166">⑪ Export (FITS/TIFF/PNG/JPEG)</text><text x="567" y="180" font-size="9" fill="#55606f">+ HDR, astrométrie et photométrie en option</text>
+        </g>
+        <g stroke="#4a6fa5" stroke-width="1.4" fill="none" marker-end="url(#fl)">
+          <path d="M170,30 H188"/><path d="M362,30 H380"/><path d="M554,30 H572"/>
+          <path d="M663,50 V72 H87 V72" opacity="0"/><path d="M663,50 V65 H87 V72" />
+          <path d="M170,100 H188"/><path d="M362,100 H380"/><path d="M554,100 H572"/>
+          <path d="M663,120 V135 H87 V142" />
+          <path d="M170,170 H188"/><path d="M362,170 H380"/>
+        </g>
+      </svg>
+      <figcaption>Figure 1 — L'ordre des opérations en ciel profond. Le sens de lecture suit exactement les groupes de l'onglet.</figcaption>
+    </figure>
+
+    <h2>2.2 Le même entonnoir, côté planétaire</h2>
+    <p>En planétaire, la matière première est une vidéo : l'entonnoir est le même, mais l'« étape calibration » est remplacée par le <strong>classement qualité</strong> — on élimine d'abord les frames floues (turbulence), on tient compte de la <strong>rotation du champ</strong> propre aux planètes, puis on affine l'alignement et on révèle les détails aux <strong>ondelettes</strong> une fois le signal empilé.</p>
+    <figure>
+      <svg viewBox="0 0 760 130" xmlns="http://www.w3.org/2000/svg" style="font-family:Arial,sans-serif;">
+        <g fill="#eef2f8" stroke="#4a6fa5" stroke-width="1.2">
+          <rect x="4"   y="10" width="166" height="40" rx="6"/><rect x="196" y="10" width="166" height="40" rx="6"/><rect x="388" y="10" width="166" height="40" rx="6"/><rect x="580" y="10" width="166" height="40" rx="6"/>
+          <rect x="4"   y="80" width="166" height="40" rx="6"/><rect x="196" y="80" width="166" height="40" rx="6"/><rect x="388" y="80" width="166" height="40" rx="6"/><rect x="580" y="80" width="166" height="40" rx="6"/>
+        </g>
+        <g font-size="11" fill="#14203a" text-anchor="middle">
+          <text x="87"  y="26">① Source</text><text x="87" y="40" font-size="9" fill="#55606f">SER · AVI · MP4 · images</text>
+          <text x="279" y="26">② Classement qualité</text><text x="279" y="40" font-size="9" fill="#55606f">netteté · luminosité · mixte</text>
+          <text x="471" y="26">③ Dérotation du champ</text><text x="471" y="40" font-size="9" fill="#55606f">auto ou manuelle (°/min)</text>
+          <text x="663" y="26">④ Alignement fin</text><text x="663" y="40" font-size="9" fill="#55606f">phase · limbe · étoiles</text>
+          <text x="87"  y="96">⑤ Empilement</text><text x="87" y="110" font-size="9" fill="#55606f">AutoStack, meilleurs %</text>
+          <text x="279" y="96">⑥ Ondelettes (Registax6)</text><text x="279" y="110" font-size="9" fill="#55606f">6 couches + débruitage</text>
+          <text x="471" y="96">⑦ Couleur</text><text x="471" y="110" font-size="9" fill="#55606f">canaux R/B · aberration chrom. · palette</text>
+          <text x="663" y="96">⑧ Film + export</text><text x="663" y="110" font-size="9" fill="#55606f">recadrage commun anti-« danse »</text>
+        </g>
+        <g stroke="#4a6fa5" stroke-width="1.4" fill="none" marker-end="url(#fl)">
+          <path d="M170,30 H188"/><path d="M362,30 H380"/><path d="M554,30 H572"/>
+          <path d="M663,50 V65 H87 V72" />
+          <path d="M170,100 H188"/><path d="M362,100 H380"/><path d="M554,100 H572"/>
+        </g>
+      </svg>
+      <figcaption>Figure 2 — L'ordre des opérations en planétaire.</figcaption>
+    </figure>
+
+    <div class="warn"><b>Deux erreurs classiques.</b> ① Appliquer un débruitage fort <em>avant</em> l'alignement : l'algorithme lisse justement les étoiles qui servent de repères, et l'appariement se dégrade. ② Exporter en JPEG 8 bits puis « retendre » dans l'onglet Finition : toute information écrasée est perdue. Restez en FITS/TIFF 16 bits tant que la chaîne n'est pas terminée (voir chapitre 8).</div>
+
+    <h2>2.3 Aperçu rapide contre calcul complet</h2>
+    <p>Presque chaque groupe possède deux vitesses : l'<strong>aperçu live</strong> (image réduite, ~450 ms, réglages visuels) et le <strong>traitement pleine résolution</strong> (bouton <span class="kbd">▶ Traiter…</span>, minutes, fichier final). La bonne habitude : régler tout le groupe en aperçu, ne lancer la pleine résolution qu'une fois la chaîne entière réglée. Le chapitre 4 détaille groupe par groupe.</p>
+  </section>
+<section id="ch3">
+    <h1 class="chapter">3. Configuration : décrire son matériel (profil d'équipement)</h1>
+
+    <h2>3.1 Créer le profil — cinq minutes qui servent à tout</h2>
+    <p>L'onglet <strong>Configuration</strong> décrit votre matériel une fois pour toutes ; les autres onglets s'en servent (taille de pixel, catalogue d'étoiles par défaut, solveur). La démarche, reprise de l'aide intégrée (« Comment ça marche ») :</p>
+    <div class="step"><span class="num">①</span><span class="t">Remplir « 1. Profil d'équipement ».</span> Caméra, Pixel (µm), température capteur (°C), Résolution (px), Matrice de Bayer (Aucune (mono) / RGGB / BGGR / GRBG / GBRG) ; Télescope, Ouverture (mm), f= (mm) ; le cas échéant Réducteur de focale et son facteur (×) ; le Mode (Ciel profond / Planétaire) et le niveau de pollution lumineuse (Bortle 1 à 9, par exemple « Banlieue (Bortle 5-6) »).</div>
+    <div class="step"><span class="num">②</span><span class="t">Enregistrer.</span> Bouton <span class="kbd">💾 Enregistrer…</span> : créez <strong>un profil par matériel</strong> (par caméra, par télescope, par réducteur). <span class="kbd">Supprimer</span> efface le profil courant.</div>
+    <div class="step"><span class="num">③</span><span class="t">Lire les valeurs calculées.</span> La focale effective (focale × facteur du réducteur), l'échantillonnage (″/px) et le champ de vue sont recalculés <strong>en direct</strong> pendant la frappe.</div>
+    <div class="step"><span class="num">④</span><span class="t">Régler « 2. Astrométrie ».</span> Cochez <span class="kbd">Utiliser solve-field (astrometry.net) s'il est installé</span> si vous avez installé astrometry.net (le plus robuste) ; sinon le solveur interne utilisera le catalogue CSV — renseignez le Catalogue par défaut (ex. <code>profiles/gaia_mon_champ.csv</code>) et la Magnitude limite.</div>
+
+    <h2>3.2 Ce que le profil calcule pour vous</h2>
+    <p>Deux nombres pilotent toute l'astrométrie et le choix de drizzle :</p>
+    <p style="text-align:center;"><strong>échantillonnage</strong> <em>e</em> (″/px) ≈ 206 × <em>p</em>(µm) / <em>f</em>(mm) &nbsp;&nbsp;·&nbsp;&nbsp; <strong>champ de vue</strong> = dimension du capteur (px) × <em>e</em></p>
+    <p>Exemples : une caméra à pixels de 3,76 µm au foyer d'un 200/1000 mm donne 206 × 3,76 / 1000 = <strong>0,77″/px</strong> ; avec un réducteur ×0,63 (focale 630 mm) on passe à <strong>1,23″/px</strong>. Sous 1″/px on est « sur-échantillonné » (le drizzle est inutile) ; au-delà de 2–2,5″/px, le drizzle ×2 gagne vraiment en détails (chapitre 4.4).</p>
+
+    <h2>3.3 Catalogue Gaia et focale automatique</h2>
+    <ul>
+      <li><span class="kbd">🌐 Générer le catalogue Gaia pour ce champ (focale + capteur)</span> télécharge <strong>une seule fois</strong> (Internet requis) les étoiles couvrant le champ de vue de votre profil, et mémorise le CSV comme catalogue par défaut. C'est ce catalogue que le solveur interne et la photométrie utilisent.</li>
+      <li><span class="kbd">🔍 Déterminer la focale automatiquement</span> résout une image prise avec votre matériel puis calcule <em>f</em> = 206 265 × pixel / échelle. Pratique après un changement de réducteur ou une distance de caméra modifiée : chargez une image, donnez le RA/Dec du centre (formats « 10:25:03 ou 156.26 » acceptés), cliquez, et la focale du profil se remplit.</li>
+    </ul>
+    <div class="tip"><b>Astuce.</b> Le profil se décline aussi en suggestions : le niveau de pollution lumineuse (Bortle) et la taille de pixel orientent notamment les réglages de débruitage et de drizzle. Si vous changez de matériel, dupliquez le profil plutôt que de l'écraser — vous conserverez les deux chaînes de traitement.</div>
+  </section>
+
+  <section id="ch4">
+    <h1 class="chapter">4. Ciel profond — les opérations dans l'ordre</h1>
+    <p>Chaque section ci-dessous correspond à un groupe de l'onglet <strong>Ciel profond</strong> (et à une étape de la figure 1). Réglez chaque groupe en suivant l'aperçu live, puis lancez la chaîne complète avec <span class="kbd">▶ Traiter (pleine résolution) et exporter…</span> quand tout est en place.</p>
+
+    <h2>4.1 Étape ① — Charger les images brutes</h2>
+    <p>Groupe <em>« 1. Images brutes (FITS/TIFF/PNG/RAW) »</em> : <span class="kbd">Ajouter…</span> sélectionne toutes les poses unitaires (lights) en une fois, <span class="kbd">Vider</span> réinitialise la liste. Pour une caméra couleur one-shot (OSC), la Matrice de Bayer est lue automatiquement depuis les RAW ; sur les FITS déjà debayerisés, vérifiez-la (RGGB est la plus courante). <strong>Toutes les images doivent provenir du même matériel, à la même température et au même gain.</strong></p>
+
+    <h2>4.2 Étape ② — Construire les masters (les « verres correcteurs » de la session)</h2>
+    <p>Groupe <em>« 2. Calibration — création des Masters »</em>. Quatre champs, quatre rôles :</p>
+    <table>
+      <tr><th>Master</th><th>Volumes conseillés</th><th>À quoi il sert</th></tr>
+      <tr><td><strong>Bias</strong></td><td>50–100 (pose la plus courte)</td><td>Retire le signal électronique fixe et le bruit de lecture</td></tr>
+      <tr><td><strong>Dark</strong></td><td>20–50, même pose et même température que les lights</td><td>Retire le signal thermique (point chauds, amp-glow)</td></tr>
+      <tr><td><strong>Flat</strong></td><td>20–30, au même pointage (ou panneau)</td><td>Retire vignettage, poussières, sensibilité inégale</td></tr>
+      <tr><td><strong>Dark-flat</strong></td><td>15–20, même pose que les flats</td><td>Retire le signal thermique des flats eux-mêmes</td></tr>
+    </table>
+    <p>Les masters sont construits en interne par combinaison robuste des frames (médiane) puis appliqués à chaque light : le dark est mis à l'échelle et le flat normalisé automatiquement. <strong>Un dark à la mauvaise température (ou pose) est la première cause de « noise fixed » résiduel</strong> : prenez les darks la nuit même, capteur à la température des lights.</p>
+
+    <h2>4.3 Étapes ③+④ — Calibration et défauts</h2>
+    <p>La calibration s'exécute automatiquement dans la chaîne dès que des masters sont fournis. La correction des défauts vient <strong>juste après</strong> (groupe <em>« 10. Pixels défectueux — carte &amp; colonnes/lignes mortes »</em>, la place est indiquée sur le bouton : <span class="kbd">Corriger (après calibration)</span>). Deux voies :</p>
+    <ul>
+      <li><span class="kbd">Détection auto (master dark/flat)</span> — la plus simple : les pixels systématiquement chauds dans le master dark et froids dans le master flat sont repérés et corrigés par voisins ; cochez <span class="kbd">Colonnes/lignes</span> pour traiter aussi les défauts colonne/ligne (amp-glow CMOS).</li>
+      <li><strong>Carte fournie</strong> — si votre constructeur ou logiciel fournit une bad-pixel map (FITS/PNG/TXT), pointez-la avec <span class="kbd">Carte (FITS/PNG/TXT) :</span>.</li>
+    </ul>
+
+    <h2>4.4 Étape ⑤ — Alignement et drizzle</h2>
+    <p>Groupe <em>« 3. Alignement &amp; Drizzle »</em>. Trois méthodes, de la plus rapide à la plus puissante :</p>
+    <table>
+      <tr><th>Méthode</th><th>Principe</th><th>Quand la choisir</th></tr>
+      <tr><td><strong>Phase (translation+rotation)</strong></td><td>Corrélation de phase entre frames</td><td>Petites séries, champ stable, rapidité</td></tr>
+      <tr><td><strong>Étoiles (similarity)</strong></td><td>Appariement de motifs d'étoiles (astroalign), similitude complète</td><td>Séries longues avec rotation du champ — le choix par défaut en ciel profond</td></tr>
+      <tr><td><strong>Plate solving + distorsions (poly)</strong></td><td>Détection d'étoiles puis ajustement polynomial de leurs positions</td><td>Grands champs, longue focale, optique qui distord (réducteurs, bretelles) : l'ajustement est itéré avec rejet des paires aberrantes</td></tr>
+    </table>
+    <ul>
+      <li><span class="kbd">Tenir compte de la rotation du champ</span> : cochez dès que la monture n'est pas parfaitement polaire ou que la série s'étale sur des heures.</li>
+      <li><strong>Drizzle</strong> (<span class="kbd">Sans / ×2 / ×3</span>, Pixfrac ≈ 0,6–0,8) : rééchantillonne pendant l'accumulation en exploitant les micro-décalages entre frames. Utile si <em>e</em> &gt; 2″/px ou si l'échantillonnage est serré au pixel près ; coût : mémoire et temps de calcul proportionnels à l'agrandissement. À 0,8″/px, restez sur « Sans ».</li>
+    </ul>
+    <div class="tip"><b>Astuce.</b> En cas d'appariement décevant avec la méthode « poly » sur très peu d'étoiles, revenez à « Étoiles (similarity) » : l'ajustement polynomial réclame au moins ~20 étoiles bien réparties pour un degré 3.</div>
+
+    <h2>4.5 Étape ⑥ — Empilement : quel algorithme ?</h2>
+    <p>Groupe <em>« 4. Empilement »</em>. Les sept algorithmes partagent le même but — accumuler le signal, rejeter les écarts — mais pas le même compromis :</p>
+    <table>
+      <tr><th>Algorithme</th><th>Comportement</th><th>Usage recommandé</th></tr>
+      <tr><td><strong>Sigma-clipping</strong> (défaut)</td><td>Rejette les pixels qui s'écartent de σ fois la médiane</td><td>Le bon choix universel (σ = 2,5–3)</td></tr>
+      <tr><td><strong>Moyenne</strong></td><td>Simplicité, meilleur S/B théorique</td><td>Séries très propres (labo, longue pose calme)</td></tr>
+      <tr><td><strong>Médiane</strong></td><td>Rejette tout ce qui n'est pas répété</td><td>Peu de frames, satellites fréquents</td></tr>
+      <tr><td><strong>Winsorisé</strong></td><td>Rejet doux : les extrêmes sont bornés, pas supprimés</td><td>Séries moyennes, peu de frames à sacrifier</td></tr>
+      <tr><td><strong>Rejet min/max</strong></td><td>Retire la plus claire et la plus sombre</td><td>Dépannage rapide, N &gt; 10</td></tr>
+      <tr><td><strong>Linear fit</strong></td><td>Ajuste une droite par pixel et rejette les résidus</td><td>Grandes séries, ciel variable (brume, lune)</td></tr>
+      <tr><td><strong>MAD clipping</strong></td><td>Rejet fondé sur l'écart absolu médian, robuste aux valeurs extrêmes</td><td>Séries polluées de trains de satellites</td></tr>
+    </table>
+    <p>Le champ <span class="kbd">Sigma :</span> règle l'agressivité du rejet (3,0 pour commencer ; 2,5 si des traces subsistent). Le classement qualité des frames (scores de netteté/luminosité, utilisé par le mode planétaire) est également disponible au niveau du noyau pour les chaînes scriptées (chapitre 10).</p>
+
+    <h2>4.6 Étape ⑦ — Gradient et fond de ciel</h2>
+    <p>Groupe <em>« 5. Traitement (fond, denoise, déconvolution) »</em>. Le Gradient modélise le fond (pollution, lune, veilleuse) et le retire :</p>
+    <ul>
+      <li><span class="kbd">Polynôme 2D</span> avec son Degré (2–3) : le cas général, très stable.</li>
+      <li><span class="kbd">RBF (thin plate)</span> avec ses cases (10–12) : s'adapte aux fonds irréguliers (coins lumineux, halos de lampadaires).</li>
+      <li><span class="kbd">Soustraction</span> (le plus courant) ou <span class="kbd">Division</span> (quand le défaut est un vignettage multiplicatif).</li>
+    </ul>
+    <p>Procédez doucement : un gradient bien réglé laisse un fond plat et sombre sans creuser les grands nébulosités. En pratique, <strong>contraignez d'abord la zone d'échantillonnage (cases) plutôt que le degré</strong>.</p>
+
+    <h2>4.7 Étape ⑧ — Débruitage et déconvolution</h2>
+    <p>Dans le même groupe : le Denoise propose <span class="kbd">Non-local means</span> (naturel, le plus utilisé ; force 0,3–0,5), <span class="kbd">Bilatéral</span> (protège les bords) et <span class="kbd">Ondelettes</span> (contrôle multi-échelle). La déconvolution (Richardson-Lucy) affine les détails : <span class="kbd">Déconv. itérations :</span> 10–20 avec un σ de PSF ≈ 1–1,5 px — par petites touches, et toujours <strong>après</strong> le débruitage léger : déconvoluer un stack bruité amplifie le grain.</p>
+
+    <h2>4.8 Étape ⑨ — Couleur : calibrer, neutraliser, déverdir</h2>
+    <p>Groupe <em>« Calibration couleur &amp; neutralisation »</em>, à utiliser dans cet ordre :</p>
+    <div class="step"><span class="num">①</span><span class="t">Calibration couleur (fond ciel)</span> — équilibre R/G/B sur le fond du ciel (méthode type Siril).</div>
+    <div class="step"><span class="num">②</span><span class="t">Neutraliser le fond</span> — fait tendre le fond vers le gris neutre ; le <span class="kbd">Percentile fond :</span> choisit la population de pixels « fond » (2–5 %).</div>
+    <div class="step"><span class="num">③</span><span class="t">SCNR vert (OSC)</span> — supprime la dominante verte des caméras couleur.</div>
+    <div class="step"><span class="num">④</span><span class="t">Calibration photométrique des couleurs (étoiles Gaia)</span> — l'affinage le plus juste : les couleurs sont calées sur les étoiles réelles du catalogue (nécessite la plateforme astrométrie du chapitre 9).</div>
+
+    <h2>4.9 Étape ⑩ — L'IA locale, au bon endroit de la chaîne</h2>
+    <p>Groupe <em>« 6. IA locale »</em> : choisissez la Tâche (<span class="kbd">denoise</span> / <span class="kbd">background</span> / <span class="kbd">sharpen</span> / <span class="kbd">superres</span> / <span class="kbd">satellite</span>) et le Fournisseur. Trois voies existent, du plus simple au plus intégré :</p>
+    <table>
+      <tr><th>Voie</th><th>Contenu</th><th>Installation</th></tr>
+      <tr><td><strong>Outils externes</strong> (résultats professionnels)</td><td>GraXpert (denoise, fond IA), StarNet2/DeepSNR (Cosmic Clarity : usage manuel, non automatisable)</td><td>Gratuits ; renseignez leurs chemins via <span class="kbd">Configurer les outils IA (chemins)…</span></td></tr>
+      <tr><td><strong>Modèles ONNX</strong></td><td>Vos modèles <code>.onnx</code> déposés dans <code>models/ai/</code> (+ JSON optionnel : tâche, taille d'entrée, chevauchement, échelle)</td><td><code>pip install onnxruntime</code> ; GPU utilisé automatiquement s'il est disponible</td></tr>
+      <tr><td><strong>Algorithmes classiques intégrés</strong></td><td>NLM, bilatéral, médiane, ondelettes ; Richardson-Lucy ; polynôme/RBF ; Hough + inpainting ; Lanczos</td><td>Rien à installer</td></tr>
+    </table>
+    <p><strong>Placement dans la chaîne</strong> : le débruitage IA remplace (ou complète) l'étape ⑧, après le gradient ; la super-résolution est la toute dernière opération avant export ; la suppression de satellites se fait de préférence sur les frames ou sur le stack avant finition.</p>
+
+    <h2>4.10 Étape ⑪ — HDR : fusionner plusieurs empilements</h2>
+    <p>Groupe <em>« 7. Composition HDR (plusieurs empilements) »</em> : empilez séparément chaque lot d'expositions (par ex. 300 s et 60 s), ajoutez chaque résultat avec <span class="kbd">Ajouter exposition…</span>, puis <span class="kbd">Fusionner HDR</span> (algorithme de Mertens) : le cœur des étoiles et les bras externes restent détaillés sur la même image.</p>
+
+    <h2>4.11 Astrométrie et exécution finale</h2>
+    <p>Le groupe <em>« 9. Astrométrie locale »</em> (plate solving, photométrie) est décrit en détail au chapitre 9 — il se règle après l'empilement, sur l'image finale. Quand toute la chaîne est réglée : <span class="kbd">▶ Traiter (pleine résolution) et exporter…</span> exécute calibration → défauts → alignement → empilement → traitements dans le bon sens, puis propose l'export. Le bouton <span class="kbd">Exporter l'image…</span> ré-exporte ensuite sans tout recalculer.</p>
+    <div class="warn"><b>Rappel.</b> L'aperçu applique un étirement automatique pour vous montrer les données linéaires — c'est un <em>affichage</em>. Le fichier exporté reste linéaire tant que vous n'avez pas traité la tonalité dans l'onglet Finition (chapitre 8) : conservez le stack FITS 32 bits comme archive maîtresse.</div>
+  </section>
+<section id="ch5">
+    <h1 class="chapter">5. Tuto d'exemple ① — traiter M51 de A à Z</h1>
+    <p><strong>Scénario.</strong> Une nuit de printemps en banlieue (Bortle 5), Newton 200/1000 mm au foyer, caméra couleur ASI533MC (pixels 3,76 µm). Vous avez posé 30 × 300 s sur M51 (plus 30 bias, 30 darks de 300 s, 25 flats, 15 dark-flats). Soit 2 h 30 de poses à aligner et empiler. Les dossiers sont organisés ainsi : <code>lights/</code>, <code>darks/</code>, <code>flats/</code>, <code>darkflats/</code>, <code>bias/</code>.</p>
+
+    <h2>5.1 Préparer (une seule fois)</h2>
+    <div class="step"><span class="num">1.</span><span class="t">Onglet Configuration.</span> Créez le profil « Newton200-ASI533 » : caméra 3,76 µm, −10 °C, matrice RGGB ; télescope 200 mm d'ouverture, f = 1000 mm ; mode Ciel profond ; Bortle « Banlieue (Bortle 5-6) ». L'échantillonnage calculé affiche <strong>0,77″/px</strong> — pas de drizzle nécessaire. <span class="kbd">💾 Enregistrer…</span></div>
+    <div class="step"><span class="num">2.</span><span class="t">Catalogue Gaia.</span> Toujours en Configuration, cliquez <span class="kbd">🌐 Générer le catalogue Gaia pour ce champ</span> : le CSV couvrant ~0,5° autour de M51 est mémorisé comme catalogue par défaut (Internet, une seule fois).</div>
+
+    <h2>5.2 Traiter (onglet Ciel profond)</h2>
+    <div class="step"><span class="num">3.</span><span class="t">Brutes.</span> <span class="kbd">Ajouter…</span> → sélectionnez les 30 fichiers de <code>lights/</code>. Bayer : RGGB.</div>
+    <div class="step"><span class="num">4.</span><span class="t">Masters.</span> Pointez chaque dossier dans le groupe 2 (Bias : <code>bias/</code>, Dark : <code>darks/</code>, Flat : <code>flats/</code>, Dark-flat : <code>darkflats/</code>).</div>
+    <div class="step"><span class="num">5.</span><span class="t">Défauts.</span> Cochez <span class="kbd">Détection auto (master dark/flat)</span> + <span class="kbd">Colonnes/lignes</span>. En aperçu, aucune colonne brillante ne doit subsister sur une frame calibrée.</div>
+    <div class="step"><span class="num">6.</span><span class="t">Alignement.</span> Cochez <span class="kbd">Tenir compte de la rotation du champ</span> (monture non parfaitement polaire sur 2 h 30) ; Méthode : <span class="kbd">Étoiles (similarity)</span> ; Drizzle : <span class="kbd">Sans</span>.</div>
+    <div class="step"><span class="num">7.</span><span class="t">Empilement.</span> Algorithme <span class="kbd">Sigma-clipping</span>, Sigma 3,0. Un trio de satellites a traversé le champ ? Passez à <span class="kbd">MAD clipping</span> ou σ = 2,5.</div>
+    <div class="step"><span class="num">8.</span><span class="t">Traitement.</span> Gradient <span class="kbd">Polynôme 2D</span>, Degré 3, <span class="kbd">Soustraction</span> — le fond doit devenir plat, M51 intacte. Denoise <span class="kbd">Non-local means</span>, Force 0,45. Déconvolution : 12 itérations, σ = 1,2 (les bras de M51 se détaillent sans halo sombre).</div>
+    <div class="step"><span class="num">9.</span><span class="t">Couleur.</span> <span class="kbd">Calibration couleur (fond ciel)</span>, puis <span class="kbd">Neutraliser le fond</span> (percentile 2 %), puis <span class="kbd">SCNR vert</span> si une dominante verte subsiste sur les étoiles.</div>
+    <div class="step"><span class="num">10.</span><span class="t">IA (optionnel).</span> Tâche <span class="kbd">denoise</span>, fournisseur GraXpert, force modérée — l'aperçu live juge de l'effet sur le fond.</div>
+    <div class="step"><span class="num">11.</span><span class="t">Astrométrie (optionnel).</span> Groupe 9 : catalogue par défaut pré-rempli, RA centre « 13:29:52 », Dec centre « +47:11 » , Rayon 0,5 → <span class="kbd">Plate solving</span>. L'échelle résolue doit retomber à ~0,77″/px : sinon, votre focale réelle diffère — utilisez la focale automatique de l'onglet Configuration.</div>
+    <div class="step"><span class="num">12.</span><span class="t">Exécuter.</span> <span class="kbd">▶ Traiter (pleine résolution) et exporter…</span> → exportez <code>M51_stack.fits</code> (FITS 32 bits flottant). Durée indicative sur un ordinateur courant : quelques minutes pour 30 frames de 9 Mo.</div>
+
+    <h2>5.3 Finition et archives</h2>
+    <div class="step"><span class="num">13.</span><span class="t">Onglet Finition (commune).</span> Chargez le stack : montez Gamma (courbes) pour révéler les bras spiraux, +contraste léger, Masque flou (force 0,4, rayon 1,8) sur le noyau désormais maîtrisé. Recadrez (X,Y,L,H) et exportez : TIFF 16 bits pour la retouche, PNG 8 bits pour le web, FITS conservé en archive.</div>
+    <div class="tip"><b>Ce que vous devez vérifier à chaque étape.</b> Après calibration : le fond d'une frame affichée « étirement auto » est sans taches fixes. Après alignement : les étoiles sont rondes aux quatre coins. Après empilement : le bruit a nettement chuté. Après gradient : le fond est plat et gris, sans quartier lumineux. Si un contrôle échoue, revenez au groupe correspondant — c'est tout l'intérêt de l'ordre des opérations.</div>
+  </section>
+
+  <section id="ch6">
+    <h1 class="chapter">6. Planétaire — les opérations dans l'ordre</h1>
+    <p>L'onglet <strong>Planétaire</strong> suit la figure 2. Sa logique diffère du ciel profond : la matière première est une vidéo dont seules quelques dizaines de frames valent la peine, et la cible tourne.</p>
+
+    <h2>6.1 Étape ① — Charger la source</h2>
+    <p>Groupe <em>« 1. Source : vidéo SER/AVI/MP4 ou images »</em> : basculez <span class="kbd">Vidéo (SER/AVI/MP4)</span> / <span class="kbd">Images (APN/FITS/TIFF)</span> puis <span class="kbd">Charger la source…</span>. Le SER est le format à privilégier à l'acquisition (métadonnées complètes, pas de compression) ; les MP4/AVI de caméras ou de smartphones sont aussi acceptés, de même que les éclipses/lune en fichiers images.</p>
+
+    <h2>6.2 Étape ② — Le classement qualité, cœur du mode</h2>
+    <p>Groupe <em>« Classement : »</em>. Chaque frame reçoit un score, et seules les meilleures entrent dans l'empilement :</p>
+    <table>
+      <tr><th>Critère</th><th>Ce qu'il mesure</th><th>À choisir quand…</th></tr>
+      <tr><td><strong>Netteté (Registax)</strong></td><td>Énergie des contours (détails fins)</td><td>Cas général lunaire/planétaire</td></tr>
+      <tr><td><strong>Luminosité</strong></td><td>Stabilité d'exposition</td><td>Vidéos avec fluctuations (auto-exposition)</td></tr>
+      <tr><td><strong>Mixte (AutoStacker)</strong></td><td>Combinaison des deux</td><td>Seeing instable, nuit tourmentée</td></tr>
+    </table>
+    <p>Le pourcentage (<span class="kbd">%</span>) détermine la sélection : gardez 10–30 % les mauvaises nuits, 25–50 % les bonnes. Trop généreux, le « voyant » se fige dans le stack ; trop sévère, le bruit remonte.</p>
+
+    <h2>6.3 Étapes ③+④ — Dérotation et alignement fin</h2>
+    <p>Groupe <em>« 2. Dérotation &amp; alignement »</em>. La <span class="kbd">Dérotation du champ</span> compense la rotation propre de l'image pendant la vidéo : <span class="kbd">auto</span> calcule le taux depuis les données de la séance, <span class="kbd">manuelle</span> impose un taux en °/min (utile au-delà de ~3 min sur Jupiter à grande focale ; en dessous d'une minute, laissez la dérotation désactivée). <span class="kbd">Intervalle frames :</span> précise la cadence si elle n'est pas lue dans l'en-tête. L'<span class="kbd">Alignement des couleurs (R/B sur G)</span> recale les canaux des caméras couleur — à activer si les bords frangés de violet/vert apparaissent. L'<span class="kbd">Algorithme :</span> se choisit selon la cible :</p>
+    <table>
+      <tr><th>Algorithme</th><th>Cible idéale</th></tr>
+      <tr><td><strong>Phase (rapide)</strong></td><td>Planètes pleines, bonne luminosité, quick look</td></tr>
+      <tr><td><strong>Limbe (précis)</strong></td><td>Jupiter/Saturne/Mars — suit le limbe, robuste en bout de focale</td></tr>
+      <tr><td><strong>Étoiles (large champ)</strong></td><td>Grand champ lunaire avec étoiles, ou scènes en fichiers</td></tr>
+    </table>
+
+    <h2>6.4 Étape ⑤ — Empilement planétaire</h2>
+    <p>Groupe <em>« 3. Empilement »</em> : <span class="kbd">Moyenne</span>, <span class="kbd">Médiane</span>, <span class="kbd">Sigma-clipping</span>, <span class="kbd">Moyenne (meilleurs %)</span>, et surtout <span class="kbd">AutoStack (AS!-style)</span> — l'approche AutoStakkert! : score de qualité par frame, sélection des meilleures, alignement par points du champ. Avec un stack_percent de 50–75 %, c'est le réglage recommandé.</p>
+
+    <h2>6.5 Étape ⑥ — Les ondelettes : la « loupe Registax6 »</h2>
+    <p>Groupe <em>« 4. Ondelettes (style Registax6) — aperçu live »</em>. L'image empilée est décomposée en 6 couches de détails, de la plus fine (<span class="kbd">Couche 1 (fins)</span>) à la plus large (<span class="kbd">Couche 6 (larges)</span>). Chaque couche a son gain :</p>
+    <ul>
+      <li><strong>Couche 1</strong> : granulation, micro-détails — gain 1,3–1,5 pas plus (amplifie aussi le bruit).</li>
+      <li><strong>Couches 2–3</strong> : bandes, continents lunaires — gain 1,2–1,3, le « bon » niveau habituel.</li>
+      <li><strong>Couches 4–6</strong> : structures larges — gain 1,0 (ne touchez pas au début) ; le résidu règle le contraste global.</li>
+      <li><span class="kbd">Débruitage (ondelettes Registax) :</span> 0,2–0,4 pour absorber le grain réveillé par les couches fines ; <span class="kbd">Réinitialiser les couches</span> repart de tout à 1,0.</li>
+    </ul>
+    <div class="tip"><b>Méthode.</b> Poussez la couche 1 jusqu'à voir du bruit, puis revenez en dessous d'un cran : vous venez de trouver votre maximum. Les anneaux de Saturne prennent surtout dans les couches 2–3 ; le limbe de la Lune, dans la couche 4.</div>
+
+    <h2>6.6 Étapes ⑦+⑧ — Couleurs, aberration chromatique, IA</h2>
+    <p>L'<span class="kbd">Aberration chromatique (correction radiale)</span> corrige les franges R/B qui fuient autour du centre (forte au Newton + barlow) : <span class="kbd">Rouge :</span> et <span class="kbd">Bleu :</span> se règlent en quelques essais à l'aperçu. Les <em>fausses couleurs</em> (groupe 7) transforment une image solaire N&B (H-alpha) en palette <span class="kbd">Solaire (orange)</span>, Inferno, Magma, Plasma, Viridis ou Turbo. L'IA locale (groupe 5 : <span class="kbd">denoise</span>, <span class="kbd">sharpen</span>, <span class="kbd">superres</span>) s'applique après les ondelettes — la super-résolution toujours en dernier.</p>
+
+    <h2>6.7 Étape ⑨ — Le film stabilisé</h2>
+    <p>Groupe <em>« 6. Film stabilisé (aligner + recadrer) &amp; export »</em> : la <span class="kbd">Recadrage commun automatique (anti-« danse »)</span> aligne toutes les frames sur un recadrage commun — le film ne tremble plus et la rotation du globe devient visible. Réglez <span class="kbd">Taille crop :</span> (0 = auto), <span class="kbd">FPS :</span>, le conteneur (<span class="kbd">MP4</span> / <span class="kbd">AVI (MJPG)</span> / <span class="kbd">GIF</span>) et la Qualité, puis <span class="kbd">🎬 Créer le film…</span>. Idéal pour animer la rotation jovienne sur 1–2 h de clips ou une éclipse lunaire.</p>
+
+    <h2>6.8 Exécuter et rejouer</h2>
+    <p><span class="kbd">▶ Tout traiter (classement→empilement→ondelettes…)</span> enchaîne toute la chaîne en pleine résolution, puis <span class="kbd">Exporter l'image…</span> écrit le résultat. Le groupe <em>« 8. Séquence &amp; batch (style Registax) »</em> mémorise tous vos réglages : <span class="kbd">💾 Enregistrer la séquence (tous les réglages)</span>, <span class="kbd">Charger une séquence (modifiable)…</span>, et <span class="kbd">▶ Batch SER : empiler toutes les vidéos d'un dossier…</span> avec <span class="kbd">Frames max/SER :</span> pour borner chaque vidéo — l'objet du chapitre 10.</p>
+  </section>
+
+  <section id="ch7">
+    <h1 class="chapter">7. Tuto d'exemple ② — une nuit sur Jupiter</h1>
+    <p><strong>Scénario.</strong> Jupiter à 40° de haut, seeing moyen. Newton 200/1000 + Barlow ×2 (focale effective 2000 mm), caméra ASI662MC. Vous avez filmé un clip SER de 90 s à ~110 fps (≈ 9 900 frames). Objectif : un stack net + un film de 6 s montrant le globe.</p>
+
+    <h2>7.1 Traitement pas à pas</h2>
+    <div class="step"><span class="num">1.</span><span class="t">Source.</span> Onglet Planétaire, <span class="kbd">Vidéo (SER/AVI/MP4)</span> → <span class="kbd">Charger la source…</span> → le SER. L'aperçu montre la première frame.</div>
+    <div class="step"><span class="num">2.</span><span class="t">Classement.</span> <span class="kbd">Netteté (Registax)</span>, garder <strong>25 %</strong> (seeing moyen). La courbe de classement affichée vous indique où tombe la qualité.</div>
+    <div class="step"><span class="num">3.</span><span class="t">Dérotation.</span> Clip de 90 s : laissez la dérotation désactivée (rotation imperceptible).</div>
+    <div class="step"><span class="num">4.</span><span class="t">Alignement.</span> Algorithme <span class="kbd">Limbe (précis)</span>. <span class="kbd">Alignement des couleurs (R/B sur G)</span> coché.</div>
+    <div class="step"><span class="num">5.</span><span class="t">Empilement.</span> <span class="kbd">AutoStack (AS!-style)</span>, <span class="kbd">%</span> 75 des frames classées. Résultat attendu : un globe lisse, les bandes équatoriales nettes.</div>
+    <div class="step"><span class="num">6.</span><span class="t">Ondelettes.</span> Gains <strong>1,4 / 1,2 / 0,9 / 1,0 / 1,0 / 1,0</strong> (couches 1→6), Débruitage 0,3. La Grande Tache Rouge se détache sans halos ; si le bord du limbe « accroche », réduisez la couche 1.</div>
+    <div class="step"><span class="num">7.</span><span class="t">Chromatisme.</span> Franges violettes sur le limbe ? <span class="kbd">Aberration chromatique</span> : Rouge +2, Bleu −2 (valeurs d'exemple à affiner à l'aperçu).</div>
+    <div class="step"><span class="num">8.</span><span class="t">IA (optionnel).</span> <span class="kbd">sharpen</span> puis <span class="kbd">superres</span> (fournisseur ONNX ou outil externe) pour un agrandissement propre.</div>
+    <div class="step"><span class="num">9.</span><span class="t">Film.</span> Recadrage commun coché, Taille 300 px (0 = auto), FPS 24, MP4, Qualité haute → <span class="kbd">🎬 Créer le film…</span> : la turbulence devient lisible image par image, le globe reste fixe.</div>
+    <div class="step"><span class="num">10.</span><span class="t">Exécuter.</span> <span class="kbd">▶ Tout traiter (classement→empilement→ondelettes…)</span> puis <span class="kbd">Exporter l'image…</span> (PNG 16 bits pour garder la dynamique).</div>
+
+    <h2>7.2 Aller plus loin : plusieurs clips, plusieurs heures</h2>
+    <p>Filmez un clip de 60–90 s toutes les 15 minutes pendant 2 h : chaque clip donne un stack (étapes ci-dessus), et le <em>film stabilisé</em> d'un lot de stacks révèle la rotation du globe. Quand vos réglages sont stables, enregistrez-les (<span class="kbd">💾 Enregistrer la séquence</span>) et laissez le <span class="kbd">▶ Batch SER</span> empiler la soirée entière d'un seul clic — le JSON <code>scripts/batch_planetaire_ser.json</code> fourni avec l'application montre la structure attendue (classement « Netteté (Registax) » 75 %, alignement « Limbe (précis) », AutoStack 90 %, ondelettes 1,3/1,2/1,0…).</p>
+    <div class="warn"><b>Piège classique.</b> Fusionner dans un même empilement des clips étalés sur plus de 3–5 minutes à grande focale : la rotation jovienne brouille les détails les plus fins. Empilez clip par clip, la dérotation ne compensant que le champ, pas la rotation du globe elle-même.</div>
+  </section>
+<section id="ch8">
+    <h1 class="chapter">8. Finition (commune) et export des fichiers</h1>
+
+    <h2>8.1 L'onglet Finition : la « salle de retouche » type GIMP</h2>
+    <p>L'onglet <strong>Finition (commune)</strong> travaille sur <em>une</em> image chargée — le stack des autres onglets ou n'importe quel fichier — et regroupe trois familles d'outils, dans l'ordre où vous les rencontrez :</p>
+    <div class="step"><span class="num">①</span><span class="t">Tonalité (style GIMP).</span> Luminosité, Contraste, Saturation, Gamma (courbes) et Balance des blancs R/G/B. C'est ici que l'image linéaire du stack devient visible : le Gamma est votre outil d'étirement manuel (1,5–2,5 typiquement).</div>
+    <div class="step"><span class="num">②</span><span class="t">Géométrie.</span> Recadrer X,Y,L,H ; rotations Aucune/90°/180°/270° ; Miroir horizontal/vertical ; <span class="kbd">Appliquer</span>. Recadrez tardivement : une opération géométrique n'est pas réversible.</div>
+    <div class="step"><span class="num">③</span><span class="t">Netteté / filtres.</span> Masque flou (force + rayon) : la touche finale sur les détails, à petits réglages (0,3–0,6 / 1–2 px) après tout le reste.</div>
+    <div class="step"><span class="num">④</span><span class="t">Recalcul pour augmenter la résolution.</span> <span class="kbd">Lanczos ×2</span>, <span class="kbd">Lanczos ×3</span> ou <span class="kbd">IA (ONNX superres)</span> — à placer juste avant l'export final, jamais avant la netteté.</div>
+    <p>L'histogramme (panneau <em>Histogramme</em>) accompagne chaque réglage : c'est lui qui montre quand le fond « décolle » du bord gauche sans y être collé.</p>
+
+    <h2>8.2 Exporter sans perdre la qualité</h2>
+    <table>
+      <tr><th>Format d'export</th><th>Profondeur</th><th>Usage</th></tr>
+      <tr><td><strong>FITS (32 bits flottant)</strong></td><td>Float32</td><td>Archive maîtresse, échanges avec d'autres logiciels ; le WCS résolu est inscrit dans l'en-tête</td></tr>
+      <tr><td><strong>TIFF 16 bits</strong></td><td>16 bits</td><td>Retouche externe, impression</td></tr>
+      <tr><td><strong>PNG 8 / 16 bits</strong></td><td>8–16 bits</td><td>Web, sans perte</td></tr>
+      <tr><td><strong>JPEG 95 %</strong></td><td>8 bits compressé</td><td>Partage rapide (réseaux)</td></tr>
+    </table>
+    <p>Ordre conseillé : terminer la chaîne en 16 bits, exporter le maître FITS, <em>puis</em> décliner les variantes de partage. Un JPEG créé trop tôt dans la chaîne devient un plafond de qualité dont on ne revient pas.</p>
+    <h2>8.3 Séquences batch (esprit Registax) dans la finition</h2>
+    <p>Le groupe <em>« Séquences batch (enregistrer &amp; rejouer) »</em> capture votre chaîne de finition : <span class="kbd">＋ Ajouter l'étape courante</span> mémorise les réglages de chaque groupe dans la liste, <span class="kbd">▶ Appliquer au lot (dossier)…</span> rejoue la séquence sur toutes les images d'un dossier (FITS/TIFF/PNG/XISF), <span class="kbd">Charger…</span> / <span class="kbd">Supprimer</span> gèrent les séquences enregistrées. Détails et exemples JSON au chapitre 10.</p>
+  </section>
+
+  <section id="ch9">
+    <h1 class="chapter">9. Astrométrie : plate solving et photométrie</h1>
+
+    <h2>9.1 Deux solveurs 100 % locaux</h2>
+    <ul>
+      <li><strong>astrometry.net</strong> (bouton <span class="kbd">Plate solving</span> du groupe 9, si l'option est cochée en Configuration) : installez le paquet + les fichiers d'index une fois ; c'est le plus robuste, notamment pour les grands champs.</li>
+      <li><strong>Solveur interne</strong> : détection d'étoiles (photutils), appariement de motifs contre votre catalogue CSV (<code>ra,dec,mag</code> en degrés — Gaia par la méthode du chapitre 3), puis ajustement WCS TAN (astropy). Il suppose un centre approximatif connu (RA/Dec + Rayon du groupe 9) et un champ sans distorsion optique forte.</li>
+    </ul>
+    <p>Le formulaire attend les coordonnées sous deux formes — « 10:25:03 ou 156.26 » — et le Rayon (deg) délimite la zone de recherche. Une fois résolu, le WCS est inscrit dans l'en-tête FITS à l'export : vos fichiers deviennent géoréférencés pour tous les autres outils.</p>
+
+    <h2>9.2 Photométrie d'ouverture</h2>
+    <p><span class="kbd">Photométrie → CSV</span> mesure chaque étoile du catalogue dans l'image (ouverture photutils), calibre le zéro de magnitude sur les étoiles de référence et exporte un CSV (x, y, flux, mag). Utilisations : contrôle d'échantillonnage, suivi de transparence, préparation de courbes de lumière.</p>
+    <h2>9.3 Photométrie différentielle</h2>
+    <p><span class="kbd">Photom. différentielle → CSV</span> mesure votre cible <em>par rapport à un ensemble d'étoiles de comparaison</em> du catalogue : le zéro instrumental et l'extinction atmosphérique s'annulent, et le résultat s'exprime directement <strong>Δmag ± erreur</strong>. C'est la méthode de référence pour les exoplanètes en transit et les étoiles variables — tout se calcule localement, sans service en ligne.</p>
+    <div class="tip"><b>Réglages d'ouverture.</b> Si les magnitudes dérivées s'écartent du catalogue, agrandissez légèrement le rayon d'ouverture ou vérifiez l'échantillonnage résolu par le plate solving : une échelle erronée décale toutes les ouvertures.</div>
+  </section>
+
+  <section id="ch10">
+    <h1 class="chapter">10. Séquences batch et scripts Python</h1>
+
+    <h2>10.1 Les trois niveaux d'automatisation</h2>
+    <table>
+      <tr><th>Niveau</th><th>Où</th><th>Ce qu'il rejoue</th></tr>
+      <tr><td>Sequence batch finition</td><td>Onglet Finition (commune)</td><td>Toute la chaîne de finition sur un dossier d'images</td></tr>
+      <tr><td>Processus de traitement automatique</td><td>Onglet Ciel profond (groupe 8)</td><td>La liste d'étapes ciel profond (↑/↓ réordonne, Activer/désactive), enregistrée en JSON</td></tr>
+      <tr><td>Séquence planétaire</td><td>Onglet Planétaire (groupe 8)</td><td>Classement, dérotation, ondelettes, palette… sur toutes les vidéos d'un dossier</td></tr>
+    </table>
+    <p>Dans chaque cas : réglez une fois, <span class="kbd">💾 Enregistrer…</span>, puis appliquez au lot. Les fichiers JSON sont petits et lisibles — voici l'exemple fourni <code>scripts/batch_planetaire_ser.json</code> :</p>
+<pre><code>{
+  "mode": "ser",
+  "ops": [ { "op": "planet_chain", "params": {
+      "quality_mode": "Netteté (Registax)", "keep_percent": 75.0,
+      "derot": false, "align_method": "Limbe (précis)", "rgb_align": true,
+      "stack_method": "AutoStack (AS!-style)", "stack_percent": 90.0,
+      "gains": [1.3, 1.2, 1.0, 1.0, 1.0, 1.0, 1.0], "wave_denoise": 0.3 } } ]
+}</code></pre>
+
+    <h2>10.2 Le noyau en Python pur (sans interface)</h2>
+    <p>Toutes les fonctions sont appelables en script — pour un plan d'action nocturne ou un ordinateur sans écran. L'essentiel (extrait de <code>GUIDE_SCRIPTS.md</code>, à lancer depuis le dossier de l'application avec <code>export PYTHONPATH=.</code>) :</p>
+<pre><code># Batch de finition sur un dossier
+from astroforge.core import sequence as Q
+seq = {"mode": "image", "ops": [
+    {"op": "gimp_tone", "params": {"contrast": 0.1, "sat": 1.1,
+                                    "usm_amount": 0.5, "usm_radius": 1.5}},
+    {"op": "denoise", "params": {"method": "Non-local means", "strength": 0.4}}]}
+Q.run_batch_image(seq, "entree/", "sortie/")
+
+# Batch planétaire : toutes les vidéos SER d'un dossier
+seq = Q.load_sequence("scripts/batch_planetaire_ser.json")
+Q.run_batch_ser_chain(seq, "videos/", "empiles/", max_frames=200)</code></pre>
+<pre><code># Pipeline ciel profond scripté : calibration -> drizzle -> gradient -> denoise
+from astroforge.core.image_io import load_image, save_image
+from astroforge.core import calibration as C, registration as R
+from astroforge.core.stacking import stack
+from astroforge.core.drizzle import drizzle_stack
+from astroforge.core.gradient import extract_gradient
+from astroforge.core.restoration import denoise
+
+cal = [C.calibrate(load_image(p), mb, md, mf) for p in lights]
+ref = cal[len(cal) // 2]
+shifts = [R.phase_corr(ref, im)[:2] for im in cal]
+img, _ = drizzle_stack(cal, shifts, scale=2, pixfrac=0.7)   # drizzle ×2
+img, fond = extract_gradient(img, "Polynôme 2D", 3, 12, 2.5, "Soustraction")
+img = denoise(img, "Non-local means", 0.5)
+save_image("resultat.fits", img)</code></pre>
+<pre><code># Astrométrie : catalogue, focale auto, photométrie (internet pour le catalogue)
+from astroforge.core import equipment as EQ, astrometry as A
+from astroforge.core.image_io import load_image
+
+EQ.make_gaia_catalog(156.25, 19.75, 0.6, "profiles/gaia_champ.csv", mag_limit=15)
+img = load_image("m51.fits")
+res = A.solve_image(img, catalog_path="profiles/gaia_champ.csv",
+                    center_ra=156.25, center_dec=19.75)
+focal = EQ.focal_from_scale(pixel_um=3.8, scale_arcsec_pix=res["scale_arcsec_pix"])
+tab = A.aperture_photometry(img, wcs=res["wcs"], catalog_path="profiles/gaia_champ.csv")
+tab.write("photometrie.csv", format="csv")</code></pre>
+    <p>Les opérations de séquence disponibles côté script (<code>Q.OPS</code>) couvrent la tonalité, le débruitage, la déconvolution, les satellites, les palettes, la super-résolution et l'appel IA. Pour un lancement nocturne : <code>nohup python3 mon_script.py &gt; log.txt 2&gt;&amp;1 &amp;</code>. Chaque fonction lourde accepte un rappel <code>progress</code> (fait, total) pour l'avancement.</p>
+  </section>
+
+  <section id="ch11">
+    <h1 class="chapter">11. Profils, astuces et dépannage</h1>
+
+    <h2>11.1 Les familles de profils</h2>
+    <p>Chaque groupe de réglages possède sa barre <span class="kbd">[profil ▾] [💾 Enregistrer] [↺ Standard]</span>. Les répertoires créés sous <code>profiles/</code> :</p>
+    <table>
+      <tr><th>Famille</th><th>Contenu</th></tr>
+      <tr><td><code>equipment</code></td><td>Profils d'équipement (caméra + télescope + Bortle)</td></tr>
+      <tr><td><code>sky_align</code>, <code>sky_stack</code>, <code>sky_trait</code>, <code>sky_defects</code>, <code>sky_ia</code></td><td>Alignement, empilement, traitements, défauts, IA du mode ciel profond</td></tr>
+      <tr><td><code>planet_rank</code>, <code>planet_stack</code>, <code>planet_wavelets</code>, <code>planet_ca</code>, <code>planet_anim</code></td><td>Classement, empilement, ondelettes, aberration chromatique, film stabilisé</td></tr>
+      <tr><td><code>common_tone</code>, <code>common_superres</code></td><td>Finition commune : tonalité et recalcul</td></tr>
+    </table>
+    <p>Le profil <em>Standard</em> reste toujours disponible pour revenir aux valeurs par défaut en un clic.</p>
+
+    <h2>11.2 Les bons réflexes d'une nuit</h2>
+    <ul>
+      <li><strong>Avant la nuit</strong> : profil d'équipement à jour (température du capteur !), catalogue Gaia généré si vous changez de champ.</li>
+      <li><strong>Pendant</strong> : darks à la température des lights ; flats le soir ou au panneau ; clips planétaires courts (60–120 s).</li>
+      <li><strong>Après</strong> : traitez d'abord une petite sous-série pour valider la chaîne, enregistrez la séquence, puis lancez le lot complet — éventuellement la nuit suivante en batch.</li>
+    </ul>
+
+    <h2>11.3 Dépannage rapide</h2>
+    <table>
+      <tr><th>Symptôme</th><th>Cause probable</th><th>Remède</th></tr>
+      <tr><td>Le fond reste vert (OSC)</td><td>Dominante verte du capteur</td><td><span class="kbd">SCNR vert</span> après la calibration couleur</td></tr>
+      <tr><td>Colonnes brillantes récurrentes</td><td>Défauts de lecture CMOS</td><td>Groupe défauts + <span class="kbd">Colonnes/lignes</span>, détection auto sur masters</td></tr>
+      <tr><td>Étoiles floues aux coins après alignement</td><td>Distorsion optique</td><td>Méthode <span class="kbd">Plate solving + distorsions (poly)</span>, ≥ 20 étoiles</td></tr>
+      <tr><td>Le plate solving échoue</td><td>Centre/rayon trop loin, catalogue trop faible</td><td>Vérifiez RA/Dec/Rayon, magnitude limite 14–15, ou installez astrometry.net</td></tr>
+      <tr><td>Stack plus sombre qu'attendu</td><td>Flat mal normalisé, dark-flat manquant</td><td>Reprenez les flats avec dark-flats assortis</td></tr>
+      <tr><td>Traces de satellites dans le stack</td><td>Rejet trop doux</td><td>σ = 2,5, ou <span class="kbd">MAD clipping</span>, ou tâche IA <span class="kbd">satellite</span></td></tr>
+      <tr><td>Planétaire « dansant » dans le film</td><td>Recadrage commun désactivé</td><td>Cochez <span class="kbd">Recadrage commun automatique</span></td></tr>
+      <tr><td>IA : fournisseur vide</td><td>Aucun outil configuré</td><td><span class="kbd">Configurer les outils IA (chemins)…</span> ou déposez un <code>.onnx</code> dans <code>models/ai/</code></td></tr>
+      <tr><td>RAW APN refusé</td><td>rawpy absent</td><td><code>pip install rawpy</code></td></tr>
+    </table>
+
+    <h2>11.4 Limites connues (à connaître avant de chercher un bug)</h2>
+    <ul>
+      <li>Le drizzle utilise un noyau carré (translation + petite rotation) — version simplifiée du drizzle de DrizzlePac.</li>
+      <li>Le solveur interne suppose un champ sans distorsion forte et un centre approximatif : pour de très grands champs, préférez astrometry.net.</li>
+      <li>XISF : lecture des images non compressées et zlib (pas LZ4/Huffman) ; écriture Float32 non compressée.</li>
+    </ul>
+  </section>
+
+  <section id="annexe">
+    <h1 class="chapter">A. Annexe — l'ordre des opérations en une page</h1>
+    <h2>Ciel profond — chaîne à imprimer</h2>
+    <table>
+      <tr><th></th><th>Étape</th><th>Groupe de l'onglet</th><th>Objectif vérifiable</th></tr>
+      <tr><td class="check">□</td><td>1. Brutes + Bayer</td><td>1. Images brutes</td><td>Toutes les frames listées, même matériel/température</td></tr>
+      <tr><td class="check">□</td><td>2. Masters</td><td>2. Calibration</td><td>Bias/dark/flat/dark-flat pointés</td></tr>
+      <tr><td class="check">□</td><td>3. Calibration</td><td>automatique</td><td>Fond de frame sans taches fixes</td></tr>
+      <tr><td class="check">□</td><td>4. Défauts</td><td>10. Pixels défectueux</td><td>Plus de colonnes/pixels morts</td></tr>
+      <tr><td class="check">□</td><td>5. Alignement (+ drizzle)</td><td>3. Alignement &amp; Drizzle</td><td>Étoiles rondes aux coins</td></tr>
+      <tr><td class="check">□</td><td>6. Empilement</td><td>4. Empilement</td><td>Bruit nettement réduit</td></tr>
+      <tr><td class="check">□</td><td>7. Gradient</td><td>5. Traitement</td><td>Fond plat et neutre</td></tr>
+      <tr><td class="check">□</td><td>8. Denoise + déconvolution</td><td>5. Traitement</td><td>Grain absorbé, détails fins</td></tr>
+      <tr><td class="check">□</td><td>9. Couleur</td><td>Calibration couleur</td><td>Fond neutre, pas de vert</td></tr>
+      <tr><td class="check">□</td><td>10. IA / HDR</td><td>6. et 7. IA / HDR</td><td>Finition esthétique (option)</td></tr>
+      <tr><td class="check">□</td><td>11. Astrométrie</td><td>9. Astrométrie</td><td>WCS résolu (option)</td></tr>
+      <tr><td class="check">□</td><td>12. Exécution + finition</td><td>▶ Traiter… puis Finition</td><td>Export FITS maître + variantes</td></tr>
+    </table>
+    <h2>Planétaire — chaîne à imprimer</h2>
+    <table>
+      <tr><th></th><th>Étape</th><th>Groupe de l'onglet</th><th>Objectif vérifiable</th></tr>
+      <tr><td class="check">□</td><td>1. Source</td><td>1. Source</td><td>Vidéo chargée, aperçu lisible</td></tr>
+      <tr><td class="check">□</td><td>2. Classement qualité</td><td>Classement</td><td>Courbe de qualité, % choisi</td></tr>
+      <tr><td class="check">□</td><td>3. Dérotation</td><td>2. Dérotation</td><td>Off &lt; 1 min ; auto/manuelle au-delà</td></tr>
+      <tr><td class="check">□</td><td>4. Alignement fin</td><td>2. Dérotation &amp; alignement</td><td>Limbe stable image à image</td></tr>
+      <tr><td class="check">□</td><td>5. Empilement</td><td>3. Empilement</td><td>AutoStack 50–75 %, globe lisse</td></tr>
+      <tr><td class="check">□</td><td>6. Ondelettes</td><td>4. Ondelettes</td><td>Gains 1→6 croissants puis stop au bruit</td></tr>
+      <tr><td class="check">□</td><td>7. Couleur / chromatisme</td><td>2. et 7.</td><td>Plus de franges R/B</td></tr>
+      <tr><td class="check">□</td><td>8. Film + export</td><td>6. Film stabilisé</td><td>MP4 stable, PNG 16 bits</td></tr>
+    </table>
+    <p style="margin-top:5mm; color:#55606f; font-size:8.5pt;">AstroForge 1.5.0 — tutoriel généré pour accompagner le manuel utilisateur ; les libellés cités sont ceux de l'interface. Bon ciel !</p>
+  </section>
+</body>
+</html>

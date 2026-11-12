@@ -1,0 +1,27 @@
+<h3><font color="#2b4a7e">3. Prise en main</font></h3>
+<h4><font color="#2b4a7e">3.1 L'interface</font></h4>
+<p>Quatre onglets : <strong>Ciel profond</strong>, <strong>Planétaire</strong>,
+<strong>Finition (commune)</strong> et <strong>Configuration</strong>. Chaque mode combine
+une colonne de paramètres (gauche), un <strong>aperçu Avant / Après / Côte à côte</strong>
+(centre) et la zone d'exécution avec journal et barre de progression (droite).</p>
+<h4><font color="#2b4a7e">3.2 Aperçu live</font></h4>
+<p>Tout réglage déclenche, après ~0,45 s, le recalcul de l'aperçu sur une copie réduite de
+l'image. La case « Étirement auto (affichage) » révèle les données linéaires ; elle ne
+modifie pas les données exportées.</p>
+<h4><font color="#2b4a7e">3.3 Profils de paramètres</font></h4>
+<p>Chaque groupe de réglages possède une barre <code>[profil ▾] [💾 Enregistrer] [↺ Standard]</code>.
+Le profil « standard » (valeurs par défaut) est protégé ; créez autant de profils que
+nécessaire — un JSON par profil dans <code>profiles/</code>.</p>
+<h4><font color="#2b4a7e">3.4 Page Configuration</font></h4>
+<p>Créez un profil par matériel : caméra (pixel µm, résolution, température capteur, matrice
+de Bayer), télescope (ouverture, focale), <strong>réducteur de focale</strong> (case + facteur),
+mode de travail et <strong>pollution lumineuse</strong> (Bortle 3-4 à 9 — une force de
+débruitage est suggérée). La focale effective, l'échantillonnage (″/px) et le champ de vue
+sont recalculés en direct. Cases à cocher d'astrométrie : « solve-field (astrometry.net) » et
+catalogue CSV par défaut. Deux boutons clés :</p>
+<ul>
+  <li><strong>« 🌐 Générer le catalogue Gaia pour ce champ »</strong> : télécharge une fois les
+  étoiles Gaia DR3 (positions + magnitudes G/BP/RP) couvrant le champ de vue de votre profil.</li>
+  <li><strong>« 🔍 Déterminer la focale automatiquement »</strong> : résout une image de votre
+  matériel et déduit la focale (f = 206 265 × pixel / échelle) — utile après un changement de réducteur.</li>
+</ul>

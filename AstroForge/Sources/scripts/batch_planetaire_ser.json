@@ -1,0 +1,13 @@
+{
+  "mode": "ser",
+  "ops": [
+    {"op": "planet_chain", "params": {
+      "quality_mode": "Netteté (Registax)", "keep_percent": 75.0,
+      "derot": false, "derot_mode": "auto", "derot_rate": 0.0, "interval": 1.0,
+      "align_method": "Limbe (précis)", "rgb_align": true, "ca": false,
+      "kr": 0.0, "kb": 0.0,
+      "stack_method": "AutoStack (AS!-style)", "stack_percent": 90.0,
+      "gains": [1.3, 1.2, 1.0, 1.0, 1.0, 1.0, 1.0], "wave_denoise": 0.3,
+      "false_color": false, "palette": "Solaire (orange)"}}
+  ]
+}

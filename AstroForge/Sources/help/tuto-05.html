@@ -1,0 +1,23 @@
+ch5">
+    <h2><font color="#1c3a6e">5. Tuto d'exemple ① — traiter M51 de A à Z</font></h2>
+    <p><strong>Scénario.</strong> Une nuit de printemps en banlieue (Bortle 5), Newton 200/1000 mm au foyer, caméra couleur ASI533MC (pixels 3,76 µm). Vous avez posé 30 × 300 s sur M51 (plus 30 bias, 30 darks de 300 s, 25 flats, 15 dark-flats). Soit 2 h 30 de poses à aligner et empiler. Les dossiers sont organisés ainsi : <code>lights/</code>, <code>darks/</code>, <code>flats/</code>, <code>darkflats/</code>, <code>bias/</code>.</p>
+
+    <h3><font color="#2b4a7e">5.1 Préparer (une seule fois)</font></h3>
+    <p>1. <b>Onglet Configuration.</b>  Créez le profil « Newton200-ASI533 » : caméra 3,76 µm, −10 °C, matrice RGGB ; télescope 200 mm d'ouverture, f = 1000 mm ; mode Ciel profond ; Bortle « Banlieue (Bortle 5-6) ». L'échantillonnage calculé affiche <strong>0,77″/px</strong> — pas de drizzle nécessaire. <b>[💾 Enregistrer…]</b></p>
+    <p>2. <b>Catalogue Gaia.</b>  Toujours en Configuration, cliquez <b>[🌐 Générer le catalogue Gaia pour ce champ]</b> : le CSV couvrant ~0,5° autour de M51 est mémorisé comme catalogue par défaut (Internet, une seule fois).</p>
+
+    <h3><font color="#2b4a7e">5.2 Traiter (onglet Ciel profond)</font></h3>
+    <p>3. <b>Brutes.</b>  <b>[Ajouter…]</b> → sélectionnez les 30 fichiers de <code>lights/</code>. Bayer : RGGB.</p>
+    <p>4. <b>Masters.</b>  Pointez chaque dossier dans le groupe 2 (Bias : <code>bias/</code>, Dark : <code>darks/</code>, Flat : <code>flats/</code>, Dark-flat : <code>darkflats/</code>).</p>
+    <p>5. <b>Défauts.</b>  Cochez <b>[Détection auto (master dark/flat)]</b> + <b>[Colonnes/lignes]</b>. En aperçu, aucune colonne brillante ne doit subsister sur une frame calibrée.</p>
+    <p>6. <b>Alignement.</b>  Cochez <b>[Tenir compte de la rotation du champ]</b> (monture non parfaitement polaire sur 2 h 30) ; Méthode : <b>[Étoiles (similarity)]</b> ; Drizzle : <b>[Sans]</b>.</p>
+    <p>7. <b>Empilement.</b>  Algorithme <b>[Sigma-clipping]</b>, Sigma 3,0. Un trio de satellites a traversé le champ ? Passez à <b>[MAD clipping]</b> ou σ = 2,5.</p>
+    <p>8. <b>Traitement.</b>  Gradient <b>[Polynôme 2D]</b>, Degré 3, <b>[Soustraction]</b> — le fond doit devenir plat, M51 intacte. Denoise <b>[Non-local means]</b>, Force 0,45. Déconvolution : 12 itérations, σ = 1,2 (les bras de M51 se détaillent sans halo sombre).</p>
+    <p>9. <b>Couleur.</b>  <b>[Calibration couleur (fond ciel)]</b>, puis <b>[Neutraliser le fond]</b> (percentile 2 %), puis <b>[SCNR vert]</b> si une dominante verte subsiste sur les étoiles.</p>
+    <p>10. <b>IA (optionnel).</b>  Tâche <b>[denoise]</b>, fournisseur GraXpert, force modérée — l'aperçu live juge de l'effet sur le fond.</p>
+    <p>11. <b>Astrométrie (optionnel).</b>  Groupe 9 : catalogue par défaut pré-rempli, RA centre « 13:29:52 », Dec centre « +47:11 » , Rayon 0,5 → <b>[Plate solving]</b>. L'échelle résolue doit retomber à ~0,77″/px : sinon, votre focale réelle diffère — utilisez la focale automatique de l'onglet Configuration.</p>
+    <p>12. <b>Exécuter.</b>  <b>[▶ Traiter (pleine résolution) et exporter…]</b> → exportez <code>M51_stack.fits</code> (FITS 32 bits flottant). Durée indicative sur un ordinateur courant : quelques minutes pour 30 frames de 9 Mo.</p>
+
+    <h3><font color="#2b4a7e">5.3 Finition et archives</font></h3>
+    <p>13. <b>Onglet Finition (commune).</b>  Chargez le stack : montez Gamma (courbes) pour révéler les bras spiraux, +contraste léger, Masque flou (force 0,4, rayon 1,8) sur le noyau désormais maîtrisé. Recadrez (X,Y,L,H) et exportez : TIFF 16 bits pour la retouche, PNG 8 bits pour le web, FITS conservé en archive.</p>
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#eef4fb"><b>Ce que vous devez vérifier à chaque étape.</b> Après calibration : le fond d'une frame affichée « étirement auto » est sans taches fixes. Après alignement : les étoiles sont rondes aux quatre coins. Après empilement : le bruit a nettement chuté. Après gradient : le fond est plat et gris, sans quartier lumineux. Si un contrôle échoue, revenez au groupe correspondant — c'est tout l'intérêt de l'ordre des opérations.</td></tr></table>

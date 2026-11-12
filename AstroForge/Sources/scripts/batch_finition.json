@@ -1,0 +1,9 @@
+{
+  "mode": "image",
+  "ops": [
+    {"op": "gimp_tone", "params": {"bright": 0.0, "contrast": 0.1, "sat": 1.1,
+                                   "gamma": 1.0, "wr": 1.0, "wg": 1.0, "wb": 1.0,
+                                   "usm_amount": 0.5, "usm_radius": 1.5}},
+    {"op": "denoise", "params": {"method": "Non-local means", "strength": 0.4}}
+  ]
+}

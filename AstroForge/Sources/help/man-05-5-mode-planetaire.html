@@ -1,0 +1,27 @@
+<h3><font color="#2b4a7e">5. Mode planétaire — workflow complet</font></h3>
+<h4><font color="#2b4a7e">5.1 Source (groupe 1)</font></h4>
+<p>Chargez une vidéo (SER lu nativement 8/16 bits mono/Bayer/couleur ; AVI/MP4 via OpenCV) ou
+une série d'images. Le <strong>tri qualité</strong> (style AutoStakkert!) note chaque frame par
+le contraste local haute fréquence et ne garde que les N % meilleures.</p>
+<h4><font color="#2b4a7e">5.2 Dérotation et alignement (groupe 2)</font></h4>
+<p>Dérotation du champ (automatique par estimation de rotation, ou manuelle en °/min ×
+intervalle), puis alignement par l'algorithme au choix v1.3 :
+<strong>Phase (rapide)</strong>, <strong>Limbe (précis)</strong> — corrélation sur les contours
+du limbe, idéale pour Jupiter/Saturne — ou <strong>Étoiles (large champ)</strong>. L'alignement
+multipoint (champ de décalage lissé) est appliqué par l'empilement AutoStack.</p>
+<h4><font color="#2b4a7e">5.3 Empilement, couleurs (groupes 3 + aberration chromatique)</font></h4>
+<p>Choisissez <strong>AutoStack (AS!-style)</strong> v1.4 (qualité →
+sélection → alignement multipoint → moyenne), la moyenne simple, la médiane ou le
+sigma-clipping. L'alignement des canaux R/B recadre la chromatie planétaire ; la correction
+d'<strong>aberration chromatique</strong> radiale (sliders R/B) v1.3
+se règle en aperçu live.</p>
+<h4><font color="#2b4a7e">5.4 Accentuation et débruitage — méthode Registax (groupe 4)</font></h4>
+<p>Les <strong>6 sliders d'ondelettes à trous</strong> reproduisent les couches de Registax6
+(gain 0-3× par couche, du détail fin au large) ; le slider <strong>« Débruitage (ondelettes
+Registax) »</strong> v1.4 applique avant eux un seuillage doux par
+ondelettes. Tout se voit en direct dans l'aperçu.</p>
+<h4><font color="#2b4a7e">5.5 Fausses couleurs et film (groupes 6-7)</font></h4>
+<p>Palette solaire (ou Inferno, Turbo…) pour les images N&amp;B du Soleil. Le
+<strong>film stabilisé</strong> : recadrage commun automatique (l'image ne « danse » plus),
+MP4/AVI/GIF, FPS et qualité réglables. L'IA locale (débruitage, super-résolution) s'applique
+en un clic sur l'aperçu.</p>

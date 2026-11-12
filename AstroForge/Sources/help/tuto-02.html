@@ -1,0 +1,22 @@
+ch2">
+    <h2><font color="#1c3a6e">2. L'ordre des opérations : la logique d'ensemble</font></h2>
+
+    <h3><font color="#2b4a7e">2.1 Pourquoi l'ordre compte plus que les réglages</font></h3>
+    <p>Un traitement astronomique n'est pas une liste d'effets appliqués dans n'importe quel ordre : c'est un <strong>entonnoir</strong>. On élimine d'abord les défauts instrumentaux, puis on accumule le signal, puis seulement on embellit. Inverser deux étapes ne « dégrade » pas seulement le résultat — cela rend certaines corrections impossibles. Trois principes suffisent à retenir tout l'ordre :</p>
+    <ul>
+      <li><strong>Réparer avant d'aligner.</strong> Les pixels morts, colonnes d'amp-glow et poussières du flat sont des défauts <em>fixes</em> du capteur : on les corrige pendant la calibration, avant tout déplacement d'image. Après l'alignement, un pixel mort « bouge » et devient une tache multipliée par chaque frame.</li>
+      <li><strong>Aligner avant d'empiler.</strong> L'empilement additionne ou moyenne les pixels ; si les étoiles ne sont pas superposées, on additionne du flou. Toute la géométrie (translation, rotation, distorsions) se règle donc <em>avant</em> la combinaison — et drizzle s'insère exactement là.</li>
+      <li><strong>Embellir après avoir empilé.</strong> Le bruit se traite quand le signal est déjà accumulé (le stack a gagné en rapport signal/bruit) ; le gradient se modélise une fois les frames fusionnées ; la couleur, l'IA et l'étirement viennent en dernier, car ce sont des opérations esthétiques qui doivent rester réversibles.</li>
+    </ul>
+    <p>AstroForge impose implicitement cet ordre : l'onglet ciel profond lit ses groupes de haut en bas, et le bouton <b>[▶ Traiter (pleine résolution) et exporter…]</b> exécute la chaîne complète dans le bon sens. Le tutoriel suit exactement ce fil.</p>
+
+    <ul><li>① Images brutes</li><li>+ matrice de Bayer</li><li>② Masters</li><li>③ Calibration</li><li>des frames brutes</li><li>④ Défauts</li><li>pixels/colonnes (après calib.)</li><li>⑤ Alignement</li><li>⑥ Empilement</li><li>7 algorithmes</li><li>⑦ Gradient / fond</li><li>⑧ Débruitage +</li><li>déconvolution</li><li>⑨ Couleur</li><li>⑩ IA locale</li><li>⑪ Export (FITS/TIFF/PNG/JPEG)</li><li>+ HDR, astrométrie et photométrie en option</li></ul><p><i>Figure 1 — L'ordre des opérations en ciel profond. Le sens de lecture suit exactement les groupes de l'onglet.</i></p>
+
+    <h3><font color="#2b4a7e">2.2 Le même entonnoir, côté planétaire</font></h3>
+    <p>En planétaire, la matière première est une vidéo : l'entonnoir est le même, mais l'« étape calibration » est remplacée par le <strong>classement qualité</strong> — on élimine d'abord les frames floues (turbulence), on tient compte de la <strong>rotation du champ</strong> propre aux planètes, puis on affine l'alignement et on révèle les détails aux <strong>ondelettes</strong> une fois le signal empilé.</p>
+    <ul><li>① Source</li><li>② Classement qualité</li><li>③ Dérotation du champ</li><li>auto ou manuelle (°/min)</li><li>④ Alignement fin</li><li>⑤ Empilement</li><li>AutoStack, meilleurs %</li><li>⑥ Ondelettes (Registax6)</li><li>6 couches + débruitage</li><li>⑦ Couleur</li><li>⑧ Film + export</li><li>recadrage commun anti-« danse »</li></ul><p><i>Figure 2 — L'ordre des opérations en planétaire.</i></p>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="6"><tr><td bgcolor="#fdf5e8"><b>Deux erreurs classiques.</b> ① Appliquer un débruitage fort <em>avant</em> l'alignement : l'algorithme lisse justement les étoiles qui servent de repères, et l'appariement se dégrade. ② Exporter en JPEG 8 bits puis « retendre » dans l'onglet Finition : toute information écrasée est perdue. Restez en FITS/TIFF 16 bits tant que la chaîne n'est pas terminée (voir chapitre 8).</td></tr></table>
+
+    <h3><font color="#2b4a7e">2.3 Aperçu rapide contre calcul complet</font></h3>
+    <p>Presque chaque groupe possède deux vitesses : l'<strong>aperçu live</strong> (image réduite, ~450 ms, réglages visuels) et le <strong>traitement pleine résolution</strong> (bouton <b>[▶ Traiter…]</b>, minutes, fichier final). La bonne habitude : régler tout le groupe en aperçu, ne lancer la pleine résolution qu'une fois la chaîne entière réglée. Le chapitre 4 détaille groupe par groupe.</p>

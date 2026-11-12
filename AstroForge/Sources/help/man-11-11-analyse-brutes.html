@@ -1,0 +1,8 @@
+<h3><font color="#2b4a7e">11. Analyse des brutes, poids, normalisation et multi-nuits</font></h3>
+<p><strong>Analyser les brutes…</strong> mesure pour chaque image le nombre d'étoiles, la FWHM et
+l'excentricité (moments adaptatifs), le fond et le SNR ; les images aberrantes (nuages, traînées,
+mise au point) sont décochées. Pondération : Aucune, SNR, FWHM ou Mixte — les poids sont utilisés
+par l'empilement et le drizzle.</p>
+<p><strong>Outils › Empilement multi-nuits</strong> : chaque nuit est calibrée avec ses propres
+masters, puis toutes les images sont alignées sur une référence commune, <strong>normalisées
+localement</strong> (cartes de fond et facteur de transparence) et empilées avec rejet.</p>

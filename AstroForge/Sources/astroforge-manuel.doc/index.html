@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>AstroForge — Manuel utilisateur</title>
+<style>
+  body { max-width: 880px; margin: 0 auto; padding: 32px 80px; box-sizing: border-box;
+         font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a; line-height: 1.55; }
+  h1 { font-size: 30px; border-bottom: 3px solid #2456a8; padding-bottom: 8px; }
+  h2 { font-size: 22px; color: #2456a8; margin-top: 40px; border-bottom: 1px solid #c9d4ea; padding-bottom: 4px; }
+  h3 { font-size: 17px; color: #333; margin-top: 26px; }
+  p, li { text-align: justify; }
+  code { font-family: Consolas, Menlo, monospace; background: #f0f2f6; padding: 1px 5px;
+         border-radius: 3px; font-size: 13px; }
+  pre { background: #f6f7fa; border: 1px solid #dde3ee; border-radius: 6px; padding: 12px 16px;
+        overflow-x: auto; font-size: 12.5px; line-height: 1.45; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14px; }
+  th, td { border: 1px solid #c9d4ea; padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: #e8eefb; color: #1c3d78; }
+  .tag { display: inline-block; background: #2456a8; color: #fff; border-radius: 10px;
+         font-size: 11px; padding: 1px 8px; vertical-align: middle; font-family: sans-serif; }
+  .note { background: #fff8e6; border-left: 4px solid #d9a300; padding: 8px 14px; margin: 14px 0; }
+  figure { margin: 24px 0; break-inside: avoid; }
+  figcaption { font-size: 13px; color: #555; text-align: center; margin-top: 6px; }
+  .cover { text-align: center; padding: 70px 20px 40px; }
+  .cover h1 { border: none; font-size: 40px; }
+  .cover p { color: #555; font-size: 17px; }
+  .flow { display: block; width: 100%; height: auto; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>AstroForge</h1>
+  <p>Manuel utilisateur — v1.5</p>
+  <p>Traitement d'images astronomiques : ciel profond, planétaire, finition</p>
+  <p style="font-size:13px">Python · Qt (PySide6) · fichiers .ui de Qt Designer · IA locale</p>
+</div>
+
+<h2>1. Présentation</h2>
+<p>AstroForge est un logiciel libre de traitement d'images astronomiques organisé en
+<strong>quatre onglets</strong> : deux modes de travail (ciel profond, planétaire), une partie
+de finition commune et une page de configuration des profils d'équipement. Chaque étape de
+traitement propose plusieurs algorithmes, des paramètres réglables avec <strong>aperçu
+live</strong>, et des <strong>profils enregistrables</strong> (le profil « standard » contient
+les valeurs par défaut).</p>
+
+<figure>
+<svg class="flow" viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7a8598"/></marker></defs>
+  <rect x="8" y="8" width="354" height="26" rx="6" fill="#e8eefb"/><text x="185" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c3d78">CIEL PROFOND</text>
+  <rect x="398" y="8" width="354" height="26" rx="6" fill="#e8eefb"/><text x="575" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c3d78">PLANÉTAIRE</text>
+  <g font-size="11" fill="#1a1a1a">
+    <g fill="#fff" stroke="#5b6b8c">
+      <rect x="30" y="46" width="310" height="24" rx="5"/><rect x="420" y="46" width="310" height="24" rx="5"/>
+      <rect x="30" y="82" width="310" height="24" rx="5"/><rect x="420" y="82" width="310" height="24" rx="5"/>
+      <rect x="30" y="118" width="310" height="24" rx="5"/><rect x="420" y="118" width="310" height="24" rx="5"/>
+      <rect x="30" y="154" width="310" height="24" rx="5"/><rect x="420" y="154" width="310" height="24" rx="5"/>
+      <rect x="30" y="190" width="310" height="24" rx="5"/><rect x="420" y="190" width="310" height="24" rx="5"/>
+      <rect x="30" y="226" width="310" height="24" rx="5"/><rect x="420" y="226" width="310" height="24" rx="5"/>
+      <rect x="30" y="262" width="310" height="24" rx="5"/><rect x="420" y="262" width="310" height="24" rx="5"/>
+    </g>
+    <text x="40" y="62">Calibration (masters) + défauts px/colonnes/lignes</text>
+    <text x="430" y="62">Tri qualité (style AutoStakkert!)</text>
+    <text x="40" y="98">Alignement : phase / étoiles (similitude) / poly (nouv.)</text>
+    <text x="430" y="98">Alignement multipoint : phase / limbe / étoiles</text>
+    <text x="40" y="134">Drizzle ×2 / ×3</text>
+    <text x="430" y="134">Stacking : AutoStack (AS!) / moyenne / sigma-clip</text>
+    <text x="40" y="170">Empilement — 7 algorithmes de rejet</text>
+    <text x="430" y="170">Canaux R/B + aberration chromatique</text>
+    <text x="40" y="206">Gradient + PCC photométrique (nouv.)</text>
+    <text x="430" y="206">Accentuation : ondelettes à trous (Registax)</text>
+    <text x="40" y="242">Débruitage : classiques + IA locale</text>
+    <text x="430" y="242">Débruitage : seuillage ondelettes (nouv.) + IA</text>
+    <text x="40" y="278">Astrométrie · photom. diff. (nouv.) · export</text>
+    <text x="430" y="278">Palette solaire · film stabilisé · export</text>
+    <g stroke="#7a8598" fill="none">
+      <path d="M185 70 V78" marker-end="url(#a)"/><path d="M185 106 V114" marker-end="url(#a)"/>
+      <path d="M185 142 V148" marker-end="url(#a)"/><path d="M185 178 V184" marker-end="url(#a)"/>
+      <path d="M185 214 V220" marker-end="url(#a)"/><path d="M185 250 V256" marker-end="url(#a)"/>
+      <path d="M575 70 V78" marker-end="url(#a)"/><path d="M575 106 V112" marker-end="url(#a)"/>
+      <path d="M575 142 V148" marker-end="url(#a)"/><path d="M575 178 V184" marker-end="url(#a)"/>
+      <path d="M575 214 V220" marker-end="url(#a)"/><path d="M575 250 V256" marker-end="url(#a)"/>
+    </g>
+  </g>
+</svg>
+<figcaption>Pipelines d'AstroForge : enchaînement alignement → tri → stacking → accentuation → débruitage (les étapes marquées « nouv. » sont les ajouts v1.5).</figcaption>
+</figure>
+
+<h2>2. Installation</h2>
+<h3>2.1 Prérequis</h3>
+<ul>
+  <li>Python 3.10 ou plus récent (Windows, macOS ou Linux).</li>
+  <li>Les paquets de <code>requirements.txt</code> : PySide6, numpy, scipy, opencv-python, astropy, Pillow, matplotlib.</li>
+</ul>
+<h3>2.2 Installation standard</h3>
+<pre><code>python -m venv .venv
+# Windows : .venv\Scripts\activate    Linux/macOS : source .venv/bin/activate
+pip install -r requirements.txt
+python main.py</code></pre>
+<h3>2.3 Scripts de lancement tout-en-un</h3>
+<p><code>launch.bat</code> (Windows, double-clic possible) et <code>launch.sh</code>
+(Linux/macOS) créent l'environnement virtuel, installent les dépendances manquantes puis
+lancent le logiciel.</p>
+<h3>2.4 Exécutable autonome</h3>
+<pre><code>build_exe.bat   (Windows)   →  dist\AstroForge\AstroForge.exe
+./build_exe.sh  (Linux/mac) →  dist/AstroForge/AstroForge</code></pre>
+<p>Ces scripts utilisent PyInstaller et embarquent les interfaces. <code>main.py --selftest</code>
+vérifie une installation sans ouvrir la fenêtre.</p>
+<h3>2.5 Dépendances optionnelles</h3>
+<table>
+<tr><th>Paquet</th><th>Utilité</th></tr>
+<tr><td><code>onnxruntime</code></td><td>Modèles IA locaux (.onnx) — débruitage, super-résolution…</td></tr>
+<tr><td><code>rawpy</code></td><td>Lecture des RAW d'appareils photo (CR2/CR3/NEF/ARW/DNG…)</td></tr>
+<tr><td><code>photutils</code>, <code>astroalign</code></td><td>Détection/appariement d'étoiles (alignement, PCC, photométrie)</td></tr>
+<tr><td><code>astroquery</code></td><td>Génération du catalogue Gaia (une seule fois, internet requis)</td></tr>
+<tr><td>astrometry.net (<code>solve-field</code>)</td><td>Plate solving local de référence (utilisé automatiquement s'il est coché)</td></tr>
+</table>
+
+<h2>3. Prise en main</h2>
+<h3>3.1 L'interface</h3>
+<p>Quatre onglets : <strong>Ciel profond</strong>, <strong>Planétaire</strong>,
+<strong>Finition (commune)</strong> et <strong>Configuration</strong>. Chaque mode combine
+une colonne de paramètres (gauche), un <strong>aperçu Avant / Après / Côte à côte</strong>
+(centre) et la zone d'exécution avec journal et barre de progression (droite).</p>
+<h3>3.2 Aperçu live</h3>
+<p>Tout réglage déclenche, après ~0,45 s, le recalcul de l'aperçu sur une copie réduite de
+l'image. La case « Étirement auto (affichage) » révèle les données linéaires ; elle ne
+modifie pas les données exportées.</p>
+<h3>3.3 Profils de paramètres</h3>
+<p>Chaque groupe de réglages possède une barre <code>[profil ▾] [💾 Enregistrer] [↺ Standard]</code>.
+Le profil « standard » (valeurs par défaut) est protégé ; créez autant de profils que
+nécessaire — un JSON par profil dans <code>profiles/</code>.</p>
+<h3>3.4 Page Configuration</h3>
+<p>Créez un profil par matériel : caméra (pixel µm, résolution, température capteur, matrice
+de Bayer), télescope (ouverture, focale), <strong>réducteur de focale</strong> (case + facteur),
+mode de travail et <strong>pollution lumineuse</strong> (Bortle 3-4 à 9 — une force de
+débruitage est suggérée). La focale effective, l'échantillonnage (″/px) et le champ de vue
+sont recalculés en direct. Cases à cocher d'astrométrie : « solve-field (astrometry.net) » et
+catalogue CSV par défaut. Deux boutons clés :</p>
+<ul>
+  <li><strong>« 🌐 Générer le catalogue Gaia pour ce champ »</strong> : télécharge une fois les
+  étoiles Gaia DR3 (positions + magnitudes G/BP/RP) couvrant le champ de vue de votre profil.</li>
+  <li><strong>« 🔍 Déterminer la focale automatiquement »</strong> : résout une image de votre
+  matériel et déduit la focale (f = 206 265 × pixel / échelle) — utile après un changement de réducteur.</li>
+</ul>
+
+<h2>4. Mode ciel profond — workflow complet</h2>
+<h3>4.1 Chargement et calibration (groupes 1-2)</h3>
+<p>Ajoutez les brutes (FITS, TIFF, PNG, RAW) et choisissez la matrice de Bayer (RGGB, BGGR,
+GRBG, GBRG) pour les capteurs couleur. Désignez les dossiers de bias, dark, flat et
+dark-flat : les <strong>masters</strong> sont créés (médiane avec rejet sigma) et la
+calibration applique (L − bias − k·dark) / flat avec mise à l'échelle du dark.</p>
+<h3>4.2 Pixels défectueux (groupe 10) <span class="tag">v1.3</span></h3>
+<p>Trois cases : correction globale, détection automatique (sur le master dark/flat, σ-MAD)
+et correction des <strong>colonnes/lignes mortes</strong> (restaurées par les voisines). Une
+<strong>carte de pixels défectueux</strong> externe (FITS/PNG où &gt; 0,5 = défaut, ou fichier
+texte « x,y ») peut être fournie.</p>
+<h3>4.3 Alignement &amp; Drizzle (groupe 3)</h3>
+<p>Trois méthodes d'alignement :</p>
+<ul>
+  <li><strong>Phase (translation + rotation)</strong> : corrélation de phase passe-haut — rapide et robuste ;</li>
+  <li><strong>Étoiles (similitude)</strong> : appariement d'étoiles — rotation + échelle + translation, sans distorsion polynomiale ;</li>
+  <li><strong>Plate solving + distorsions (poly)</strong> <span class="tag">v1.5</span> : appariement
+  d'étoiles puis ajustement <strong>polynôme de degré ≤ 3</strong> des coordonnées — corrige les
+  distorsions optiques/atmosphériques <em>propres à chaque pose</em> (ré-association mutuelle
+  itérative, seuils 8→5→3 px, degré choisi au meilleur résidu).</li>
+</ul>
+<p>Le drizzle (×2 ou ×3, pixfrac réglable) reconstruit l'image à plus haute résolution en
+profitant du dithering entre les poses.</p>
+<h3>4.4 Empilement (groupe 4)</h3>
+<p>Sept algorithmes : moyenne, médiane, sigma-clipping, winsorisé, rejet min/max,
+<strong>linear fit</strong> (mise à l'échelle de chaque frame sur l'image médiane, rejet au-delà
+de k·σ) et <strong>MAD clipping</strong> (médiane absolue). Les deux derniers éliminent
+satellites et traces cosmiques — testés : résidu 0,000 là où la moyenne simple laisse 0,056.</p>
+<h3>4.5 Traitement (groupes 5-6) et couleurs</h3>
+<p>Extraction de gradient (polynôme 2D degré 1-5 ou RBF ; soustraction ou division),
+débruitage (non-local means, bilatéral, médiane, ondelettes — ou IA locale), déconvolution
+Richardson-Lucy, netteté. Groupe 8 : <strong>calibration couleur sur le fond du ciel</strong>,
+<strong>neutralisation du fond</strong> et <strong>SCNR vert</strong>.</p>
+<h3>4.6 Calibration photométrique des couleurs — PCC <span class="tag">v1.5</span></h3>
+<p>Résolvez d'abord le champ (groupe 9), puis cliquez « Calibration photométrique des couleurs
+(étoiles Gaia) » : les étoiles détectées sont appariées au catalogue ; les flux mesurés par
+canal sont comparés aux couleurs BP/RP de Gaia et les canaux R et B sont corrigés pour que
+les couleurs stellaires mesurées retrouvent celles du catalogue. Le journal affiche kR, kB et
+le nombre d'étoiles utilisées.</p>
+<h3>4.7 Astrométrie et photométrie (groupe 9)</h3>
+<p><strong>Plate solving</strong> : solve-field (si installé et coché) ou solveur interne
+(appariement de motifs contre le catalogue local, WCS TAN). Le résultat (échelle, centre,
+nombre d'étoiles, RMS) s'affiche et le WCS est inscrit dans le FITS à l'export.
+<strong>Photométrie d'ouverture</strong> : CSV (x, y, flux, mag, zero point calibré).
+<strong>Photométrie différentielle</strong> <span class="tag">v1.5</span> : la magnitude de la
+cible (étoile la plus proche des coordonnées RA/Dec saisies, sinon la plus brillante) est
+mesurée par rapport à la moyenne d'un ensemble d'étoiles de comparaison du catalogue — le
+zero point et l'extinction s'annulent. Export CSV : dmag ± erreur.</p>
+<h3>4.8 HDR, IA et processus automatique (groupes 7-8 de la liste d'étapes)</h3>
+<p>La fusion HDR (Mertens) combine plusieurs empilements d'expositions différentes. La liste
+« Processus de traitement automatique » organise les étapes (haut/bas, activer/désactiver) et
+s'enregistre/recharge en JSON.</p>
+
+<h2>5. Mode planétaire — workflow complet</h2>
+<h3>5.1 Source (groupe 1)</h3>
+<p>Chargez une vidéo (SER lu nativement 8/16 bits mono/Bayer/couleur ; AVI/MP4 via OpenCV) ou
+une série d'images. Le <strong>tri qualité</strong> (style AutoStakkert!) note chaque frame par
+le contraste local haute fréquence et ne garde que les N % meilleures.</p>
+<h3>5.2 Dérotation et alignement (groupe 2)</h3>
+<p>Dérotation du champ (automatique par estimation de rotation, ou manuelle en °/min ×
+intervalle), puis alignement par l'algorithme au choix <span class="tag">v1.3</span> :
+<strong>Phase (rapide)</strong>, <strong>Limbe (précis)</strong> — corrélation sur les contours
+du limbe, idéale pour Jupiter/Saturne — ou <strong>Étoiles (large champ)</strong>. L'alignement
+multipoint (champ de décalage lissé) est appliqué par l'empilement AutoStack.</p>
+<h3>5.3 Empilement, couleurs (groupes 3 + aberration chromatique)</h3>
+<p>Choisissez <strong>AutoStack (AS!-style)</strong> <span class="tag">v1.4</span> (qualité →
+sélection → alignement multipoint → moyenne), la moyenne simple, la médiane ou le
+sigma-clipping. L'alignement des canaux R/B recadre la chromatie planétaire ; la correction
+d'<strong>aberration chromatique</strong> radiale (sliders R/B) <span class="tag">v1.3</span>
+se règle en aperçu live.</p>
+<h3>5.4 Accentuation et débruitage — méthode Registax (groupe 4)</h3>
+<p>Les <strong>6 sliders d'ondelettes à trous</strong> reproduisent les couches de Registax6
+(gain 0-3× par couche, du détail fin au large) ; le slider <strong>« Débruitage (ondelettes
+Registax) »</strong> <span class="tag">v1.4</span> applique avant eux un seuillage doux par
+ondelettes. Tout se voit en direct dans l'aperçu.</p>
+<h3>5.5 Fausses couleurs et film (groupes 6-7)</h3>
+<p>Palette solaire (ou Inferno, Turbo…) pour les images N&amp;B du Soleil. Le
+<strong>film stabilisé</strong> : recadrage commun automatique (l'image ne « danse » plus),
+MP4/AVI/GIF, FPS et qualité réglables. L'IA locale (débruitage, super-résolution) s'applique
+en un clic sur l'aperçu.</p>
+
+<h2>6. Traitement par lot (batch)</h2>
+<p>Trois voies complémentaires — toutes rejouables car enregistrées en JSON :</p>
+<table>
+<tr><th>Voie</th><th>Où</th><th>Principe</th></tr>
+<tr><td>Processus automatique</td><td>Ciel profond, groupe 8</td><td>Liste d'étapes ordonnées (calibration → alignement → drizzle → gradient → denoise…), enregistrable/rechargeable</td></tr>
+<tr><td>Séquence finition</td><td>Finition (commune)</td><td>« ＋ Ajouter l'étape courante » capture les réglages ; « ▶ Appliquer au lot » traite tout un dossier d'images</td></tr>
+<tr><td>Séquence planétaire</td><td>Planétaire, groupe 8</td><td>« 💾 Enregistrer la séquence » sauvegarde TOUS les réglages ; « Charger une séquence » les rend modifiables ; « ▶ Batch SER » empile toutes les vidéos d'un dossier avec la même chaîne</td></tr>
+</table>
+<p>Les séquences d'exemple sont dans <code>scripts/</code> ; l'API Python
+(<code>astroforge/core/sequence.py</code>) et le guide <code>GUIDE_SCRIPTS.md</code> permettent
+d'aller plus loin (crontab, chaînes personnalisées, photométrie en masse).</p>
+
+<h2>7. IA locale</h2>
+<ol>
+  <li><strong>Modèles ONNX</strong> : déposez un .onnx (+ JSON de config optionnel) dans
+  <code>models/ai/</code> — inférence par tuiles avec fondu, GPU automatique si disponible.</li>
+  <li><strong>Outils externes</strong> : bouton « Configurer les outils IA… » — chemins de
+  GraXpert (denoise + fond), Cosmic Clarity (denoise, netteté, super-résolution, satellites)
+  et StarNet2/DeepSNR.</li>
+  <li><strong>Algorithmes classiques intégrés</strong> : aucune IA requise.</li>
+</ol>
+
+<h2>8. Formats et matrices de Bayer</h2>
+<p><strong>Lecture</strong> : FITS (8-32 bits, mono/RGB), TIFF/PNG/JPEG (8-16 bits), RAW APN
+(avec rawpy), XISF (non compressé et zlib), SER (8-16 bits), AVI/MP4.
+<strong>Écriture</strong> : FITS float32 (WCS inscrit), TIFF 16 bits, PNG 8/16 bits, JPEG 95 %,
+XISF Float32, MP4/AVI/GIF. Matrices de Bayer : RGGB, BGGR, GRBG, GBRG — choix manuel ou
+détection automatique pour les RAW.</p>
+
+<h2>9. Dépannage et limites</h2>
+<table>
+<tr><th>Symptôme</th><th>Cause probable / solution</th></tr>
+<tr><td>Plate solving échoue</td><td>RA/Dec centre approximatif erroné, rayon trop petit, catalogue Gaia non généré pour ce champ — ou générez le catalogue depuis l'onglet Configuration</td></tr>
+<tr><td>PCC : « moins de 5 étoiles appariées »</td><td>WCS absent ou catalogue sans BP/RP — régénérez le catalogue (v1.5+)</td></tr>
+<tr><td>Alignement poly : « appariement insuffisant »</td><td>Images trop peu alignées entre elles — faites d'abord un alignement phase, ou utilisez la similitude</td></tr>
+<tr><td>IA : « aucun modèle ONNX »</td><td>Déposez un .onnx dans models/ai/ ou configurez un outil externe (pip install onnxruntime)</td></tr>
+<tr><td>RAW non lu</td><td>pip install rawpy</td></tr>
+<tr><td>Drizzle</td><td>Version « noyau carré » simplifiée (pas DrizzlePac) ; prévoir un dithering entre les poses</td></tr>
+<tr><td>XISF</td><td>Lecture non compressé + zlib ; LZ4 non supporté (convertissez via Siril)</td></tr>
+</table>
+
+<p style="margin-top:34px; font-size:12.5px; color:#666">AstroForge v1.5 — logiciel libre ;
+les algorithmes s'appuient sur numpy/scipy/OpenCV/astropy/photutils. Documentation générée le
+22 septembre 2026.</p>
+
+</body>
+</html>
