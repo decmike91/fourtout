@@ -3,6 +3,12 @@ name: Publier la release Trait Fin
 on:
   push:
     tags: ["trait-fin-v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version à publier"
+        required: true
+        default: "1.0.0"
 
 permissions:
   contents: write
@@ -15,10 +21,17 @@ jobs:
       - name: Créer la release avec les fichiers
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            VERSION="$INPUT_VERSION"
+          else
+            VERSION="${GITHUB_REF_NAME#trait-fin-v}"
+          fi
           cp "Web (hors ligne)/Trait-Fin.html" Trait-Fin.html
-          gh release create "$GITHUB_REF_NAME" \
-            --title "Trait Fin ${GITHUB_REF_NAME#trait-fin-v}" \
+          gh release create "trait-fin-v$VERSION" \
+            --target "$GITHUB_SHA" \
+            --title "Trait Fin $VERSION" \
             --notes-file .github/trait-fin-release-notes.md \
             Windows/Trait-Fin-Setup-1.0.0.exe \
             Android/Trait-Fin-1.0.apk \
