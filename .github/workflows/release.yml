@@ -1,0 +1,25 @@
+name: Publier la release Trait Fin
+
+on:
+  push:
+    tags: ["trait-fin-v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Créer la release avec les fichiers
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp "Web (hors ligne)/Trait-Fin.html" Trait-Fin.html
+          gh release create "$GITHUB_REF_NAME" \
+            --title "Trait Fin ${GITHUB_REF_NAME#trait-fin-v}" \
+            --notes-file .github/trait-fin-release-notes.md \
+            Windows/Trait-Fin-Setup-1.0.0.exe \
+            Android/Trait-Fin-1.0.apk \
+            Trait-Fin.html
