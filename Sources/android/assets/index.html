@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2A54E4">
+</head>
+<body>
+<title>Trait Fin</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Familjen+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: table à dessin — grande feuille sur papier millimétré à gauche, rail de réglages à droite (sous la feuille sur téléphone) */
+:root{
+  --table:#E8ECF1; --grid:#DFE5EC; --grid-major:#CED7E1;
+  --surface:#FFFFFF; --sheet:#FFFFFF;
+  --ink:#14202D; --muted:#5A6878; --line:#D3DAE2;
+  --accent:#2A54E4; --accent-ink:#FFFFFF; --accent-soft:#E4EAFD;
+  --shadow:rgba(16,32,60,.14);
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Familjen Grotesk","Segoe UI",Roboto,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,"Roboto Mono",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --table:#0D1219; --grid:#141C26; --grid-major:#1B2633;
+    --surface:#151D27; --sheet:#F7F9FB;
+    --ink:#E3E9F0; --muted:#8B99A8; --line:#253140;
+    --accent:#7F9CFF; --accent-ink:#0A1022; --accent-soft:#1D2949;
+    --shadow:rgba(0,0,0,.5);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --table:#0D1219; --grid:#141C26; --grid-major:#1B2633;
+  --surface:#151D27; --sheet:#F7F9FB;
+  --ink:#E3E9F0; --muted:#8B99A8; --line:#253140;
+  --accent:#7F9CFF; --accent-ink:#0A1022; --accent-soft:#1D2949;
+  --shadow:rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--table);color:var(--ink);font:15px/1.45 var(--f-body)}
+.app{display:grid;grid-template-rows:auto minmax(0,1fr);height:100%}
+
+/* En-tête */
+.top{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;background:var(--surface);border-bottom:1px solid var(--line);
+  padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.brand svg{flex:none;color:var(--accent)}
+.brand h1{margin:0;font:700 21px/1 var(--f-display);letter-spacing:-.015em;text-wrap:balance}
+.brand small{display:block;margin-top:3px;font:500 10.5px/1.2 var(--f-mono);color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.top .actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Boutons */
+.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 14px;border-radius:8px;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 14px/1 var(--f-body);cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:focus-visible,.seg label:focus-within,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn svg{flex:none}
+.file-in{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+/* Zone de travail */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:0}
+.stage{position:relative;overflow:hidden;touch-action:none;min-height:0;cursor:grab;
+  background-color:var(--table);
+  background-image:linear-gradient(var(--grid-major) 1px,transparent 1px),linear-gradient(90deg,var(--grid-major) 1px,transparent 1px),
+    linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:50px 50px,50px 50px,10px 10px,10px 10px}
+.stage.panning{cursor:grabbing}
+.stage.drag::after{content:"Déposez l'image ici";position:absolute;inset:12px;border:2px dashed var(--accent);border-radius:12px;display:grid;place-items:center;
+  font:600 18px var(--f-display);color:var(--accent);background:color-mix(in srgb,var(--table) 80%,transparent)}
+.sheet{position:absolute;left:0;top:0;transform-origin:0 0;background:var(--sheet);box-shadow:0 1px 2px var(--shadow),0 10px 34px var(--shadow)}
+.sheet img,.sheet .vec{position:absolute;inset:0;width:100%;height:100%;display:block}
+.sheet img{user-select:none;-webkit-user-drag:none;pointer-events:none}
+.sheet .vec svg{width:100%;height:100%;display:block}
+.stage[data-view="vec"] .sheet img{display:none}
+.stage[data-view="over"] .sheet img{opacity:.32}
+.stage[data-view="img"] .sheet .vec{display:none}
+
+.status{position:absolute;top:max(12px,env(safe-area-inset-top,0px));right:12px;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--line);font:500 12px/1 var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums;max-width:calc(100% - 24px)}
+.status .dot{width:7px;height:7px;border-radius:50%;background:#2E9E62;flex:none}
+.status.busy .dot{background:var(--accent);animation:pulse 1s ease-in-out infinite}
+.status.warn .dot{background:#D9822B}
+.status span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion: reduce){.status.busy .dot{animation:none}}
+
+.tools{position:absolute;left:max(12px,env(safe-area-inset-left,0px));right:12px;bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;pointer-events:none}
+.tools > *{pointer-events:auto}
+.seg{display:inline-flex;padding:3px;border-radius:9px;background:var(--surface);border:1px solid var(--line);gap:2px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{padding:7px 11px;border-radius:6px;font:600 13px/1 var(--f-body);color:var(--muted);cursor:pointer;white-space:nowrap}
+.seg input:checked + span{color:var(--ink)}
+.seg label:has(input:checked){background:var(--accent-soft);color:var(--ink)}
+.zoom{display:inline-flex;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:3px}
+.zoom button{appearance:none;border:0;background:none;color:var(--ink);width:32px;height:30px;border-radius:6px;font:600 16px/1 var(--f-body);cursor:pointer}
+.zoom button:hover{background:var(--accent-soft)}
+.zoom output{min-width:52px;text-align:center;font:500 12px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.zoom .fit{width:auto;padding:0 9px;font-size:13px}
+
+/* Panneau */
+.panel{overflow-y:auto;background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;gap:20px;
+  padding-block:16px 28px;padding-left:18px;padding-right:max(18px,env(safe-area-inset-right,0px))}
+.group{display:flex;flex-direction:column;gap:12px}
+.group h2{margin:0;display:flex;align-items:center;gap:10px;font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.group h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.seg.full{display:flex}
+.seg.full label{flex:1;text-align:center;padding:9px 8px}
+.ctl{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 10px}
+.ctl label{font-weight:500}
+.ctl output{font:500 12.5px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.ctl input[type=range]{grid-column:1/-1;width:100%;margin:2px 0 0;accent-color:var(--accent)}
+.ctl .hint{grid-column:1/-1;font-size:12.5px;color:var(--muted);line-height:1.35}
+.ctl.off{opacity:.45}
+.check{display:flex;align-items:center;gap:9px;font-weight:500;cursor:pointer}
+.check input{width:17px;height:17px;margin:0;accent-color:var(--accent)}
+.inline{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.inline input[type=color]{width:46px;height:32px;padding:2px;border:1px solid var(--line);border-radius:7px;background:var(--surface);cursor:pointer}
+
+.export{display:flex;flex-direction:column;gap:10px;padding:14px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--accent-soft) 45%,var(--surface))}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{display:flex;flex-direction:column;gap:2px}
+.stats b{font:500 17px/1.1 var(--f-mono);font-variant-numeric:tabular-nums}
+.stats span{font-size:11.5px;color:var(--muted)}
+.export .row{display:flex;gap:8px;flex-wrap:wrap}
+.export .row .btn{flex:1}
+.src-name{font:500 12px var(--f-mono);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+details{border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font-weight:600;font-size:14px}
+details textarea{margin-top:8px;width:100%;height:150px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:var(--table);color:var(--ink);
+  font:12px/1.4 var(--f-mono);padding:8px}
+.foot{font-size:12.5px;color:var(--muted);line-height:1.45}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20;max-width:min(92vw,440px);
+  background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:9px;font-weight:500;box-shadow:0 8px 24px var(--shadow)}
+
+@media (max-width: 860px){
+  html,body{height:auto}
+  .app{height:auto;display:block}
+  .work{grid-template-columns:1fr}
+  .stage{height:60svh;min-height:340px}
+  .panel{border-left:0;border-top:1px solid var(--line);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .brand small{display:none}
+}
+@media (max-width: 420px){
+  .seg label{padding:7px 8px}
+  .top .actions .btn{padding:0 11px}
+}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M3 24C8 24 9 7 15 7s6 16 12 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="3" cy="24" r="2.4" fill="currentColor"/><circle cx="15" cy="7" r="2.4" fill="currentColor"/><circle cx="27" cy="23" r="2.4" fill="currentColor"/></svg>
+      <div><h1>Trait Fin</h1><small>image → svg · tracé central lissé</small></div>
+    </div>
+    <div class="actions">
+      <label class="btn primary" for="file">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 11V2M4.5 5.5 8 2l3.5 3.5M2 10v3.5h12V10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Ouvrir une image
+      </label>
+      <input class="file-in" type="file" id="file" accept="image/*">
+      <button class="btn" id="sample" type="button">Exemple</button>
+    </div>
+  </header>
+
+  <main class="work">
+    <section class="stage" id="stage" data-view="vec" aria-label="Aperçu du tracé">
+      <div class="sheet" id="sheet"><img id="under" alt=""><div class="vec" id="vec"></div></div>
+      <div class="status busy" id="status" role="status"><i class="dot"></i><span id="statusText">Préparation…</span></div>
+      <div class="tools">
+        <div class="seg" role="radiogroup" aria-label="Affichage">
+          <label><input type="radio" name="view" id="v-vec" value="vec" checked>Tracé</label>
+          <label><input type="radio" name="view" id="v-over" value="over">Superposé</label>
+          <label><input type="radio" name="view" id="v-img" value="img">Image</label>
+        </div>
+        <div class="zoom">
+          <button type="button" id="zOut" aria-label="Dézoomer">−</button>
+          <output id="zVal">100 %</output>
+          <button type="button" id="zIn" aria-label="Zoomer">+</button>
+          <button type="button" class="fit" id="zFit">Ajuster</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="Réglages">
+      <div class="group">
+        <h2>Mode</h2>
+        <div class="seg full" role="radiogroup" aria-label="Mode de vectorisation">
+          <label><input type="radio" name="mode" id="m-center" value="center" checked>Ligne centrale</label>
+          <label><input type="radio" name="mode" id="m-contour" value="contour">Contour</label>
+        </div>
+        <div class="ctl" style="grid-template-columns:1fr"><span class="hint" id="modeHint">Chaque trait de l'image devient une seule ligne passant par son milieu, à l'épaisseur que vous choisissez.</span></div>
+      </div>
+
+      <div class="group">
+        <h2>Détection</h2>
+        <div class="ctl" id="c-thr">
+          <label for="thr">Seuil noir / blanc</label><output id="o-thr">auto</output>
+          <input type="range" id="thr" min="1" max="254" value="128">
+        </div>
+        <label class="check"><input type="checkbox" id="auto" checked>Seuil automatique</label>
+        <label class="check"><input type="checkbox" id="inv">Traits clairs sur fond sombre</label>
+        <div class="ctl">
+          <label for="blur">Adoucir le bruit</label><output id="o-blur"></output>
+          <input type="range" id="blur" min="0" max="3" step="1" value="1">
+        </div>
+        <div class="ctl">
+          <label for="res">Résolution de calcul</label><output id="o-res"></output>
+          <input type="range" id="res" min="400" max="2400" step="100" value="1200">
+          <span class="hint">Plus haut = plus de détails, calcul plus long.</span>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Nettoyage</h2>
+        <div class="ctl">
+          <label for="specks">Supprimer les taches</label><output id="o-specks"></output>
+          <input type="range" id="specks" min="0" max="300" step="5" value="20">
+        </div>
+        <div class="ctl">
+          <label for="holes">Boucher les petits trous</label><output id="o-holes"></output>
+          <input type="range" id="holes" min="0" max="300" step="5" value="30">
+        </div>
+        <div class="ctl" id="c-spur">
+          <label for="spur">Couper les barbules</label><output id="o-spur"></output>
+          <input type="range" id="spur" min="0" max="40" step="1" value="8">
+          <span class="hint">Retire les petites branches parasites aux angles et aux croisements.</span>
+        </div>
+        <div class="ctl">
+          <label for="minlen">Ignorer les traits plus courts que</label><output id="o-minlen"></output>
+          <input type="range" id="minlen" min="0" max="60" step="1" value="6">
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Courbes</h2>
+        <div class="ctl">
+          <label for="smooth">Lissage</label><output id="o-smooth"></output>
+          <input type="range" id="smooth" min="0" max="12" step="1" value="4">
+        </div>
+        <div class="ctl">
+          <label for="simp">Simplification</label><output id="o-simp"></output>
+          <input type="range" id="simp" min="0.1" max="3" step="0.1" value="0.6">
+          <span class="hint">Écart toléré avant d'ajouter un nœud. Plus haut = moins de nœuds.</span>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Trait</h2>
+        <div class="ctl" id="c-width">
+          <label for="sw">Épaisseur</label><output id="o-sw"></output>
+          <input type="range" id="sw" min="0.2" max="12" step="0.1" value="1.5">
+        </div>
+        <div class="inline">
+          <label for="col" style="font-weight:500">Couleur</label>
+          <input type="color" id="col" value="#14202d">
+        </div>
+        <label class="check" id="c-fill" hidden><input type="checkbox" id="fill">Remplir les formes (au lieu du contour seul)</label>
+      </div>
+
+      <div class="export">
+        <div class="src-name" id="srcName">—</div>
+        <div class="stats">
+          <div><b id="s-paths">0</b><span>tracés</span></div>
+          <div><b id="s-nodes">0</b><span>nœuds</span></div>
+          <div><b id="s-size">0</b><span>ko</span></div>
+        </div>
+        <div class="row">
+          <button class="btn primary" id="save" type="button">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v9M4.5 7.5 8 11l3.5-3.5M2 13.5h12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Enregistrer le SVG
+          </button>
+          <button class="btn" id="copy" type="button">Copier le code</button>
+        </div>
+        <details id="codeBox"><summary>Code SVG</summary><textarea id="code" readonly spellcheck="false" aria-label="Code SVG"></textarea></details>
+      </div>
+
+      <p class="foot">Tout est calculé sur votre appareil : l'image n'est envoyée nulle part. Astuce : collez une image (Ctrl+V) ou glissez-la sur la feuille.</p>
+    </aside>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const stage = $("stage"), sheet = $("sheet"), vec = $("vec"), under = $("under");
+
+/* ---------- état ---------- */
+let src = null, srcId = 0, current = null;
+const cache = {};
+function memo(name, key, fn){ if (cache[name] && cache[name].key === key) return cache[name].val; const val = fn(); cache[name] = {key, val}; return val; }
+
+/* ---------- capacité d'enregistrement (artefact) ---------- */
+let dlPromise = Promise.resolve(null);
+try { if (window.claude && typeof window.claude.use === "function") dlPromise = window.claude.use("downloads").catch(() => null); } catch (e) {}
+
+/* ---------- interface ---------- */
+let toastT;
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3200); }
+function status(msg, kind){ $("statusText").textContent = msg; const s = $("status"); s.classList.toggle("busy", kind === "busy"); s.classList.toggle("warn", kind === "warn"); }
+
+const fmt = {
+  thr: v => v, blur: v => v == 0 ? "aucun" : "×" + v, res: v => v + " px", specks: v => v + " px²", holes: v => v + " px²",
+  spur: v => v + " px", minlen: v => v + " px", smooth: v => v == 0 ? "aucun" : v, simp: v => (+v).toFixed(1) + " px", sw: v => (+v).toFixed(1) + " px"
+};
+function syncOutputs(){
+  for (const k in fmt){ const o = $("o-" + k); if (o && !(k === "thr" && $("auto").checked)) o.textContent = fmt[k]($(k).value); }
+  const contour = $("m-contour").checked;
+  $("c-spur").classList.toggle("off", contour); $("spur").disabled = contour;
+  $("c-fill").hidden = !contour;
+  const filled = contour && $("fill").checked;
+  $("c-width").classList.toggle("off", filled); $("sw").disabled = filled;
+  $("modeHint").textContent = contour
+    ? "Suit le bord de chaque forme avec une ligne fine et lisse. Utile pour les aplats, les logos et le texte."
+    : "Chaque trait de l'image devient une seule ligne passant par son milieu, à l'épaisseur que vous choisissez.";
+}
+function params(){
+  return {
+    mode: $("m-contour").checked ? "contour" : "center",
+    auto: $("auto").checked, thr: +$("thr").value, inv: $("inv").checked, blur: +$("blur").value, res: +$("res").value,
+    specks: +$("specks").value, holes: +$("holes").value, spur: +$("spur").value, minLen: +$("minlen").value,
+    smooth: +$("smooth").value, simp: +$("simp").value, sw: +$("sw").value, col: $("col").value, fill: $("fill").checked
+  };
+}
+
+/* ---------- 1. niveaux de gris ---------- */
+function toGray(p){
+  const W = src.w, H = src.h;
+  const s = Math.min(3, p.res / Math.max(W, H));
+  const w = Math.max(8, Math.round(W * s)), h = Math.max(8, Math.round(H * s));
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const x = c.getContext("2d", {willReadFrequently: true});
+  x.fillStyle = "#fff"; x.fillRect(0, 0, w, h); x.imageSmoothingQuality = "high"; x.drawImage(src.el, 0, 0, w, h);
+  const d = x.getImageData(0, 0, w, h).data, g = new Float32Array(w * h);
+  for (let i = 0, j = 0; i < g.length; i++, j += 4) g[i] = 0.299 * d[j] + 0.587 * d[j + 1] + 0.114 * d[j + 2];
+  return {g: boxBlur(g, w, h, p.blur), w, h, sx: W / w, sy: H / h};
+}
+function boxBlur(g, w, h, r){
+  if (r <= 0) return g;
+  let a = g;
+  for (let pass = 0; pass < 2; pass++){
+    const b = new Float32Array(a.length), c = new Float32Array(a.length), n = 2 * r + 1;
+    for (let y = 0; y < h; y++){ const o = y * w; for (let x = 0; x < w; x++){ let s = 0; for (let k = -r; k <= r; k++){ const xx = x + k < 0 ? 0 : x + k >= w ? w - 1 : x + k; s += a[o + xx]; } b[o + x] = s / n; } }
+    for (let x = 0; x < w; x++) for (let y = 0; y < h; y++){ let s = 0; for (let k = -r; k <= r; k++){ const yy = y + k < 0 ? 0 : y + k >= h ? h - 1 : y + k; s += b[yy * w + x]; } c[y * w + x] = s / n; }
+    a = c;
+  }
+  return a;
+}
+function otsu(g){
+  const hist = new Float64Array(256); for (let i = 0; i < g.length; i++) hist[Math.min(255, g[i] | 0)]++;
+  const N = g.length; let sum = 0; for (let i = 0; i < 256; i++) sum += i * hist[i];
+  let sB = 0, wB = 0, best = -1, t = 128;
+  for (let i = 0; i < 256; i++){ wB += hist[i]; if (!wB) continue; const wF = N - wB; if (!wF) break; sB += i * hist[i];
+    const v = wB * wF * (sB / wB - (sum - sB) / wF) ** 2; if (v > best){ best = v; t = i; } }
+  return Math.max(1, Math.min(254, t));
+}
+
+/* ---------- 2. binarisation + nettoyage ---------- */
+function binarize(A, p){
+  const {g, w, h} = A, t = p.auto ? otsu(g) : p.thr, bin = new Uint8Array(w * h);
+  let fg = 0;
+  for (let i = 0; i < g.length; i++){ const on = p.inv ? g[i] > t : g[i] <= t; bin[i] = on ? 1 : 0; fg += bin[i]; }
+  if (p.specks > 0) filterComponents(bin, w, h, 1, p.specks, true, false);
+  if (p.holes > 0) filterComponents(bin, w, h, 0, p.holes, false, true);
+  return {bin, t, ratio: fg / g.length};
+}
+function filterComponents(bin, w, h, val, minArea, conn8, interiorOnly){
+  const seen = new Uint8Array(w * h), stack = new Int32Array(w * h), comp = [];
+  for (let i = 0; i < w * h; i++){
+    if (bin[i] !== val || seen[i]) continue;
+    let sp = 0, border = false; comp.length = 0; stack[sp++] = i; seen[i] = 1;
+    while (sp){
+      const q = stack[--sp]; comp.push(q); const x = q % w, y = (q / w) | 0;
+      if (x === 0 || y === 0 || x === w - 1 || y === h - 1) border = true;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++){
+        if (!dx && !dy) continue; if (!conn8 && dx && dy) continue;
+        const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+        const k = yy * w + xx; if (bin[k] === val && !seen[k]){ seen[k] = 1; stack[sp++] = k; }
+      }
+    }
+    if (comp.length < minArea && !(interiorOnly && border)) for (const q of comp) bin[q] = 1 - val;
+  }
+}
+
+/* ---------- 3a. squelette (Zhang-Suen) ---------- */
+function thin(bin0, w, h){
+  const s = new Uint8Array(bin0);
+  for (let x = 0; x < w; x++){ s[x] = 0; s[(h - 1) * w + x] = 0; }
+  for (let y = 0; y < h; y++){ s[y * w] = 0; s[y * w + w - 1] = 0; }
+  let pts = []; for (let i = 0; i < s.length; i++) if (s[i]) pts.push(i);
+  const del = []; let changed = true;
+  while (changed){
+    changed = false;
+    for (let step = 0; step < 2; step++){
+      del.length = 0;
+      for (let k = 0; k < pts.length; k++){
+        const i = pts[k]; if (!s[i]) continue;
+        const p2 = s[i - w], p3 = s[i - w + 1], p4 = s[i + 1], p5 = s[i + w + 1], p6 = s[i + w], p7 = s[i + w - 1], p8 = s[i - 1], p9 = s[i - w - 1];
+        const B = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9; if (B < 2 || B > 6) continue;
+        const A = (!p2 && p3) + (!p3 && p4) + (!p4 && p5) + (!p5 && p6) + (!p6 && p7) + (!p7 && p8) + (!p8 && p9) + (!p9 && p2);
+        if (A !== 1) continue;
+        if (step === 0){ if (p2 && p4 && p6) continue; if (p4 && p6 && p8) continue; }
+        else { if (p2 && p4 && p8) continue; if (p2 && p6 && p8) continue; }
+        del.push(i);
+      }
+      if (del.length){ changed = true; for (const i of del) s[i] = 0; }
+    }
+    let n = 0; for (const i of pts) if (s[i]) pts[n++] = i; pts.length = n;
+  }
+  // retire les marches d'escalier (pixels redondants en angle)
+  for (const i of pts){
+    if (!s[i]) continue;
+    const N = s[i - w], E = s[i + 1], S = s[i + w], W = s[i - 1], NE = s[i - w + 1], SE = s[i + w + 1], SW = s[i + w - 1], NW = s[i - w - 1];
+    if ((N && E && !S && !W && !SW) || (E && S && !N && !W && !NW) || (S && W && !N && !E && !NE) || (W && N && !S && !E && !SE)) s[i] = 0;
+  }
+  return s;
+}
+
+/* ---------- 3b. squelette → graphe de tracés ---------- */
+function traceSkeleton(s, w, h){
+  const off = [-w, 1, w, -1, -w + 1, w + 1, w - 1, -w - 1];
+  const deg = new Uint8Array(w * h), fg = [];
+  for (let i = 0; i < s.length; i++){ if (!s[i]) continue; let c = 0; for (const o of off) c += s[i + o]; deg[i] = c; fg.push(i); }
+  const cl = new Int32Array(w * h).fill(-1), clusters = [];
+  for (const i of fg){
+    const d = deg[i]; if (d === 2 || d === 0 || cl[i] >= 0) continue;
+    if (d === 1){ cl[i] = clusters.length; clusters.push({x: i % w + .5, y: ((i / w) | 0) + .5, j: false}); continue; }
+    const id = clusters.length, st = [i]; let sx = 0, sy = 0, n = 0; cl[i] = id;
+    while (st.length){ const q = st.pop(); sx += q % w; sy += (q / w) | 0; n++;
+      for (const o of off){ const r = q + o; if (s[r] && deg[r] >= 3 && cl[r] < 0){ cl[r] = id; st.push(r); } } }
+    clusters.push({x: sx / n + .5, y: sy / n + .5, j: true});
+  }
+  const xy = i => [i % w + .5, ((i / w) | 0) + .5];
+  const mk = (px, a, b) => { const pts = px.map(xy); pts[0] = [clusters[a].x, clusters[a].y]; pts[pts.length - 1] = [clusters[b].x, clusters[b].y]; return {pts, a, b, closed: false}; };
+  const vis = new Uint8Array(w * h), paths = [], pairs = new Set();
+  for (const i of fg){
+    const d = deg[i]; if (d === 2 || d === 0) continue;
+    for (const o of off){
+      const m = i + o; if (!s[m]) continue;
+      if (deg[m] !== 2){
+        if (cl[m] === cl[i] || cl[m] < 0) continue;
+        const key = Math.min(cl[i], cl[m]) * 1e7 + Math.max(cl[i], cl[m]);
+        if (!pairs.has(key)){ pairs.add(key); paths.push(mk([i, m], cl[i], cl[m])); }
+        continue;
+      }
+      if (vis[m]) continue;
+      const px = [i, m]; vis[m] = 1; let prev = i, cur = m, end = -1;
+      for (;;){
+        let nx = -1; for (const o2 of off){ const q = cur + o2; if (q !== prev && s[q]){ nx = q; break; } }
+        if (nx < 0) break;
+        if (deg[nx] !== 2){ px.push(nx); end = nx; break; }
+        if (vis[nx]) break;
+        vis[nx] = 1; px.push(nx); prev = cur; cur = nx;
+      }
+      if (end >= 0 && cl[end] >= 0) paths.push(mk(px, cl[i], cl[end]));
+    }
+  }
+  for (const i of fg){ // boucles fermées sans jonction
+    if (deg[i] !== 2 || vis[i]) continue;
+    const px = [i]; vis[i] = 1; let prev = -1, cur = i;
+    for (;;){ let nx = -1; for (const o of off){ const q = cur + o; if (q !== prev && s[q] && !vis[q] && deg[q] === 2){ nx = q; break; } }
+      if (nx < 0) break; vis[nx] = 1; px.push(nx); prev = cur; cur = nx; }
+    if (px.length >= 3) paths.push({pts: px.map(xy), a: -1, b: -1, closed: true});
+  }
+  return {paths, clusters};
+}
+
+/* ---------- 3c. contours (marching squares) ---------- */
+function traceContours(bin, w, h){
+  const W2 = w + 2, v = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? 0 : bin[y * w + x];
+  const hk = (x, y) => ((y + 1) * W2 + (x + 1)) * 2, vk = (x, y) => ((y + 1) * W2 + (x + 1)) * 2 + 1;
+  const adj = new Map(), pos = new Map();
+  const link = (a, b) => {
+    pos.set(a[0], [a[1], a[2]]); pos.set(b[0], [b[1], b[2]]);
+    (adj.get(a[0]) || adj.set(a[0], []).get(a[0])).push(b[0]);
+    (adj.get(b[0]) || adj.set(b[0], []).get(b[0])).push(a[0]);
+  };
+  for (let y = -1; y < h; y++) for (let x = -1; x < w; x++){
+    const c = v(x, y) * 8 + v(x + 1, y) * 4 + v(x + 1, y + 1) * 2 + v(x, y + 1);
+    if (c === 0 || c === 15) continue;
+    const T = [hk(x, y), x + 1, y + .5], R = [vk(x + 1, y), x + 1.5, y + 1], B = [hk(x, y + 1), x + 1, y + 1.5], L = [vk(x, y), x + .5, y + 1];
+    switch (c){
+      case 1: case 14: link(L, B); break;
+      case 2: case 13: link(B, R); break;
+      case 3: case 12: link(L, R); break;
+      case 4: case 11: link(T, R); break;
+      case 6: case 9: link(T, B); break;
+      case 7: case 8: link(T, L); break;
+      case 5: link(T, L); link(B, R); break;
+      case 10: link(T, R); link(L, B); break;
+    }
+  }
+  const seen = new Set(), paths = [];
+  for (const k of adj.keys()){
+    if (seen.has(k)) continue;
+    const loop = []; let prev = -1, cur = k;
+    while (cur !== undefined && !seen.has(cur)){ seen.add(cur); loop.push(pos.get(cur)); const [n1, n2] = adj.get(cur); const nx = n1 !== prev ? n1 : n2; prev = cur; cur = nx; }
+    if (loop.length >= 4) paths.push({pts: loop, a: -1, b: -1, closed: true});
+  }
+  return {paths, clusters: []};
+}
+
+/* ---------- 4. élagage, fusion, lissage, courbes ---------- */
+const plen = pts => { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return L; };
+function mergeAll(paths){
+  let changed = true;
+  while (changed){
+    changed = false;
+    const ends = new Map();
+    paths.forEach((p, k) => { if (p.closed) return; for (const [c, e] of [[p.a, 0], [p.b, 1]]){ if (!ends.has(c)) ends.set(c, []); ends.get(c).push({k, e}); } });
+    const used = new Set(), repl = new Map();
+    for (const list of ends.values()){
+      if (list.length !== 2) continue;
+      const [x, y] = list; if (used.has(x.k) || used.has(y.k)) continue;
+      if (x.k === y.k){ const p = paths[x.k]; if (p.pts.length > 3){ repl.set(x.k, {...p, pts: p.pts.slice(0, -1), closed: true}); used.add(x.k); changed = true; } continue; }
+      const P = paths[x.k], Q = paths[y.k];
+      const pp = x.e === 1 ? P.pts : P.pts.slice().reverse(), pa = x.e === 1 ? P.a : P.b;
+      const qq = y.e === 0 ? Q.pts : Q.pts.slice().reverse(), qb = y.e === 0 ? Q.b : Q.a;
+      repl.set(x.k, {pts: pp.concat(qq.slice(1)), a: pa, b: qb, closed: false, len: P.len + Q.len}); repl.set(y.k, null);
+      used.add(x.k); used.add(y.k); changed = true;
+    }
+    if (changed) paths = paths.map((p, k) => repl.has(k) ? repl.get(k) : p).filter(Boolean);
+  }
+  return paths;
+}
+function prune(raw, spur, minLen){
+  const C = raw.clusters;
+  let paths = raw.paths.map(p => ({...p, len: plen(p.pts)}));
+  for (let round = 0; round < 4; round++){
+    const cnt = new Map(); const inc = c => cnt.set(c, (cnt.get(c) || 0) + 1);
+    for (const p of paths) if (!p.closed){ inc(p.a); inc(p.b); }
+    let removed = false;
+    if (spur > 0) paths = paths.filter(p => {
+      if (p.closed || p.a === p.b || p.len >= spur) return true;
+      const ae = !C[p.a].j, be = !C[p.b].j; if (ae === be) return true;
+      const jc = ae ? p.b : p.a;
+      if (cnt.get(jc) >= 3){ cnt.set(jc, cnt.get(jc) - 1); removed = true; return false; }
+      return true;
+    });
+    paths = mergeAll(paths);
+    if (!removed) break;
+  }
+  return paths.filter(p => p.len >= minLen || (!p.closed && C[p.a] && C[p.b] && C[p.a].j && C[p.b].j));
+}
+function smoothPts(pts, closed, it){
+  let a = pts;
+  for (let k = 0; k < it; k++){
+    const n = a.length; if (n < 3) break; const b = new Array(n);
+    for (let i = 0; i < n; i++){
+      if (!closed && (i === 0 || i === n - 1)){ b[i] = a[i]; continue; }
+      const p = a[(i - 1 + n) % n], q = a[i], r = a[(i + 1) % n];
+      b[i] = [(p[0] + 2 * q[0] + r[0]) / 4, (p[1] + 2 * q[1] + r[1]) / 4];
+    }
+    a = b;
+  }
+  return a;
+}
+function rdp(pts, eps){
+  const n = pts.length; if (n < 3) return pts;
+  const keep = new Uint8Array(n); keep[0] = keep[n - 1] = 1; const st = [[0, n - 1]];
+  while (st.length){
+    const [s, e] = st.pop(); const [x1, y1] = pts[s], [x2, y2] = pts[e]; const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy);
+    let md = 0, mi = -1;
+    for (let i = s + 1; i < e; i++){ const [x, y] = pts[i]; const d = L ? Math.abs(dy * x - dx * y + x2 * y1 - y2 * x1) / L : Math.hypot(x - x1, y - y1); if (d > md){ md = d; mi = i; } }
+    if (mi > 0 && md > eps){ keep[mi] = 1; st.push([s, mi], [mi, e]); }
+  }
+  return pts.filter((_, i) => keep[i]);
+}
+function rdpClosed(pts, eps){
+  if (pts.length < 4) return pts;
+  let far = 0, md = -1; for (let i = 1; i < pts.length; i++){ const d = Math.hypot(pts[i][0] - pts[0][0], pts[i][1] - pts[0][1]); if (d > md){ md = d; far = i; } }
+  const a = rdp(pts.slice(0, far + 1), eps), b = rdp(pts.slice(far).concat([pts[0]]), eps);
+  return a.concat(b.slice(1, -1));
+}
+const num = v => { const r = Math.round(v * 100) / 100; return Object.is(r, -0) ? "0" : String(r); };
+function toD(pts, closed, sx, sy){
+  const n = pts.length, P = p => num(p[0] * sx) + " " + num(p[1] * sy);
+  if (n === 2) return {d: "M" + P(pts[0]) + "L" + P(pts[1]), segs: 1};
+  let d = "M" + P(pts[0]); const segs = closed ? n : n - 1;
+  for (let i = 0; i < segs; i++){
+    const p1 = pts[i], p2 = pts[(i + 1) % n];
+    const p0 = closed ? pts[(i - 1 + n) % n] : (i === 0 ? p1 : pts[i - 1]);
+    const p3 = closed ? pts[(i + 2) % n] : (i + 2 < n ? pts[i + 2] : p2);
+    const L = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]), lim = L * 0.45;
+    const clamp = t => { const m = Math.hypot(t[0], t[1]); return m > lim && m > 0 ? [t[0] * lim / m, t[1] * lim / m] : t; };
+    const t1 = clamp([(p2[0] - p0[0]) / 6, (p2[1] - p0[1]) / 6]), t2 = clamp([(p3[0] - p1[0]) / 6, (p3[1] - p1[1]) / 6]);
+    d += "C" + P([p1[0] + t1[0], p1[1] + t1[1]]) + " " + P([p2[0] - t2[0], p2[1] - t2[1]]) + " " + P(p2);
+  }
+  return {d: closed ? d + "Z" : d, segs};
+}
+function makePaths(C, p, A){
+  const paths = p.mode === "center" ? prune(C, p.spur, p.minLen) : C.paths.filter(q => plen(q.pts) >= p.minLen);
+  const ds = []; let nodes = 0;
+  for (const q of paths){
+    let pts = smoothPts(q.pts, q.closed, p.smooth);
+    pts = q.closed ? rdpClosed(pts, p.simp) : rdp(pts, p.simp);
+    if (pts.length < 2 || (q.closed && pts.length < 3)) continue;
+    const r = toD(pts, q.closed, A.sx, A.sy); ds.push(r.d); nodes += r.segs + (q.closed ? 0 : 1);
+  }
+  return {ds, nodes};
+}
+
+/* ---------- 5. SVG ---------- */
+function buildSvg(D, p){
+  const W = src.w, H = src.h;
+  const head = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">`;
+  if (p.mode === "contour" && p.fill)
+    return `${head}\n<path fill="${p.col}" fill-rule="evenodd" d="${D.ds.join("")}"/>\n</svg>`;
+  return `${head}\n<g fill="none" stroke="${p.col}" stroke-width="${num(p.sw)}" stroke-linecap="round" stroke-linejoin="round">\n` +
+    D.ds.map(d => `<path d="${d}"/>`).join("\n") + `\n</g>\n</svg>`;
+}
+
+/* ---------- pipeline ---------- */
+let timer;
+function schedule(delay = 140){ if (!src) return; clearTimeout(timer); status("Calcul…", "busy"); timer = setTimeout(() => requestAnimationFrame(() => setTimeout(run, 0)), delay); }
+function run(){
+  const t0 = performance.now();
+  try {
+    const p = params();
+    const kA = [srcId, p.res, p.blur].join("|");
+    const A = memo("a", kA, () => toGray(p));
+    const kB = [kA, p.auto, p.auto ? "" : p.thr, p.inv, p.specks, p.holes].join("|");
+    const B = memo("b", kB, () => binarize(A, p));
+    if (p.auto){ $("thr").value = B.t; $("o-thr").textContent = "auto · " + B.t; }
+    const kC = [kB, p.mode].join("|");
+    const C = memo("c", kC, () => p.mode === "center" ? traceSkeleton(thin(B.bin, A.w, A.h), A.w, A.h) : traceContours(B.bin, A.w, A.h));
+    const kD = [kC, p.spur, p.minLen, p.smooth, p.simp].join("|");
+    const D = memo("d", kD, () => makePaths(C, p, A));
+    const svg = buildSvg(D, p);
+    current = {svg};
+    vec.innerHTML = svg;
+    $("code").value = svg;
+    const kb = new Blob([svg]).size / 1024;
+    $("s-paths").textContent = D.ds.length.toLocaleString("fr-FR");
+    $("s-nodes").textContent = D.nodes.toLocaleString("fr-FR");
+    $("s-size").textContent = kb < 10 ? kb.toFixed(1).replace(".", ",") : Math.round(kb).toLocaleString("fr-FR");
+    const ms = Math.round(performance.now() - t0);
+    if (B.ratio > 0.55) status("Le fond semble détecté comme trait. Essayez « Traits clairs sur fond sombre ».", "warn");
+    else if (!D.ds.length) status("Aucun trait trouvé. Ajustez le seuil.", "warn");
+    else status(`${A.w}×${A.h} px analysés · ${ms} ms`);
+  } catch (err){
+    console.error(err); status("Le calcul a échoué. Baissez la résolution de calcul.", "warn");
+  }
+}
+
+/* ---------- sources ---------- */
+function setSource(el, w, h, url, name){
+  src = {el, w, h, url, name}; srcId++;
+  under.src = url; sheet.style.width = w + "px"; sheet.style.height = h + "px";
+  $("srcName").textContent = name + " · " + w + "×" + h + " px";
+  fit(); schedule(0);
+}
+function loadFile(f){
+  if (!f || !/^image\//.test(f.type)){ toast("Choisissez une image (PNG, JPG, WebP…)."); return; }
+  const url = URL.createObjectURL(f), im = new Image();
+  im.onload = () => { if (!im.naturalWidth){ toast("Cette image n'a pas de dimensions lisibles. Essayez un PNG ou un JPG."); return; } setSource(im, im.naturalWidth, im.naturalHeight, url, f.name || "image"); };
+  im.onerror = () => toast("Impossible de lire cette image. Essayez un PNG ou un JPG.");
+  im.src = url;
+}
+function makeSample(){
+  const c = document.createElement("canvas"); c.width = 1000; c.height = 700;
+  const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, 1000, 700);
+  x.strokeStyle = x.fillStyle = "#1b1b1b"; x.lineCap = "round"; x.lineJoin = "round";
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  // spirale
+  x.lineWidth = 12; x.beginPath();
+  for (let t = 0; t < 6 * Math.PI; t += 0.04){ const r = 8 + t * 10, px = 245 + r * Math.cos(t), py = 260 + r * Math.sin(t); t ? x.lineTo(px, py) : x.moveTo(px, py); }
+  x.stroke();
+  // vague
+  x.lineWidth = 17; x.beginPath();
+  for (let X = 540; X <= 940; X += 3){ const Y = 120 + Math.sin((X - 540) / 38) * 42 + (rnd() - .5) * 2; X === 540 ? x.moveTo(X, Y) : x.lineTo(X, Y); }
+  x.stroke();
+  // feuille + nervures
+  x.lineWidth = 10; x.beginPath(); x.moveTo(560, 560);
+  x.bezierCurveTo(610, 360, 800, 290, 930, 300); x.bezierCurveTo(880, 450, 740, 590, 560, 560); x.stroke();
+  x.lineWidth = 7; x.beginPath(); x.moveTo(530, 600); x.quadraticCurveTo(720, 470, 930, 300); x.stroke();
+  x.lineWidth = 5;
+  for (let k = 1; k <= 5; k++){ const t = k / 6, ax = 560 + (930 - 560) * t, ay = 560 + (300 - 560) * t - Math.sin(t * Math.PI) * 55;
+    x.beginPath(); x.moveTo(ax, ay); x.quadraticCurveTo(ax + 10, ay - 40, ax + 4, ay - 72 + k * 4); x.stroke();
+    x.beginPath(); x.moveTo(ax, ay); x.quadraticCurveTo(ax + 40, ay + 6, ax + 60 - k * 5, ay + 30); x.stroke(); }
+  // texte
+  x.font = "italic 700 128px Georgia, 'Times New Roman', serif"; x.fillText("Trait", 70, 650);
+  // poussières à nettoyer
+  for (let k = 0; k < 60; k++){ x.beginPath(); x.arc(rnd() * 1000, rnd() * 700, 0.6 + rnd() * 1.6, 0, 7); x.fill(); }
+  setSource(c, 1000, 700, c.toDataURL("image/png"), "exemple.png");
+}
+
+/* ---------- vue : zoom & déplacement ---------- */
+const view = {z: 1, tx: 0, ty: 0};
+function apply(){ sheet.style.transform = `translate(${view.tx}px,${view.ty}px) scale(${view.z})`; $("zVal").textContent = Math.round(view.z * 100) + " %"; }
+function fit(){
+  if (!src) return; const r = stage.getBoundingClientRect(), m = 24, bottom = 64;
+  const z = Math.max(0.01, Math.min((r.width - 2 * m) / src.w, (r.height - m - bottom) / src.h));
+  view.z = z; view.tx = (r.width - src.w * z) / 2; view.ty = m + ((r.height - m - bottom) - src.h * z) / 2; apply();
+}
+function zoomAt(px, py, f){ const nz = Math.min(40, Math.max(0.02, view.z * f)); view.tx = px - (px - view.tx) * (nz / view.z); view.ty = py - (py - view.ty) * (nz / view.z); view.z = nz; apply(); }
+const ptrs = new Map(); let pinch = null;
+stage.addEventListener("pointerdown", e => {
+  if (e.target.closest(".tools, .status")) return;
+  stage.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, {x: e.clientX, y: e.clientY}); pinch = null; stage.classList.add("panning");
+});
+stage.addEventListener("pointermove", e => {
+  if (!ptrs.has(e.pointerId)) return;
+  const prev = ptrs.get(e.pointerId); ptrs.set(e.pointerId, {x: e.clientX, y: e.clientY});
+  if (ptrs.size === 1){ view.tx += e.clientX - prev.x; view.ty += e.clientY - prev.y; apply(); return; }
+  const [a, b] = [...ptrs.values()], r = stage.getBoundingClientRect();
+  const mid = {x: (a.x + b.x) / 2 - r.left, y: (a.y + b.y) / 2 - r.top}, dist = Math.hypot(a.x - b.x, a.y - b.y);
+  if (pinch){ view.tx += mid.x - pinch.mid.x; view.ty += mid.y - pinch.mid.y; zoomAt(mid.x, mid.y, dist / pinch.dist); }
+  pinch = {mid, dist};
+});
+const endPtr = e => { ptrs.delete(e.pointerId); pinch = null; if (!ptrs.size) stage.classList.remove("panning"); };
+stage.addEventListener("pointerup", endPtr); stage.addEventListener("pointercancel", endPtr);
+stage.addEventListener("wheel", e => { e.preventDefault(); const r = stage.getBoundingClientRect(); zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-e.deltaY * 0.0015)); }, {passive: false});
+const zc = f => { const r = stage.getBoundingClientRect(); zoomAt(r.width / 2, r.height / 2, f); };
+$("zIn").onclick = () => zc(1.4); $("zOut").onclick = () => zc(1 / 1.4); $("zFit").onclick = fit;
+new ResizeObserver(() => fit()).observe(stage);
+
+/* ---------- glisser-déposer & coller ---------- */
+stage.addEventListener("dragover", e => { e.preventDefault(); stage.classList.add("drag"); });
+stage.addEventListener("dragleave", () => stage.classList.remove("drag"));
+stage.addEventListener("drop", e => { e.preventDefault(); stage.classList.remove("drag"); loadFile(e.dataTransfer.files[0]); });
+window.addEventListener("paste", e => { const it = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith("image/")); if (it) loadFile(it.getAsFile()); });
+
+/* ---------- contrôles ---------- */
+$("file").addEventListener("change", e => { loadFile(e.target.files[0]); e.target.value = ""; });
+$("sample").onclick = makeSample;
+document.querySelectorAll('input[name="view"]').forEach(r => r.addEventListener("change", () => stage.dataset.view = r.value));
+$("thr").addEventListener("input", () => { $("auto").checked = false; });
+const heavy = ["thr", "auto", "inv", "blur", "res", "specks", "holes", "spur", "minlen", "smooth", "simp", "m-center", "m-contour"];
+heavy.forEach(id => $(id).addEventListener("input", () => { syncOutputs(); schedule(); }));
+["sw", "col", "fill"].forEach(id => $(id).addEventListener("input", () => { syncOutputs(); schedule(0); }));
+
+$("save").onclick = async () => {
+  if (!current) return;
+  const name = (src.name || "trace").replace(/\.[^.]+$/, "") + "-trait.svg";
+  if (window.Android && window.Android.saveSvg){ window.Android.saveSvg(name, current.svg); return; }
+  const dl = await dlPromise;
+  if (dl){
+    try { await dl.save({filename: name, data: current.svg}); toast("SVG enregistré : " + name); }
+    catch (e){
+      if (e && e.code === "declined") toast("Enregistrement annulé.");
+      else if (e && e.code === "rate_limited") toast("Une demande d'enregistrement est déjà ouverte.");
+      else toast("L'enregistrement n'est pas disponible ici. Utilisez « Copier le code ».");
+    }
+    return;
+  }
+  try {
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([current.svg], {type: "image/svg+xml"})); a.download = name;
+    document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); toast("SVG enregistré : " + name);
+  } catch (e){ toast("L'enregistrement a échoué. Utilisez « Copier le code »."); }
+};
+$("copy").onclick = () => {
+  if (!current) return;
+  if (window.Android && window.Android.copy){ if (window.Android.copy(current.svg)){ toast("Code SVG copié."); return; } }
+  const fallback = () => { $("codeBox").open = true; const t = $("code"); t.focus(); t.select(); toast("Code sélectionné : copiez-le avec Ctrl+C ou un appui long."); };
+  try { navigator.clipboard.writeText(current.svg).then(() => toast("Code SVG copié."), fallback); } catch (e){ fallback(); }
+};
+
+syncOutputs();
+makeSample();
+})();
+</script>
+
+</body>
+</html>

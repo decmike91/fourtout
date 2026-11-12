@@ -1,0 +1,56 @@
+{
+  "name": "trait-fin",
+  "productName": "Trait Fin",
+  "version": "1.0.0",
+  "description": "Vectorisation d'image en SVG : tracé fin et lisse",
+  "author": "Trait Fin",
+  "main": "main.js",
+  "build": {
+    "appId": "fr.traitfin.app",
+    "productName": "Trait Fin",
+    "files": [
+      "main.js",
+      "index.html",
+      "icon.png"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "shortcutName": "Trait Fin",
+      "artifactName": "Trait-Fin-Setup-${version}.exe",
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "language": "1036"
+    },
+    "portable": {
+      "artifactName": "Trait-Fin-portable-${version}.exe"
+    },
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8"
+  }
+}

@@ -1,0 +1,23 @@
+!!brut.androlib.apk.ApkInfo
+apkFileName: trait-fin.apk
+compressionType: false
+doNotCompress:
+- arsc
+- png
+isFrameworkApk: false
+packageInfo:
+  forcedPackageId: '127'
+  renameManifestPackage: null
+sdkInfo:
+  minSdkVersion: '24'
+  targetSdkVersion: '34'
+sharedLibrary: false
+sparseResources: false
+usesFramework:
+  ids:
+  - 1
+  tag: null
+version: 2.10.0
+versionInfo:
+  versionCode: '1'
+  versionName: '1.0'
