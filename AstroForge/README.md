@@ -6,14 +6,25 @@ mosaïques, comètes, empilement en direct), planétaire et solaire
 bande étroite), IA locale, ligne de commande. Interface en français et en
 anglais. Licence MIT.
 
-TÉLÉCHARGEMENT (publication « AstroForge 2.0.0 » du dépôt)
-  https://github.com/decmike91/fourtout/releases/tag/astroforge-v2.0.0
-  AstroForge-2.0.0-windows-setup.exe   Installateur Windows 10/11 64 bits
-                                       (Python et dépendances inclus)
-  AstroForge-2.0.0-portable.zip        Version sans installation
-  AstroForge_2.0.0_sources.zip         Sources (identiques à Sources/)
-  Les fichiers dépassent la limite de 100 Mo de GitHub pour un dépôt :
-  ils sont donc joints à la publication et non au dossier.
+CONTENU
+  Windows/                       Installateur et version portable, découpés
+                                 en morceaux de 95 Mo (GitHub refuse les
+                                 fichiers de plus de 100 Mo dans un dépôt)
+    reconstituer.bat             Double-clic : recrée les deux fichiers
+                                 ci-dessous et vérifie leur SHA-256
+    reconstituer.sh              Idem sous Linux / macOS
+    -> AstroForge-2.0.0-windows-setup.exe  Installateur Windows 10/11 64 bits
+                                           (Python et dépendances inclus)
+    -> AstroForge-2.0.0-portable.zip       Version sans installation
+  AstroForge_2.0.0_sources.zip   Sources (identiques à Sources/)
+  Sources/                       Code source
+
+RÉCUPÉRER LES FICHIERS WINDOWS
+  1. Téléchargez le dépôt (bouton « Code » > « Download ZIP ») ou les
+     fichiers du dossier Windows/ (.part00, .part01, .part02 et
+     reconstituer.bat).
+  2. Double-cliquez sur reconstituer.bat : « OK » doit s'afficher pour
+     les deux fichiers.
 
 INSTALLATION WINDOWS
   1. Lancez AstroForge-2.0.0-windows-setup.exe : installation pour vous seul

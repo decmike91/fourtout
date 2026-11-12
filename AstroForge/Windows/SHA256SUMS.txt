@@ -1,0 +1,2 @@
+27e9da2f2f4ffefcf70d667e3ac04fade3c049fed24218329d673cba732bfd9d  AstroForge-2.0.0-windows-setup.exe
+8ee1ce84796cdd436742c53445e8c83dcb2052ef2be84d0b4145e711f0872355  AstroForge-2.0.0-portable.zip

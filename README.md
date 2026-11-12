@@ -44,8 +44,8 @@ SOURCES
 AUTRES LOGICIELS DU DÉPÔT
   AstroForge/                  AstroForge 2.0.0 - traitement d'images
                                astronomiques (voir AstroForge/README.md ;
-                               installateur Windows dans la publication
-                               astroforge-v2.0.0)
+                               installateur Windows et version portable
+                               dans AstroForge/Windows/)
   AstroForge-rs/               AstroForge en Rust : interface Planétaire,
                                Planétaire IA (traitement automatique) et
                                Time-lapse multi-vidéos ; programmes Windows
